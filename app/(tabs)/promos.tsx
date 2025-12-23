@@ -1,6 +1,6 @@
 // app/(tabs)/promos.tsx
-import LikeButton from '@/components/likeButton';
 import { getCafeName } from '@/data/places';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -93,8 +93,12 @@ export default function PromosScreen() {
             {/* Time limit date */}
             <View style={styles.cardBottom}>
               <Text style={styles.name}>from {formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-              {/* Heart button et like number */}
-              <LikeButton></LikeButton>
+              {/* liked by many users */}
+              <View style={{flexDirection: 'row', gap: 4}}>
+                <Ionicons name='heart'
+                          color={THEME.sub}></Ionicons>
+                <Text style={styles.name}>number</Text>
+              </View>
             </View> 
           </TouchableOpacity>
         ))}
