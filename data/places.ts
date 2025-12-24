@@ -11,7 +11,7 @@ export type CafePlace = {
     food: string[];
     hours: string;
     tags: string[];
-    crowd: string;
+    crowd: string; // no more crowd cause no api
     coords?: { latitude: number; longitude: number }; // facultatif
   
     // 🔽 nouveaux champs "mini résumé"

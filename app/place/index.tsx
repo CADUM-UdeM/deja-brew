@@ -6,8 +6,10 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
+import LikeButton from '@/components/likeButton';
 import { ReviewCard } from '@/components/ReviewCard'; // comme dans ton ancien fichier
 import { ReviewsModal } from '@/components/ReviewsModal';
+import { formatDateEN, PROMOS } from '@/data/promos';
 import AppHeader from '../../components/AppHeader';
 import { PLACES } from '../../data/places'; // ajuste si ton dossier est ailleurs
 
@@ -75,6 +77,10 @@ export default function PlaceScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
 
   const place = useMemo(() => PLACES.find((p) => p.id === id), [id]);
+  const promos = useMemo(() => {
+    if(!id) return [];
+    return PROMOS.filter((promo) => promo.cafe_id === id);
+  },[id]); 
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -273,13 +279,29 @@ export default function PlaceScreen() {
 
         {/* PROMOS EN COURS (SIMPLE) */}
         <Text style={styles.sectionTitle}>Promos en cours</Text>
-        <View style={styles.promoCard}>
+        {promos.length === 0 ? (
+          <Text>Aucune promotion en cours </Text>
+        ) : (
+          promos.map((promo) => (
+            <View key={promo.id} style={styles.promoCard}>
+              <Text style={styles.promoTitle}>{promo.title}</Text>
+              <Text style={styles.promoText}>{promo.description}</Text>
+
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
+                <LikeButton></LikeButton>
+              </View>
+            </View>
+          ))
+        )}
+        
+        {/* <View style={styles.promoCard}>
           <Text style={styles.promoTitle}>☕ -15% pour les étudiants</Text>
           <Text style={styles.promoText}>
             Sur présentation de ta carte étudiante, en semaine après 16h. Ajoute ce café à
             ta prochaine session “exam cram”.
           </Text>
-        </View>
+        </View> */}
 
         <View style={{ height: 40 }} />
 
@@ -488,5 +510,11 @@ const styles = StyleSheet.create({
   promoText: {
     fontSize: 13,
     color: THEME.text,
+    padding: 4,
+  },
+  promoDate: {
+    color: THEME.sub,
+    fontSize: 11,
+    fontWeight: '600',
   },
 });
