@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 13,
     color: THEME.text,
+    padding: 4,
   },
   cardBottom: {
     flexDirection: 'row',
