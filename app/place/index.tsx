@@ -7,13 +7,13 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import LikeButton from '@/components/likeButton';
-import AppHeader from '../../components/AppHeader';
-import { PLACES, CafePlace } from '../../data/places';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
 import { formatDateEN, PROMOS } from '@/data/promos';
 import AppHeader from '../../components/AppHeader';
-import { PLACES } from '../../data/places'; // ajuste si ton dossier est ailleurs
+import { PLACES } from '../../data/places';
+// import AppHeader from '../../components/AppHeader';
+// import { PLACES } from '../../data/places'; // ajuste si ton dossier est ailleurs
 
 const THEME = {
   bg: '#FFF6EF',
