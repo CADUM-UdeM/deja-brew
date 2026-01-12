@@ -7,8 +7,8 @@ import MapView, { Marker } from 'react-native-maps';
 import { Image } from 'expo-image';
 
 import AppHeader from '../../components/AppHeader';
-import { PLACES, CafePlace } from '../../data/places';                   // ajuste si ton dossier est ailleurs
-import { ReviewCard } from '@/components/ReviewCard';       // comme dans ton ancien fichier
+import { PLACES, CafePlace } from '../../data/places';
+import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
 
 const THEME = {
@@ -42,7 +42,7 @@ const getPlaceImage = (id?: string) => {
   }
 };
 
-// reviews mock (on pourra plus tard relier ça à une vraie DB)
+// reviews mock
 const MOCK_REVIEWS = [
   {
     name: 'Étudiante Concordia',
@@ -228,7 +228,7 @@ export default function PlaceScreen() {
           </>
         )}
 
-        {/* REVIEWS SECTION (MIX AVEC TON ANCIEN ÉCRAN) */}
+        {/* REVIEWS SECTION */}
         <Text style={styles.sectionTitle}>Avis des étudiants</Text>
 
         <View style={styles.ratingRow}>
@@ -251,7 +251,7 @@ export default function PlaceScreen() {
           />
         </View>
 
-        {/* PROMOS EN COURS (SIMPLE) */}
+        {/* PROMOS EN COURS */}
         <Text style={styles.sectionTitle}>Promos en cours</Text>
         <View style={styles.promoCard}>
           <Text style={styles.promoTitle}>☕ -15% pour les étudiants</Text>
