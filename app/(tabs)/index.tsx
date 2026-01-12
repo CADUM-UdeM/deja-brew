@@ -1,3 +1,4 @@
+// app/(tabs)/index.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
@@ -32,8 +33,6 @@ type Category = (typeof CATEGORIES)[number];
 
 const IMAGES = {
   heroStudy: require('../../assets/images/home-hero-study.png'),
-  beanLofi: require('../../assets/images/bean-lofi-focus.png'),
-  beanAmbient: require('../../assets/images/bean-ambient-playlists.png'),
 } as const;
 
 export default function Home() {
@@ -71,6 +70,9 @@ export default function Home() {
       return haystack.includes(q);
     });
   }, [selected, query]);
+
+  // simple sélection de cafés mis de l’avant
+  const featuredPlaces = useMemo(() => PLACES.slice(0, 3), []);
 
   // cute coffee bean animation (bounce + wobble)
   const beanY = useRef(new Animated.Value(0)).current;
@@ -130,9 +132,14 @@ export default function Home() {
       >
         {/* Hero card */}
         <View style={styles.padH}>
-          <View style={[styles.hero, { backgroundColor: '#FFEDE3', borderColor: THEME.border }]}>
+          <View
+            style={[
+              styles.hero,
+              { backgroundColor: '#FFEDE3', borderColor: THEME.border },
+            ]}
+          >
             <View style={styles.rowBetween}>
-              {/* now this is “what you do”, not the brand again */}
+              {/* what you do / value prop */}
               <View style={styles.rowLeft}>
                 <Animated.View
                   style={{ transform: [{ translateY: beanY }, { rotate: beanRotate }] }}
@@ -154,7 +161,10 @@ export default function Home() {
 
             {/* Search */}
             <View
-              style={[styles.searchBox, { backgroundColor: '#fff', borderColor: THEME.border }]}
+              style={[
+                styles.searchBox,
+                { backgroundColor: '#fff', borderColor: THEME.border },
+              ]}
             >
               <Ionicons name="search-outline" size={18} color={THEME.sub} />
               <TextInput
@@ -180,7 +190,10 @@ export default function Home() {
             </View>
 
             {/* main CTAs */}
-            <TouchableOpacity style={styles.primaryCta} onPress={() => router.push('/quiz')}>
+            <TouchableOpacity
+              style={styles.primaryCta}
+              onPress={() => router.push('/quiz')}
+            >
               <Text style={styles.primaryCtaText}>Find your study vibe</Text>
             </TouchableOpacity>
 
@@ -199,53 +212,99 @@ export default function Home() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 10, paddingTop: 12 }}
             >
-              {['Popular', 'Recent', 'Long sessions', 'Morning', 'Near metro'].map((label) => (
-                <View
-                  key={label}
-                  style={[styles.quick, { backgroundColor: '#fff', borderColor: THEME.border }]}
-                >
-                  <Text style={{ color: THEME.text, fontSize: 12 }}>{label}</Text>
-                </View>
-              ))}
+              {['Popular', 'Recent', 'Long sessions', 'Morning', 'Near metro'].map(
+                (label) => (
+                  <View
+                    key={label}
+                    style={[
+                      styles.quick,
+                      { backgroundColor: '#fff', borderColor: THEME.border },
+                    ]}
+                  >
+                    <Text style={{ color: THEME.text, fontSize: 12 }}>{label}</Text>
+                  </View>
+                )
+              )}
             </ScrollView>
           </View>
         </View>
 
-        {/* Featured */}
+        {/* Featured cafés & deals */}
         <View style={[styles.padH, { marginTop: 16 }]}>
-          <Text style={styles.sectionTitle}>Featured</Text>
+          <Text style={styles.sectionTitle}>Featured cafés & deals</Text>
         </View>
-        <View style={[styles.padH, styles.row, { gap: 12, marginTop: 8 }]}>
-          {/* Lofi Focus */}
-          <TouchableOpacity
-            style={[styles.featuredCard, { backgroundColor: '#FBD3BF', borderColor: THEME.border }]}
-            onPress={() => router.push('/quiz')}
-            activeOpacity={0.9}
-          >
-            <Image
-              source={IMAGES.beanLofi}
-              contentFit="cover"
-              style={styles.featuredImage}
-            />
-            <Text style={[styles.featuredLabel, { color: THEME.text }]}>Lofi Focus</Text>
-            <Text style={styles.featuredSub}>Soft beats · Deep focus</Text>
-          </TouchableOpacity>
 
-          {/* Ambient playlists */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            gap: 12,
+            paddingHorizontal: 20,
+            paddingVertical: 8,
+          }}
+        >
+          {featuredPlaces.map((place) => (
+            <TouchableOpacity
+              key={place.id}
+              style={[
+                styles.featuredCard,
+                {
+                  backgroundColor: '#F6EDE6',
+                  borderColor: THEME.border,
+                  width: 230,
+                },
+              ]}
+              onPress={() =>
+                router.push({ pathname: '/place', params: { id: place.id } })
+              }
+              activeOpacity={0.9}
+            >
+              <Text
+                style={[styles.featuredLabel, { color: THEME.text }]}
+                numberOfLines={1}
+              >
+                {place.name}
+              </Text>
+
+              <Text style={styles.featuredSub} numberOfLines={1}>
+                {place.district} · {place.tags.slice(0, 2).join(' · ')}
+              </Text>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                <Ionicons name="cafe-outline" size={14} color={THEME.accentDark} />
+                <Text style={[styles.featuredSub, { marginLeft: 4 }]}>
+                  Great for study sessions
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+
+          {/* Card linking straight to promos tab */}
           <TouchableOpacity
-            style={[styles.featuredCard, { backgroundColor: '#F6EDE6', borderColor: THEME.border }]}
-            onPress={() => router.push('/quiz')}
+            style={[
+              styles.featuredCard,
+              {
+                backgroundColor: '#FBD3BF',
+                borderColor: THEME.border,
+                width: 230,
+              },
+            ]}
+            onPress={() => router.push('/(tabs)/promos')}
             activeOpacity={0.9}
           >
-            <Image
-              source={IMAGES.beanAmbient}
-              contentFit="cover"
-              style={styles.featuredImage}
-            />
-            <Text style={[styles.featuredLabel, { color: THEME.text }]}>Ambient playlists</Text>
-            <Text style={styles.featuredSub}>Rain, café & soft noise</Text>
+            <Text style={[styles.featuredLabel, { color: THEME.text }]}>
+              Today’s deals
+            </Text>
+            <Text style={styles.featuredSub}>Student discounts & happy hours</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+              <Ionicons name="pricetag-outline" size={14} color={THEME.accentDark} />
+              <Text style={[styles.featuredSub, { marginLeft: 4 }]}>
+                See all promos
+              </Text>
+            </View>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
 
         {/* Match to Study */}
         <View style={[styles.padH, { marginTop: 12 }]}>
@@ -273,20 +332,29 @@ export default function Home() {
         {/* Popular places */}
         <View style={[styles.padH, { marginTop: 8 }]}>
           <Text style={styles.sectionTitle}>
-            {selected === 'Tous' ? 'Lieux populaires' : `${selected} spots populaires`}
+            {selected === 'Tous'
+              ? 'Lieux populaires'
+              : `${selected} spots populaires`}
           </Text>
         </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 10, paddingHorizontal: 10, paddingVertical: 12 }}
+          contentContainerStyle={{
+            gap: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 12,
+          }}
         >
           {CATEGORIES.map((category) => (
             <TouchableOpacity key={category} onPress={() => setSelected(category)}>
               <View
                 style={[
                   styles.catChip,
-                  { backgroundColor: selected === category ? THEME.accentDark : '#CFC7C2' },
+                  {
+                    backgroundColor:
+                      selected === category ? THEME.accentDark : '#CFC7C2',
+                  },
                 ]}
               >
                 <Text style={{ color: '#fff', fontWeight: '700' }}>{category}</Text>
@@ -300,9 +368,13 @@ export default function Home() {
           {items.map((place) => (
             <TouchableOpacity
               key={place.id}
-              onPress={() => router.push({ pathname: '/place', params: { id: place.id } })}
+              onPress={() =>
+                router.push({ pathname: '/place', params: { id: place.id } })
+              }
             >
-              <View style={[styles.brownCard, { backgroundColor: THEME.accentDark }]}>
+              <View
+                style={[styles.brownCard, { backgroundColor: THEME.accentDark }]}
+              >
                 <Text style={styles.placeTitle}>{place.name}</Text>
 
                 <View style={styles.placeLocationRow}>
@@ -419,20 +491,12 @@ const styles = StyleSheet.create({
   link: { color: THEME.accentDark, fontWeight: '700' },
 
   featuredCard: {
-    flex: 1,
-    minHeight: 150,
     borderRadius: 22,
     padding: 14,
     borderWidth: 1,
     alignItems: 'flex-start',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     rowGap: 4,
-  },
-  featuredImage: {
-    width: '100%',
-    height: 80,
-    borderRadius: 18,
-    marginBottom: 8,
   },
   featuredLabel: { fontSize: 16, fontWeight: '700' },
   featuredSub: { fontSize: 12, color: THEME.sub },
