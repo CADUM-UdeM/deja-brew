@@ -1,15 +1,19 @@
 // app/place/index.tsx
-import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import MapView, { Marker } from 'react-native-maps';
 import { Image } from 'expo-image';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
+import LikeButton from '@/components/likeButton';
 import AppHeader from '../../components/AppHeader';
 import { PLACES, CafePlace } from '../../data/places';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
+import { formatDateEN, PROMOS } from '@/data/promos';
+import AppHeader from '../../components/AppHeader';
+import { PLACES } from '../../data/places'; // ajuste si ton dossier est ailleurs
 
 const THEME = {
   bg: '#FFF6EF',
@@ -18,6 +22,10 @@ const THEME = {
   card: '#FFFFFF',
   border: '#E8D9D1',
   accentDark: '#7F3B00',
+  green: '#6B8E23',      // Olive green (naturel, terreux)
+  greenLight: '#9CAF88', // Version plus claire
+  red: '#B8503C',        // Terre cuite/terracotta
+  redLight: '#D4846F',   // Version plus claire
 };
 
 // petite fonction pour donner une image par café
@@ -71,6 +79,10 @@ export default function PlaceScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
 
   const place = useMemo(() => PLACES.find((p) => p.id === id), [id]);
+  const promos = useMemo(() => {
+    if(!id) return [];
+    return PROMOS.filter((promo) => promo.cafe_id === id);
+  },[id]); 
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -130,18 +142,24 @@ export default function PlaceScreen() {
         </View>
 
         {/* HEADER TEXTE */}
-        <View style={{ marginTop: 14 }}>
+        <View style={{ marginTop: 14}}>
           <View style={styles.titleRow}>
+            {/* view cafe name and address */}
             <View style={{ flex: 1 }}>
               <Text style={styles.placeName}>{place.name}</Text>
               <Text style={styles.placeAddress}>
                 {place.address}
               </Text>
+              {/* <View style={{flexDirection: 'row',  alignItems: 'center', gap: 4, paddingTop: 8}}> */}
+              {/*TODO: AFFICHER OPEN WHEN IT'S OPEN AND CLOSED WHEN IT'S CLOSED */}
+              <Text style={styles.hoursText}>Open/Closed • {place.hours}</Text>
             </View>
-
-            <View style={styles.typeChip}>
-              <Ionicons name="cafe-outline" size={16} color={THEME.accentDark} />
-              <Text style={styles.typeChipText}>Study café</Text>
+            {/* Study café tag and crowd icon */}
+            <View>
+              <View style={styles.typeChip}>
+                <Ionicons name="cafe-outline" size={16} color={THEME.accentDark} />
+                <Text style={styles.typeChipText}>Study café</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -162,16 +180,26 @@ export default function PlaceScreen() {
               {place.outlets ? 'Beaucoup de prises' : 'Peu de prises'}
             </Text>
           </View>
-          <View style={styles.quickInfoChip}>
+          {/* <View style={styles.quickInfoChip}>
             <Ionicons name="time-outline" size={16} color={THEME.accentDark} />
             <Text style={styles.quickInfoText}>Horaires :</Text>
-          </View>
+          </View> */}
         </View>
-        <Text style={styles.hoursText}>{place.hours}</Text>
+        
 
         {/* VIBE */}
         <Text style={styles.sectionTitle}>Vibe</Text>
         <Text style={styles.vibeText}>{place.vibe}</Text>
+
+        {/* TAGS DEJA BREW 
+        <Text style={styles.sectionTitle}>Tags Deja Brew</Text> */}
+        <View style={styles.tagsRow}>
+          {place.tags.map((tag) => (
+            <View key={tag} style={styles.tagChip}>
+              <Text style={styles.tagText}>{tag}</Text>
+            </View>
+          ))}
+        </View>
 
         {/* AMBIANCE POUR ÉTUDIER */}
         <Text style={styles.sectionTitle}>Ambiance pour étudier</Text>
@@ -192,7 +220,7 @@ export default function PlaceScreen() {
           ))}
         </View>
 
-        {/* TAGS DEJA BREW */}
+        {/* TAGS DEJA BREW
         <Text style={styles.sectionTitle}>Tags Deja Brew</Text>
         <View style={styles.tagsRow}>
           {place.tags.map((tag) => (
@@ -200,7 +228,7 @@ export default function PlaceScreen() {
               <Text style={styles.tagText}>{tag}</Text>
             </View>
           ))}
-        </View>
+        </View> */}
 
         {/* MAP MINIATURE */}
         {place.coords && (
@@ -253,13 +281,29 @@ export default function PlaceScreen() {
 
         {/* PROMOS EN COURS */}
         <Text style={styles.sectionTitle}>Promos en cours</Text>
-        <View style={styles.promoCard}>
+        {promos.length === 0 ? (
+          <Text>Aucune promotion en cours </Text>
+        ) : (
+          promos.map((promo) => (
+            <View key={promo.id} style={styles.promoCard}>
+              <Text style={styles.promoTitle}>{promo.title}</Text>
+              <Text style={styles.promoText}>{promo.description}</Text>
+
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
+                <LikeButton></LikeButton>
+              </View>
+            </View>
+          ))
+        )}
+        
+        {/* <View style={styles.promoCard}>
           <Text style={styles.promoTitle}>☕ -15% pour les étudiants</Text>
           <Text style={styles.promoText}>
             Sur présentation de ta carte étudiante, en semaine après 16h. Ajoute ce café à
             ta prochaine session “exam cram”.
           </Text>
-        </View>
+        </View> */}
 
         <View style={{ height: 40 }} />
 
@@ -313,7 +357,8 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    columnGap: 8,
+
+    // columnGap: 8,
   },
   placeName: {
     fontSize: 24,
@@ -467,5 +512,11 @@ const styles = StyleSheet.create({
   promoText: {
     fontSize: 13,
     color: THEME.text,
+    padding: 4,
+  },
+  promoDate: {
+    color: THEME.sub,
+    fontSize: 11,
+    fontWeight: '600',
   },
 });
