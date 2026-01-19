@@ -123,7 +123,7 @@ export default function Home() {
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
       {/* global brand header */}
-      <AppHeader />
+      <AppHeader onRightPress={() => router.push('/notifications')} />
 
       <ScrollView
         style={{ flex: 1 }}
@@ -156,7 +156,7 @@ export default function Home() {
                 </View>
               </View>
 
-              <Ionicons name="notifications-outline" size={22} color={"#fff"} />
+              <Ionicons name="notifications-outline" size={22} color={THEME.text} />
             </View>
 
             {/* Search */}
