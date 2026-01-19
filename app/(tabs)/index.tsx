@@ -1,21 +1,21 @@
 // app/(tabs)/index.tsx
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
   Animated,
   Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
-import { Image } from 'expo-image';
 
 import AppHeader from '../../components/AppHeader';
-import { PLACES, CafePlace } from '../../data/places';
+import { CafePlace, PLACES } from '../../data/places';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -123,7 +123,7 @@ export default function Home() {
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
       {/* global brand header */}
-      <AppHeader />
+      <AppHeader onRightPress={() => router.push('/notifications')} />
 
       <ScrollView
         style={{ flex: 1 }}
