@@ -6,11 +6,10 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-import LikeButton from '@/components/likeButton';
+import PromoCard from '@/components/PromoCard';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
-import SaveButton from '@/components/saveButton';
-import { formatDateEN, PROMOS } from '@/data/promos';
+import { PROMOS } from '@/data/promos';
 import AppHeader from '../../components/AppHeader';
 import { PLACES } from '../../data/places';
 // import AppHeader from '../../components/AppHeader';
@@ -286,19 +285,23 @@ export default function PlaceScreen() {
           <Text>Aucune promotion en cours </Text>
         ) : (
           promos.map((promo) => (
-            <View key={promo.id} style={styles.promoCard}>
-              <Text style={styles.promoTitle}>{promo.title}</Text>
-              <Text style={styles.promoText}>{promo.description}</Text>
+            <PromoCard
+              key={promo.id}
+              promo={promo}
+              />
+            // <View key={promo.id} style={styles.promoCard}>
+            //   <Text style={styles.promoTitle}>{promo.title}</Text>
+            //   <Text style={styles.promoText}>{promo.description}</Text>
 
-              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-                <View style={{flexDirection: 'row', gap: 16}}>
-                  <SaveButton></SaveButton>
-                  <LikeButton></LikeButton>
-                </View>
+            //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+            //     <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
+            //     <View style={{flexDirection: 'row', gap: 16}}>
+            //       <SaveButton></SaveButton>
+            //       <LikeButton></LikeButton>
+            //     </View>
                 
-              </View>
-            </View>
+            //   </View>
+            // </View>
           ))
         )}
         
