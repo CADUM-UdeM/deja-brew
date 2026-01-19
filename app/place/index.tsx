@@ -50,6 +50,7 @@ const getPlaceImage = (id?: string) => {
   }
 };
 
+
 // reviews mock
 const MOCK_REVIEWS = [
   {
@@ -91,6 +92,17 @@ export default function PlaceScreen() {
     const total = MOCK_REVIEWS.reduce((sum, r) => sum + r.rating, 0);
     return (total / MOCK_REVIEWS.length).toFixed(1);
   }, []);
+
+  // fonction pour sauvegarder les promos bookmarked
+  const [savedPromoIds, setSavedPromoIds] = useState<number[]>([]);
+
+  const toggleSavePromo = (promoId: number) => {
+    setSavedPromoIds(prev =>
+      prev.includes(promoId)
+        ? prev.filter(id => id !== promoId)
+        : [...prev, promoId]
+    );
+  };
 
   if (!place) {
     return (

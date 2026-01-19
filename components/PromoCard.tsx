@@ -14,7 +14,7 @@ type Promo = {
 };
 
 type PromoCardProps = {
-    promo : Promo
+    promo : Promo;
 };
 
 const THEME = {
@@ -35,7 +35,7 @@ export default function PromoCard({promo} : PromoCardProps) {
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
                 <View style={{flexDirection: 'row', gap: 16}}>
-                  <SaveButton></SaveButton>
+                  <SaveButton promoId={promo.id}/>
                   <LikeButton></LikeButton>
                 </View>
               </View>

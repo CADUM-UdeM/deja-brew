@@ -1,22 +1,23 @@
+import { useSavedPromos } from "@/data/savedPromosContext";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
 import { Pressable } from "react-native";
 
-const filledColor = '#7F3B00'
-const SaveButton = () => {
-    const [isSaved, setIsSaved] = useState(false);
-    
-    const handlePress = () => {
-        setIsSaved((prevIsSaved) => (!prevIsSaved))
-    };
+const filledColor = "#7F3B00";
 
-    return (
-        <Pressable onPress={handlePress}>
-            <Ionicons name={isSaved ? 'bookmark' : 'bookmark-outline'}
-                      size={24}
-                      color={isSaved ? filledColor: 'black'}></Ionicons>
-        </Pressable>
-    );
+type SaveButtonProps = {
+    promoId: number;
+};
+
+export default function SaveButton({ promoId }: SaveButtonProps) {
+    const {savedPromoIds, toggleSavePromo} = useSavedPromos();
+    const isSaved = savedPromoIds.includes(promoId);
+  return (
+    <Pressable onPress={() => toggleSavePromo(promoId)}>
+      <Ionicons
+        name={isSaved ? "bookmark" : "bookmark-outline"}
+        size={24}
+        color={isSaved ? filledColor : "black"}
+      />
+    </Pressable>
+  );
 }
-
-export default SaveButton;
