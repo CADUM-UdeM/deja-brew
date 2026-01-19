@@ -1,20 +1,21 @@
 // app/(tabs)/promos.tsx
 import { getCafeName } from '@/data/places';
 import { PROMOS, formatDateEN } from '@/data/promos';
+import { THEME } from '@/data/THEME';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AppHeader from '../../components/AppHeader';
 
-const THEME = {
-  bg: '#FFF6EF',
-  text: '#2A1C17',
-  sub: '#7A6B62',
-  card: '#FFFFFF',
-  border: '#E8D9D1',
-  accentDark: '#7F3B00',
-};
+// const THEME = {
+//   bg: '#FFF6EF',
+//   text: '#2A1C17',
+//   sub: '#7A6B62',
+//   card: '#FFFFFF',
+//   border: '#E8D9D1',
+//   accentDark: '#7F3B00',
+// };
 
 // const PROMOS = [
 //   {
@@ -82,9 +83,29 @@ export default function PromosScreen() {
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
         </Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text>Promos</Text>
-          <Text onPress={() => router.push({pathname: '/savedPromos'})}>Saved promos</Text>
+        <View style={{flexDirection: 'row' }}>
+
+          <View style={{flex: 1,
+                        borderWidth: 1,
+                        paddingVertical: 14,
+                        paddingHorizontal: 18,
+                        // paddingStart: 8,
+                        alignItems: 'center',
+                        borderColor: THEME.accentDark,
+                        backgroundColor: THEME.border}}>
+
+            <Text>Promos</Text>
+          </View>
+          <View style={{flex: 1,
+                        borderWidth: 1, 
+                        paddingVertical: 14,
+                        paddingHorizontal: 18,
+                        alignItems: 'center',
+                        borderColor: THEME.accentDark,
+                        backgroundColor: THEME.border,}}>
+
+            <Text onPress={() => router.push({pathname: '/savedPromos'})}>Saved promos</Text>
+          </View>
         </View>
         
 
