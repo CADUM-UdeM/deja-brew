@@ -9,6 +9,7 @@ import MapView, { Marker } from 'react-native-maps';
 import LikeButton from '@/components/likeButton';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
+import SaveButton from '@/components/saveButton';
 import { formatDateEN, PROMOS } from '@/data/promos';
 import AppHeader from '../../components/AppHeader';
 import { PLACES } from '../../data/places';
@@ -291,7 +292,11 @@ export default function PlaceScreen() {
 
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-                <LikeButton></LikeButton>
+                <View style={{flexDirection: 'row', gap: 16}}>
+                  <SaveButton></SaveButton>
+                  <LikeButton></LikeButton>
+                </View>
+                
               </View>
             </View>
           ))
