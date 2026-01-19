@@ -82,6 +82,11 @@ export default function PromosScreen() {
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
         </Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text>Promos</Text>
+          <Text onPress={() => router.push({pathname: '/savedPromos'})}>Saved promos</Text>
+        </View>
+        
 
         {PROMOS.map((promo) => (
           <TouchableOpacity onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})} key={promo.id} style={styles.card}>
