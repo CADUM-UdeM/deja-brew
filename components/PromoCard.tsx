@@ -14,7 +14,11 @@ type Promo = {
 };
 
 type PromoCardProps = {
+<<<<<<< HEAD
     promo : Promo;
+=======
+    promo : Promo
+>>>>>>> 5f46159 (added PromoCard)
 };
 
 const THEME = {
@@ -35,7 +39,11 @@ export default function PromoCard({promo} : PromoCardProps) {
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
                 <View style={{flexDirection: 'row', gap: 16}}>
+<<<<<<< HEAD
                   <SaveButton promoId={promo.id}/>
+=======
+                  <SaveButton></SaveButton>
+>>>>>>> 5f46159 (added PromoCard)
                   <LikeButton></LikeButton>
                 </View>
               </View>
