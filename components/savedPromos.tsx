@@ -18,10 +18,12 @@ export default function SavedPromosScreen() {
   const savedPromos = PROMOS.filter(promo => savedPromoIds.includes(promo.id));
 
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{ flex: 1, backgroundColor: THEME.bg,}}>
 
       {savedPromos.length === 0 ? (
+      <View style={{flex: 1, backgroundColor: THEME.bg, justifyContent: 'center', alignItems: 'center'}}>
         <Text style={styles.emptyText}>You haven't saved any promos yet.</Text>
+      </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           {savedPromos.map(promo => (
