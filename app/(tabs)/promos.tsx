@@ -7,27 +7,32 @@ import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import AppHeader from '../../components/AppHeader';
 
+// routes for the tabs
 const routes = [
   {key: 'promos', title: 'All promos'},
   {key: 'saved', title: 'My saved promos'},
 ];
 
+// renders screen of all promos 
 function PromoTab() {
   return(
   <AllPromosScreen />)
 }
 
+// renders screen of saved promos
 function SavedPromoTab() {
   return(
    <SavedPromosScreen />
   )
 }
 
+// does the rendering (i think...)
 const renderScene = SceneMap({
   promos: PromoTab,
   saved: SavedPromoTab,
 });
 
+// modification (styles) fait à la tab bar
  const renderTabBar = (props: any) => (
     <TabBar
       {...props}
@@ -35,20 +40,20 @@ const renderScene = SceneMap({
       activeColor={THEME.accentDark}
       inactiveColor={THEME.sub}
       style={{backgroundColor: THEME.bg,
-              elevation: 0,
+              elevation: 0, // removes the shadow on android
+              shadowOpacity: 0, // removes the shadow on IOS
+
       }}
       />
   )
 
 
 export default function PromosScreen() {
-  // const router = useRouter();
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
-  
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 20, /* paddingBottom: 120 */ }}>
+    <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 20}}>
       <AppHeader rightIcon="pricetag-outline" />
 
         <Text style={styles.title}>Promos & perks</Text>
@@ -56,6 +61,7 @@ export default function PromosScreen() {
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
         </Text>
 
+        {/* Tab all promos and saved promos done here! */}
         <TabView 
           navigationState={{index, routes}}
           renderScene={renderScene}

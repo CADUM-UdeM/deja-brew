@@ -6,6 +6,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 
+// screen for the saved promos tab
 export default function SavedPromosScreen() {
   const { savedPromoIds } = useSavedPromos();
 
