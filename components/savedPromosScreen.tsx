@@ -5,11 +5,6 @@ import { THEME } from '@/data/THEME';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-// const THEME = {
-//   bg: '#FFF6EF',
-//   text: '#2A1C17',
-//   sub: '#7A6B62',
-// };
 
 export default function SavedPromosScreen() {
   const { savedPromoIds } = useSavedPromos();
