@@ -41,6 +41,7 @@ const renderScene = SceneMap({
       style={{backgroundColor: THEME.bg,
               elevation: 0, // removes the shadow on android
               shadowOpacity: 0, // removes the shadow on IOS
+              marginBottom: 8,
       }}
       />
   )
