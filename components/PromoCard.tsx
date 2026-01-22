@@ -1,5 +1,8 @@
+import { getCafeName } from "@/data/places";
 import { formatDateEN } from "@/data/promos";
-import { StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LikeButton from "./likeButton";
 import SaveButton from "./saveButton";
 
@@ -15,7 +18,7 @@ type Promo = {
 
 type PromoCardProps = {
     promo : Promo;
-};
+}
 
 const THEME = {
   bg: '#FFF6EF',
@@ -26,24 +29,43 @@ const THEME = {
   accentDark: '#7F3B00',
 };
 
+// Promo card that has the button like and saved (bookmark)
 export default function PromoCard({promo} : PromoCardProps) {
+  const router = useRouter()
     return (
-        <View key={promo.id} style={styles.promoCard}>
-              <Text style={styles.promoTitle}>{promo.title}</Text>
-              <Text style={styles.promoText}>{promo.description}</Text>
+    <View key={promo.id} style={styles.promoCard}>
+      <View style={styles.cardHeader}>
+        <Text style={styles.cardTag}>{promo.tag}</Text>
+        <TouchableOpacity 
+          onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})}
+          style={{flexDirection: 'row', gap: 4, alignItems: 'center'}}>
+          <Text style={styles.name}>by {getCafeName(promo.cafe_id)}</Text>
+          <Ionicons 
+            name="chevron-forward-outline"
+            color={THEME.sub}/>
+        </TouchableOpacity>
+        
+      </View>
+      <Text style={styles.promoTitle}>{promo.title}</Text>
+      <Text style={styles.promoText}>{promo.description}</Text>
 
-              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-                <View style={{flexDirection: 'row', gap: 16}}>
-                  <SaveButton promoId={promo.id}/>
-                  <LikeButton></LikeButton>
-                </View>
-              </View>
-            </View>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+        <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
+        <View style={{flexDirection: 'row', gap: 16}}>
+          <SaveButton promoId={promo.id}/>
+          <LikeButton></LikeButton>
+        </View>
+      </View>
+    </View>
     );
 }
 
 const styles = StyleSheet.create({
+    name: {
+      color: THEME.sub,
+      fontSize: 11,
+      fontWeight: '600',
+    },
    promoCard: {
     backgroundColor: THEME.card,
     borderRadius: 16,
@@ -68,5 +90,22 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
   },
+  cardHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 6
+    },
+    cardTag: {
+      alignSelf: 'flex-start',
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 999,
+      backgroundColor: '#F3E7E0',
+      color: THEME.accentDark,
+      fontSize: 11,
+      fontWeight: '700',
+      // marginBottom: 6,
+    },
 });
 

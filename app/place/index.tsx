@@ -301,19 +301,6 @@ export default function PlaceScreen() {
               key={promo.id}
               promo={promo}
               />
-            // <View key={promo.id} style={styles.promoCard}>
-            //   <Text style={styles.promoTitle}>{promo.title}</Text>
-            //   <Text style={styles.promoText}>{promo.description}</Text>
-
-            //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            //     <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-            //     <View style={{flexDirection: 'row', gap: 16}}>
-            //       <SaveButton></SaveButton>
-            //       <LikeButton></LikeButton>
-            //     </View>
-                
-            //   </View>
-            // </View>
           ))
         )}
         
