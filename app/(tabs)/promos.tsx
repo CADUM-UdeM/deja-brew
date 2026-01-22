@@ -7,67 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
-import { SceneMap, TabView } from 'react-native-tab-view';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import AppHeader from '../../components/AppHeader';
-
-// const THEME = {
-//   bg: '#FFF6EF',
-//   text: '#2A1C17',
-//   sub: '#7A6B62',
-//   card: '#FFFFFF',
-//   border: '#E8D9D1',
-//   accentDark: '#7F3B00',
-// };
-
-// const PROMOS = [
-//   {
-//     id: 1,
-//     title: '☕ -15% sur les lattés étudiants Café Central',
-//     description: 'Tous les jours après 16h avec une carte étudiante valide.',
-//     cafe_id: 'constance',
-//     tag: 'Étudiants', 
-//     promoStart: '2025-02-01T23:59:59Z',
-//     promoEnd: '2025-02-15T23:59:59Z',
-//   },
-//   {
-//     id: 2,
-//     title: '📚 2h détude = 1 café filtre gratuit',
-//     description: 'Scanne le QR Deja Brew à lentrée de certains cafés partenaires.',
-//     cafe_id: 'savsav',
-//     tag: 'Loyalty',
-//     promoStart: '2025-03-02T23:59:59Z',
-//     promoEnd: '2025-03-15T23:59:59Z',
-//   },
-//   {
-//     id: 3,
-//     title: '🌙 Night owls -10% après 20h',
-//     description: 'Pour les cafés ouverts tard listés sur Deja Brew.',
-//     cafe_id: 'savsav',
-//     tag: 'Night study',
-//     promoStart: '2025-05-21T23:59:59Z',
-//     promoEnd: '2025-06-15T23:59:59Z',
-//   },
-//   {
-//     id: 4,
-//     title: '👯‍♀️ Study date : 2 pour 1',
-//     description: 'Un dessert offert à lachat de 2 boissons dans des spots sélectionnés.',
-//     cafe_id: 'amea',
-//     tag: 'Friends',
-//     promoStart: '2025-01-11T23:59:59Z',
-//     promoEnd: '2025-02-25T23:59:59Z',
-//   },
-// ];
-
-// const formatDateEN = (iso : string) => {
-//   return new Date(iso).toLocaleDateString('en-US', {
-//     day: 'numeric',
-//     month: 'long',
-//   });
-// }; 
-
-// ADD TIME LIMIT
-// LIKE (REVIEW: THIS IS A GOOD DEAL) PROMO
-
 
 const routes = [
   {key: 'promos', title: 'All promos'},
@@ -114,6 +55,21 @@ const renderScene = SceneMap({
   saved: SavedPromoTab,
 });
 
+ const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{backgroundColor: THEME.accentDark, height: 3}}
+      activeColor={THEME.accentDark}
+      inactiveColor={THEME.sub}
+      style={{backgroundColor: THEME.bg,
+              elevation: 0,
+      }}
+
+      >
+      </TabBar>
+  )
+
+
 export default function PromosScreen() {
   // const router = useRouter();
   const layout = useWindowDimensions();
@@ -138,7 +94,9 @@ export default function PromosScreen() {
           navigationState={{index, routes}}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}>
+          initialLayout={{width: layout.width}}
+          renderTabBar={renderTabBar}
+          >
         </TabView>
 
         {/* <View style={{flexDirection: 'row' }}>
