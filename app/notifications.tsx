@@ -13,24 +13,43 @@ const THEME = {
   accentDark: "#7F3B00",
 };
 
+// catégories de notifs : 
+// 1. Nouvelles promotions
+// 2. Study session invite
+// 3. Study session reminder
+// 4. Friend started study session
+// 5. New friend request
+
 const NOTIFS = [
   {
     id: 1,
     title: "Nouvelle promotion 2 pour 1",
-    description: "Applicable seulement chez certaines succursales",
+    description: "Applicable seulement chez certains cafés",
     tag: "Promotion",
   },
   {
     id: 2,
-    title: "Vous avez été invité à une study date",
+    title: "Vous avez été invité à une study session",
     description: "Cliquez ici pour accepter",
     tag: "Invitation",
   },
   {
     id: 3,
-    title: "New cafe recently opened nearby",
-    description: "Click here to it see on the map",
-    tag: "New cafe",
+    title: "Vous avez une study session dans 30 minutes",
+    description: "Au café sans fil à 13h",
+    tag: "Reminder",
+  },
+  {
+    id: 4,
+    title: "Votre ami(e) a commencé une nouvelle study session",
+    description: "Demander à rejoindre",
+    tag: "Join",
+  },
+  {
+    id: 5,
+    title: "Vous avez une nouvelle demande d'ami",
+    description: "Cliquer ici pour accepter",
+    tag: "Friend",
   },
 ];
 
