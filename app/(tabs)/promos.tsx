@@ -1,11 +1,11 @@
 // app/(tabs)/promos.tsx
-import { getCafeName } from '@/data/places';
-import { PROMOS, formatDateEN } from '@/data/promos';
+import SavedPromosScreen from '@/components/savedPromos';
+import { PROMOS } from '@/data/promos';
 import { THEME } from '@/data/THEME';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { SceneMap, TabView } from 'react-native-tab-view';
 import AppHeader from '../../components/AppHeader';
 
 // const THEME = {
@@ -66,8 +66,36 @@ import AppHeader from '../../components/AppHeader';
 // ADD TIME LIMIT
 // LIKE (REVIEW: THIS IS A GOOD DEAL) PROMO
 
+const routes = [
+  {key: 'promos', title: 'All promos'},
+  {key: 'saved', title: 'My saved promos'},
+];
+
+function PromoTab() {
+  return(
+    <ScrollView contentContainerStyle={{padding: 20}}>
+      {PROMOS.map(promo => (
+        <Text key={promo.id}>{promo.title}</Text>
+      ))}
+    </ScrollView>
+  )
+}
+
+function SavedPromoTab() {
+  return(
+   <SavedPromosScreen />
+  )
+}
+
+const renderScene = SceneMap({
+  promos: PromoTab,
+  saved: SavedPromoTab,
+});
+
 export default function PromosScreen() {
   const router = useRouter();
+  const layout = useWindowDimensions();
+  const [index, setIndex] = React.useState(0);
 
   
   return (
@@ -83,7 +111,15 @@ export default function PromosScreen() {
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
         </Text>
-        <View style={{flexDirection: 'row' }}>
+
+        <TabView 
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{width: layout.width}}>
+        </TabView>
+
+        {/* <View style={{flexDirection: 'row' }}>
 
           <View style={{flex: 1,
                         borderWidth: 1,
@@ -106,9 +142,9 @@ export default function PromosScreen() {
 
             <Text onPress={() => router.push({pathname: '/savedPromos'})}>Saved promos</Text>
           </View>
-        </View>
+        </View> */}
         
-
+{/* 
         {PROMOS.map((promo) => (
           <TouchableOpacity onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})} key={promo.id} style={styles.card}>
             <View style={styles.cardHeader}>
@@ -117,10 +153,10 @@ export default function PromosScreen() {
             </View>
             <Text style={styles.cardTitle}>{promo.title}</Text>
             <Text style={styles.cardText}>{promo.description}</Text>
-            {/* Time limit date */}
+            {/* Time limit date *
             <View style={styles.cardBottom}>
               <Text style={styles.name}>from {formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-              {/* liked by many users */}
+              {/* liked by many users *
               <View style={{flexDirection: 'row', gap: 4}}>
                 <Ionicons name='heart'
                           color={THEME.sub}></Ionicons>
@@ -129,6 +165,8 @@ export default function PromosScreen() {
             </View> 
           </TouchableOpacity>
         ))}
+         */} 
+        
       </ScrollView>
     </View>
   );
