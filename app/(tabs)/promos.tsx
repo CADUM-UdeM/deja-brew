@@ -1,10 +1,12 @@
 // app/(tabs)/promos.tsx
 import SavedPromosScreen from '@/components/savedPromos';
-import { PROMOS } from '@/data/promos';
+import { getCafeName } from '@/data/places';
+import { formatDateEN, PROMOS } from '@/data/promos';
 import { THEME } from '@/data/THEME';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SceneMap, TabView } from 'react-native-tab-view';
 import AppHeader from '../../components/AppHeader';
 
@@ -66,18 +68,38 @@ import AppHeader from '../../components/AppHeader';
 // ADD TIME LIMIT
 // LIKE (REVIEW: THIS IS A GOOD DEAL) PROMO
 
+
 const routes = [
   {key: 'promos', title: 'All promos'},
   {key: 'saved', title: 'My saved promos'},
 ];
 
 function PromoTab() {
+  const router = useRouter();
   return(
-    <ScrollView contentContainerStyle={{padding: 20}}>
-      {PROMOS.map(promo => (
-        <Text key={promo.id}>{promo.title}</Text>
-      ))}
+    <ScrollView>
+      {PROMOS.map((promo) => (
+          <TouchableOpacity onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})} key={promo.id} style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTag}>{promo.tag}</Text>
+              <Text style={styles.name}>by {getCafeName(promo.cafe_id)}</Text>
+            </View>
+            <Text style={styles.cardTitle}>{promo.title}</Text>
+            <Text style={styles.cardText}>{promo.description}</Text>
+            {/* Time limit date */}
+            <View style={styles.cardBottom}>
+              <Text style={styles.name}>from {formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
+              {/* liked by many users */}
+              <View style={{flexDirection: 'row', gap: 4}}>
+                <Ionicons name='heart'
+                          color={THEME.sub}></Ionicons>
+                <Text style={styles.name}>number</Text>
+              </View>
+            </View> 
+          </TouchableOpacity>
+        ))}
     </ScrollView>
+      
   )
 }
 
@@ -93,20 +115,20 @@ const renderScene = SceneMap({
 });
 
 export default function PromosScreen() {
-  const router = useRouter();
+  // const router = useRouter();
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
   
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg }}>
+    <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 20, /* paddingBottom: 120 */ }}>
       <AppHeader rightIcon="pricetag-outline" />
 
-      <ScrollView
+      {/* <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
-      >
+      > */}
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
@@ -167,7 +189,7 @@ export default function PromosScreen() {
         ))}
          */} 
         
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 }

@@ -18,8 +18,7 @@ export default function SavedPromosScreen() {
   const savedPromos = PROMOS.filter(promo => savedPromoIds.includes(promo.id));
 
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 16 }}>
-      <Text style={styles.title}>Saved Promos</Text>
+    <View style={{ flex: 1, backgroundColor: THEME.bg}}>
 
       {savedPromos.length === 0 ? (
         <Text style={styles.emptyText}>You haven't saved any promos yet.</Text>
