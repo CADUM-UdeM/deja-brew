@@ -5,7 +5,6 @@ import { THEME } from '@/data/THEME';
 import React from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
-import AppHeader from '../../components/AppHeader';
 
 // routes for the tabs
 const routes = [
@@ -42,7 +41,6 @@ const renderScene = SceneMap({
       style={{backgroundColor: THEME.bg,
               elevation: 0, // removes the shadow on android
               shadowOpacity: 0, // removes the shadow on IOS
-
       }}
       />
   )
@@ -54,13 +52,15 @@ export default function PromosScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 20}}>
-      <AppHeader rightIcon="pricetag-outline" />
+      {/* <AppHeader rightIcon="pricetag-outline" /> */}
 
+      <View style={{paddingTop: 32}}>
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
         </Text>
-
+      </View>
+        
         {/* Tab all promos and saved promos done here! */}
         <TabView 
           navigationState={{index, routes}}
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 13,
     color: THEME.sub,
-    marginBottom: 16,
+    marginBottom: 8,
   },
 
 });

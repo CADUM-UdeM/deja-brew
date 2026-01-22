@@ -1,6 +1,8 @@
 import { getCafeName } from "@/data/places";
 import { formatDateEN } from "@/data/promos";
-import { StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LikeButton from "./likeButton";
 import SaveButton from "./saveButton";
 
@@ -29,11 +31,20 @@ const THEME = {
 
 // Promo card that has the button like and saved (bookmark)
 export default function PromoCard({promo} : PromoCardProps) {
+  const router = useRouter()
     return (
     <View key={promo.id} style={styles.promoCard}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTag}>{promo.tag}</Text>
-        <Text style={styles.name}>by {getCafeName(promo.cafe_id)}</Text>
+        <TouchableOpacity 
+          onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})}
+          style={{flexDirection: 'row', gap: 4, alignItems: 'center'}}>
+          <Text style={styles.name}>by {getCafeName(promo.cafe_id)}</Text>
+          <Ionicons 
+            name="chevron-forward-outline"
+            color={THEME.sub}/>
+        </TouchableOpacity>
+        
       </View>
       <Text style={styles.promoTitle}>{promo.title}</Text>
       <Text style={styles.promoText}>{promo.description}</Text>

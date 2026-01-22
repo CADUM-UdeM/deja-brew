@@ -1,10 +1,9 @@
-import { getCafeName } from '@/data/places';
-import { formatDateEN, PROMOS } from '@/data/promos';
+import { PROMOS } from '@/data/promos';
 import { THEME } from '@/data/THEME';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import PromoCard from './PromoCard';
 
 // screen for the all promo tab
 export default function AllPromosScreen() {
@@ -12,27 +11,12 @@ export default function AllPromosScreen() {
   return(
     <ScrollView>
       {PROMOS.map((promo) => (
-          <TouchableOpacity onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})} key={promo.id} style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTag}>{promo.tag}</Text>
-              <Text style={styles.name}>by {getCafeName(promo.cafe_id)}</Text>
-            </View>
-            <Text style={styles.cardTitle}>{promo.title}</Text>
-            <Text style={styles.cardText}>{promo.description}</Text>
-            {/* Time limit date */}
-            <View style={styles.cardBottom}>
-              <Text style={styles.name}>from {formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
-              {/* liked by many users */}
-              <View style={{flexDirection: 'row', gap: 4}}>
-                <Ionicons name='heart'
-                          color={THEME.sub}></Ionicons>
-                <Text style={styles.name}>number</Text>
-              </View>
-            </View> 
-          </TouchableOpacity>
+        <PromoCard
+          key={promo.id}
+          promo={promo} 
+          />
         ))}
     </ScrollView>
-      
   )
 }
 
