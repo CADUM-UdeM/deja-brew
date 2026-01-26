@@ -1,21 +1,22 @@
+import { useLikedPromos } from '@/data/likedPromosContext';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { Pressable } from 'react-native';
 
-const LikeButton = () => {
-    const [isLike, setIsLiked] = useState(false);
+type LikeButtonProps = {
+    promoId: number;
+};
 
-    const handlePress = () => {
-        setIsLiked((prevIsLiked) => (!prevIsLiked))
-    };
+export default function LikeButton({ promoId }: LikeButtonProps) {
+    const {isLiked, toggleLiked} = useLikedPromos();
+    const liked = isLiked(promoId);
 
     return (
-        <Pressable onPress={handlePress}>
-            <Ionicons name={isLike ? 'heart' : 'heart-outline'} 
+        <Pressable onPress={ () => toggleLiked(promoId)}>
+            <Ionicons name={liked ? 'heart' : 'heart-outline'} 
                       size={24}
-                      color={isLike ? 'red' : 'black'}></Ionicons>
+                      color={liked ? 'red' : 'black'}></Ionicons>
         </Pressable>
     );
 };
 
-export default LikeButton;

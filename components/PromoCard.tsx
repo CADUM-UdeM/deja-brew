@@ -47,7 +47,7 @@ export default function PromoCard({promo, enableCafeRoute} : PromoCardProps) {
         <Text style={styles.promoDate}>{formatDateEN(promo.promoStart)} to {formatDateEN(promo.promoEnd)}</Text>
         <View style={{flexDirection: 'row', gap: 16}}>
           <SaveButton promoId={promo.id}/>
-          <LikeButton></LikeButton>
+          <LikeButton promoId={promo.id}></LikeButton>
         </View>
       </View>
     </View>
