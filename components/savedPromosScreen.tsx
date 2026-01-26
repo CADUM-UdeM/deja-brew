@@ -23,7 +23,7 @@ export default function SavedPromosScreen() {
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           {savedPromos.map(promo => (
-            <PromoCard key={promo.id} promo={promo} />
+            <PromoCard key={promo.id} promo={promo} enableCafeRoute={true} />
           ))}
         </ScrollView>
       )}

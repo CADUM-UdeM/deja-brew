@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { LikedPromosProvider } from '@/data/likedPromosContext';
 import { SavedPromosProvider } from '@/data/savedPromosContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -14,6 +15,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <LikedPromosProvider>
     <SavedPromosProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
@@ -48,6 +50,7 @@ export default function RootLayout() {
         <StatusBar style="auto" />
       </ThemeProvider>
     </SavedPromosProvider>
+    </LikedPromosProvider>
     
   );
 }
