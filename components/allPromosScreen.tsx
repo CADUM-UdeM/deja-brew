@@ -14,6 +14,7 @@ export default function AllPromosScreen() {
         <PromoCard
           key={promo.id}
           promo={promo} 
+          enableCafeRoute={true}
           />
         ))}
     </ScrollView>

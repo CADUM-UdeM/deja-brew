@@ -1,5 +1,6 @@
 import { getCafeName } from "@/data/places";
 import { formatDateEN } from "@/data/promos";
+import { THEME } from "@/data/THEME";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -18,24 +19,17 @@ type Promo = {
 
 type PromoCardProps = {
     promo : Promo;
+    enableCafeRoute: boolean;
 }
 
-const THEME = {
-  bg: '#FFF6EF',
-  text: '#2A1C17',
-  sub: '#7A6B62',
-  card: '#FFFFFF',
-  border: '#E8D9D1',
-  accentDark: '#7F3B00',
-};
-
 // Promo card that has the button like and saved (bookmark)
-export default function PromoCard({promo} : PromoCardProps) {
+export default function PromoCard({promo, enableCafeRoute} : PromoCardProps) {
   const router = useRouter()
     return (
     <View key={promo.id} style={styles.promoCard}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTag}>{promo.tag}</Text>
+        {enableCafeRoute ? (
         <TouchableOpacity 
           onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})}
           style={{flexDirection: 'row', gap: 4, alignItems: 'center'}}>
@@ -43,7 +37,7 @@ export default function PromoCard({promo} : PromoCardProps) {
           <Ionicons 
             name="chevron-forward-outline"
             color={THEME.sub}/>
-        </TouchableOpacity>
+        </TouchableOpacity> ) : ( null) }
         
       </View>
       <Text style={styles.promoTitle}>{promo.title}</Text>

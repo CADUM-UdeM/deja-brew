@@ -300,6 +300,7 @@ export default function PlaceScreen() {
             <PromoCard
               key={promo.id}
               promo={promo}
+              enableCafeRoute={false}
               />
           ))
         )}
