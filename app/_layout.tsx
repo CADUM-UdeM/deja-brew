@@ -46,6 +46,13 @@ export default function RootLayout() {
                 headerBackButtonDisplayMode: 'minimal',
               }}
             />
+            <Stack.Screen
+              name="notifications"
+              options={{
+                presentation: 'pageSheet',
+                headerShown: false
+              }}
+            />
           </Stack>
           <StatusBar style="dark" />
         </ThemeProvider>

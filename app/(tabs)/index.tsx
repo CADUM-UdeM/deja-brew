@@ -156,7 +156,6 @@ export default function Home() {
                 </View>
               </View>
 
-              <Ionicons name="notifications-outline" size={22} color={THEME.text} />
             </View>
 
             {/* Search */}

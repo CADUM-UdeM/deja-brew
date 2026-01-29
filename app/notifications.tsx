@@ -66,7 +66,7 @@ export default function Notifications() {
 
       <View style={{ flex: 1, backgroundColor: THEME.bg }}>
         {/* Ton header custom, avec une flèche retour */}
-        <AppHeader rightIcon="chevron-back-outline" onRightPress={() => router.back()} />
+        <AppHeader rightIcon="close" onRightPress={() => router.back()} />
 
         <ScrollView
           style={{ flex: 1 }}
