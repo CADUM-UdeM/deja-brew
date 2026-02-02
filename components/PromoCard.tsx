@@ -31,7 +31,7 @@ export default function PromoCard({promo, enableCafeRoute} : PromoCardProps) {
         <Text style={styles.cardTag}>{promo.tag}</Text>
         {enableCafeRoute ? (
         <TouchableOpacity 
-          onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id}})}
+          onPress={()=> router.push({pathname: '/place', params: {id: promo.cafe_id, scrollTo: "promos"}})}
           style={{flexDirection: 'row', gap: 4, alignItems: 'center'}}>
           <Text style={styles.name}>by {getCafeName(promo.cafe_id)}</Text>
           <Ionicons 

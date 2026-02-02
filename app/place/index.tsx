@@ -2,7 +2,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -127,6 +127,28 @@ export default function PlaceScreen() {
     );
   }
 
+  // const et fonction pour scroll à la section promo
+  const {scrollTo} = useLocalSearchParams();
+  const scrollRef = useRef<ScrollView>(null);
+  const promoRef = useRef<Text>(null);
+
+  const scrollToPromo = () => {
+    promoRef.current?.measureLayout(
+      scrollRef.current as any, 
+      (x, y) => {
+        scrollRef.current?.scrollTo({y, animated: true});
+      }
+    )
+  }
+
+  useEffect(() => {
+    if (scrollTo === "promos") {
+      // délai de 300 ms pour donner du temps au layout d'être prêt
+      setTimeout(scrollToPromo, 300);
+    }
+  }, [scrollTo]);
+
+
   const heroImage = getPlaceImage(place.id);
 
   return (
@@ -137,6 +159,7 @@ export default function PlaceScreen() {
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
+        ref={scrollRef}
       >
         {/* HERO IMAGE + badge open study spot */}
         <View style={styles.heroWrapper}>
@@ -292,7 +315,7 @@ export default function PlaceScreen() {
         </View>
 
         {/* PROMOS EN COURS */}
-        <Text style={styles.sectionTitle}>Promos en cours</Text>
+        <Text style={styles.sectionTitle} ref={promoRef}>Promos en cours</Text>
         {promos.length === 0 ? (
           <Text>Aucune promotion en cours </Text>
         ) : (
