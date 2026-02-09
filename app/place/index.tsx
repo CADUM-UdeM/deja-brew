@@ -10,6 +10,9 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import MapView, { Marker } from 'react-native-maps';
 import { Image } from 'expo-image';
@@ -19,7 +22,10 @@ import { PLACES, CafePlace } from '../../data/places';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import AppHeader from '../../components/AppHeader';
 import { ALL_PLACES } from '../../data/places';
 import { fetchPlaceDetail, fetchPromos } from '../../data/api';
@@ -89,8 +95,11 @@ export default function PlaceScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const place = useMemo(() => PLACES.find((p) => p.id === id), [id]);
 =======
+=======
+>>>>>>> Stashed changes
   const [placeData, setPlaceData] = useState<CafePlace | undefined>(
     ALL_PLACES.find((p) => p.id === id)
   );
@@ -116,6 +125,9 @@ export default function PlaceScreen() {
       mounted = false;
     };
   }, [id]);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -136,8 +148,11 @@ export default function PlaceScreen() {
   }, [reviews]);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   if (!place) {
 =======
+=======
+>>>>>>> Stashed changes
   const handleToggleLike = () => {
     setLiked((prev) => !prev);
     setLikesCount((prev) => (liked ? Math.max(0, prev - 1) : prev + 1));
@@ -163,6 +178,9 @@ export default function PlaceScreen() {
   };
 
   if (!placeData) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     return (
       <View style={{ flex: 1, backgroundColor: THEME.bg }}>
@@ -239,6 +257,7 @@ export default function PlaceScreen() {
         </View>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         {/* HEADER TEXTE */}
         <View style={{ marginTop: 14 }}>
           <View style={styles.titleRow}>
@@ -261,6 +280,16 @@ export default function PlaceScreen() {
               <Text style={styles.placeAddress}>{place.address}</Text>
               <Text style={styles.hoursText}>Hours · {place.hours || 'Not listed'}</Text>
             </View>
+=======
+        {/* HERO INFO */}
+        <View style={styles.heroInfoCard}>
+          <View style={styles.heroTopRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.placeName}>{place.name}</Text>
+              <Text style={styles.placeAddress}>{place.address}</Text>
+              <Text style={styles.hoursText}>Hours · {place.hours || 'Not listed'}</Text>
+            </View>
+>>>>>>> Stashed changes
             <View style={styles.ratingBubble}>
               <Ionicons name="star" size={14} color="#F6B100" />
               <Text style={styles.ratingBubbleText}>{averageRating}</Text>
@@ -337,6 +366,9 @@ export default function PlaceScreen() {
                   <Text style={styles.bulletText}>{line}</Text>
                 </View>
               ))}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </View>
           </View>
@@ -361,6 +393,7 @@ export default function PlaceScreen() {
             ))}
           </View>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <View style={styles.quickInfoChip}>
             <Ionicons name="time-outline" size={16} color={THEME.accentDark} />
             <Text style={styles.quickInfoText}>Horaires :</Text>
@@ -379,6 +412,23 @@ export default function PlaceScreen() {
             <Text style={styles.bullet}>•</Text>
             <Text style={styles.bulletText}>{line}</Text>
 =======
+=======
+        </View>
+
+        {/* TAGS */}
+        <View style={styles.infoCard}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="pricetags-outline" size={16} color={THEME.accentDark} />
+            <Text style={styles.sectionTitle}>Tags</Text>
+          </View>
+          <View style={styles.tagsRow}>
+            {place.tags.map((tag) => (
+              <View key={tag} style={styles.tagChip}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            ))}
+          </View>
+>>>>>>> Stashed changes
         </View>
 
         {/* TAGS */}
@@ -536,9 +586,12 @@ export default function PlaceScreen() {
 
         {/* PROMOS EN COURS */}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <Text style={styles.sectionTitle}>Promos en cours</Text>
         <View style={styles.promoCard}>
 =======
+=======
+>>>>>>> Stashed changes
         <View style={styles.sectionHeader}>
           <Ionicons name="pricetag-outline" size={16} color={THEME.accentDark} />
           <Text style={styles.sectionTitle}>Promos en cours</Text>
@@ -619,7 +672,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     columnGap: 8,
+=======
+    gap: 10,
+    marginTop: 10,
+    flexWrap: 'wrap',
+>>>>>>> Stashed changes
 =======
     gap: 10,
     marginTop: 10,

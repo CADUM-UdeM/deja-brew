@@ -8,6 +8,9 @@ import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import { useRouter } from 'expo-router';
 import AppHeader from '@/components/AppHeader';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 const THEME = {
@@ -48,6 +51,7 @@ const PROMOS = [
 
 export default function PromosScreen() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
       <AppHeader rightIcon="pricetag-outline" />
@@ -58,6 +62,8 @@ export default function PromosScreen() {
         showsVerticalScrollIndicator={false}
       >
 =======
+=======
+>>>>>>> Stashed changes
   const router = useRouter();
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
@@ -67,6 +73,9 @@ export default function PromosScreen() {
       <AppHeader onRightPress={() => router.push('/notifications')} />
 
       <View style={{paddingTop: 12, paddingHorizontal: 20}}>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>

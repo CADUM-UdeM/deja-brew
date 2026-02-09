@@ -16,7 +16,13 @@ import { Image } from 'expo-image';
 
 import AppHeader from '../../components/AppHeader';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { PLACES, CafePlace } from '../../data/places';
+=======
+import { ALL_PLACES, CafePlace } from '../../data/places';
+import { SESSION_FEED, SessionFeedItem } from '../../data/sessions';
+import { fetchPlaces, fetchSessions } from '../../data/api';
+>>>>>>> Stashed changes
 =======
 import { ALL_PLACES, CafePlace } from '../../data/places';
 import { SESSION_FEED, SessionFeedItem } from '../../data/sessions';
@@ -156,9 +162,12 @@ export default function Home() {
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       {/* global brand header */}
       <AppHeader />
 =======
+=======
+>>>>>>> Stashed changes
       {/* App header */}
       <AppHeader onRightPress={() => router.push('/notifications')} />
 >>>>>>> Stashed changes
