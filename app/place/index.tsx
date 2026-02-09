@@ -11,6 +11,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -23,7 +26,10 @@ import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import AppHeader from '../../components/AppHeader';
@@ -96,8 +102,11 @@ export default function PlaceScreen() {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const place = useMemo(() => PLACES.find((p) => p.id === id), [id]);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   const [placeData, setPlaceData] = useState<CafePlace | undefined>(
@@ -126,6 +135,9 @@ export default function PlaceScreen() {
     };
   }, [id]);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -149,8 +161,11 @@ export default function PlaceScreen() {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   if (!place) {
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   const handleToggleLike = () => {
@@ -179,6 +194,9 @@ export default function PlaceScreen() {
 
   if (!placeData) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -258,6 +276,7 @@ export default function PlaceScreen() {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         {/* HEADER TEXTE */}
         <View style={{ marginTop: 14 }}>
           <View style={styles.titleRow}>
@@ -280,6 +299,16 @@ export default function PlaceScreen() {
               <Text style={styles.placeAddress}>{place.address}</Text>
               <Text style={styles.hoursText}>Hours · {place.hours || 'Not listed'}</Text>
             </View>
+=======
+        {/* HERO INFO */}
+        <View style={styles.heroInfoCard}>
+          <View style={styles.heroTopRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.placeName}>{place.name}</Text>
+              <Text style={styles.placeAddress}>{place.address}</Text>
+              <Text style={styles.hoursText}>Hours · {place.hours || 'Not listed'}</Text>
+            </View>
+>>>>>>> Stashed changes
 =======
         {/* HERO INFO */}
         <View style={styles.heroInfoCard}>
@@ -367,6 +396,9 @@ export default function PlaceScreen() {
                 </View>
               ))}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -394,6 +426,7 @@ export default function PlaceScreen() {
           </View>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <View style={styles.quickInfoChip}>
             <Ionicons name="time-outline" size={16} color={THEME.accentDark} />
             <Text style={styles.quickInfoText}>Horaires :</Text>
@@ -413,6 +446,23 @@ export default function PlaceScreen() {
             <Text style={styles.bulletText}>{line}</Text>
 =======
 =======
+=======
+        </View>
+
+        {/* TAGS */}
+        <View style={styles.infoCard}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="pricetags-outline" size={16} color={THEME.accentDark} />
+            <Text style={styles.sectionTitle}>Tags</Text>
+          </View>
+          <View style={styles.tagsRow}>
+            {place.tags.map((tag) => (
+              <View key={tag} style={styles.tagChip}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            ))}
+          </View>
+>>>>>>> Stashed changes
         </View>
 
         {/* TAGS */}
@@ -587,9 +637,12 @@ export default function PlaceScreen() {
         {/* PROMOS EN COURS */}
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <Text style={styles.sectionTitle}>Promos en cours</Text>
         <View style={styles.promoCard}>
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         <View style={styles.sectionHeader}>
@@ -673,7 +726,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     columnGap: 8,
+=======
+    gap: 10,
+    marginTop: 10,
+    flexWrap: 'wrap',
+>>>>>>> Stashed changes
 =======
     gap: 10,
     marginTop: 10,

@@ -9,6 +9,9 @@ import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import { useRouter } from 'expo-router';
 import AppHeader from '@/components/AppHeader';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -52,6 +55,7 @@ const PROMOS = [
 export default function PromosScreen() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
       <AppHeader rightIcon="pricetag-outline" />
@@ -64,6 +68,8 @@ export default function PromosScreen() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   const router = useRouter();
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
@@ -74,6 +80,9 @@ export default function PromosScreen() {
 
       <View style={{paddingTop: 12, paddingHorizontal: 20}}>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
