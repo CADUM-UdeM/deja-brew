@@ -1,5 +1,5 @@
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { X } from 'lucide-react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { Modal, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { ReviewCard } from './ReviewCard';
@@ -27,14 +27,14 @@ export function ReviewsModal({ visible, onClose, reviews }: ReviewsModalProps) {
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <View style={{ 
-        flex: 1, 
+      <View style={{
+        flex: 1,
         backgroundColor: isDark ? '#000' : '#fff'
       }}>
         {/* Header */}
-        <View style={{ 
-          flexDirection: 'row', 
-          alignItems: 'center', 
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: 16,
           paddingTop: Platform.OS === 'ios' ? 16 : 30,
@@ -42,27 +42,27 @@ export function ReviewsModal({ visible, onClose, reviews }: ReviewsModalProps) {
           borderBottomWidth: 1,
           borderBottomColor: isDark ? '#333' : '#ddd'
         }}>
-          <Text style={{ 
-            color: isDark ? 'white' : 'black', 
-            fontSize: 24, 
-            fontWeight: '700' 
+          <Text style={{
+            color: isDark ? 'white' : 'black',
+            fontSize: 24,
+            fontWeight: '700'
           }}>
             Tous les avis
           </Text>
-          <Pressable 
+          <Pressable
             onPress={onClose}
-            style={{ 
+            style={{
               padding: 8,
               borderRadius: 20,
               backgroundColor: isDark ? '#222' : '#f0f0f0'
             }}
           >
-            <X size={24} color={isDark ? 'white' : 'black'} />
+            <Ionicons name="close" size={24} color={isDark ? 'white' : 'black'} />
           </Pressable>
         </View>
 
         {/* Reviews list */}
-        <ScrollView 
+        <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: 16 }}
         >
