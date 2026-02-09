@@ -22,6 +22,7 @@ export type CafePlace = {
   priceLevel?: '$' | '$$' | '$$$';  // niveau de prix
   source?: 'curated' | 'osm';
 };
+
 export const PLACES: CafePlace[] = [
   {
     id: "savsav",
@@ -274,7 +275,6 @@ export const ALL_PLACES: CafePlace[] = [
   ...PLACES.map((p) => ({ ...p, source: 'curated' as const })),
   ...OSM_PLACES,
 ];
-
 // Fonction pour get cafe name par id
 export const getCafeName = (cafeId: string): string => {
   const cafe = ALL_PLACES.find((place) => place.id === cafeId);
