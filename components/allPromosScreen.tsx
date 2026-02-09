@@ -20,15 +20,15 @@ export default function AllPromosScreen() {
     };
   }, []);
 
-  return(
-    <ScrollView>
+  return (
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120, paddingTop: 12 }}
+      showsVerticalScrollIndicator={false}
+    >
       {promos.map((promo) => (
-        <PromoCard
-          key={promo.id}
-          promo={promo} 
-          enableCafeRoute={true}
-          />
-        ))}
+        <PromoCard key={promo.id} promo={promo} enableCafeRoute={true} />
+      ))}
     </ScrollView>
-  )
+  );
 }

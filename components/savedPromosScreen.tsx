@@ -5,24 +5,32 @@ import { THEME } from '@/data/THEME';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-
 // screen for the saved promos tab
 export default function SavedPromosScreen() {
   const { savedPromoIds } = useSavedPromos();
 
   // Filter only saved promos
-  const savedPromos = PROMOS.filter(promo => savedPromoIds.includes(promo.id));
+  const savedPromos = PROMOS.filter((promo) => savedPromoIds.includes(promo.id));
 
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg,}}>
-
+    <View style={{ flex: 1, backgroundColor: THEME.bg, paddingHorizontal: 20, paddingTop: 12 }}>
       {savedPromos.length === 0 ? (
-      <View style={{flex: 1, backgroundColor: THEME.bg, justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={styles.emptyText}>You have not saved any promos yet.</Text>
-      </View>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: THEME.bg,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={styles.emptyText}>You have not saved any promos yet.</Text>
+        </View>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {savedPromos.map(promo => (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 120 }}
+        >
+          {savedPromos.map((promo) => (
             <PromoCard key={promo.id} promo={promo} enableCafeRoute={true} />
           ))}
         </ScrollView>
@@ -41,5 +49,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 14,
     color: THEME.sub,
+    textAlign: 'center',
   },
 });
