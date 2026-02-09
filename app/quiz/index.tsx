@@ -1,268 +1,657 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Dimensions,
   Animated,
   Easing,
-  Dimensions,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import AppHeader from '../../components/AppHeader';
+import { THEME } from '../../data/THEME';
+import { CURRENT_USER_ID, USERS } from '../../data/users';
 
 const C = {
-  bg: '#FFF7F0',        // latte foam
-  card: '#FFFFFF',
-  text: '#1F1A17',
-  sub: '#6F6159',
-  accent: '#C27C4A',    // caramel
-  accentDark: '#7F3B00',// espresso
-  border: '#E8D9D1',
-  chip: '#F6E9E1',
+  bg: THEME.bg,
+  card: THEME.card,
+  text: THEME.text,
+  sub: THEME.sub,
+  accent: '#C27C4A',
+  accentDark: THEME.accentDark,
+  border: THEME.border,
+  chip: '#F3E7E0',
+  glow: '#FFEDE3',
 };
 
-type Q = { id: string; title: string; options: string[]; icon?: keyof typeof Ionicons.glyphMap };
+type Q = {
+  id: string;
+  title: string;
+  subtitle: string;
+  options: string[];
+  icon?: keyof typeof Ionicons.glyphMap;
+};
+
 const QUESTIONS: Q[] = [
-  { id:'noise',   title:'What noise level suits you today?', options:['Pin-drop quiet','Soft chatter','Lively café'], icon: 'volume-low' },
-  { id:'session', title:'How long do you want to study?',   options:['Quick sprint (30–45m)','Medium (1–2h)','Long (3h+)'], icon: 'timer-outline' },
-  { id:'vibe',    title:'Pick a vibe',                       options:['Warm & cozy','Bright & modern','Green & airy'],   icon: 'leaf-outline' },
+  {
+    id: 'noise',
+    title: 'Noise level',
+    subtitle: 'How quiet do you need it today?',
+    options: ['Pin-drop quiet', 'Soft chatter', 'Lively café'],
+    icon: 'volume-low',
+  },
+  {
+    id: 'time',
+    title: 'Time of day',
+    subtitle: 'When are you studying?',
+    options: ['Morning', 'Afternoon', 'Evening', 'Late night'],
+    icon: 'time-outline',
+  },
+  {
+    id: 'duration',
+    title: 'Duration',
+    subtitle: 'How long is your session?',
+    options: ['Quick sprint (30–45m)', 'Medium (1–2h)', 'Long (3h+)'],
+    icon: 'timer-outline',
+  },
+  {
+    id: 'group',
+    title: 'Group size',
+    subtitle: 'Solo or squad?',
+    options: ['Solo', 'Duo', 'Small group (3–4)', 'Big group (5+)'],
+    icon: 'people-outline',
+  },
+  {
+    id: 'vibe',
+    title: 'Vibe',
+    subtitle: 'Pick an atmosphere',
+    options: ['Warm & cozy', 'Bright & modern', 'Industrial', 'Green & airy'],
+    icon: 'leaf-outline',
+  },
+  {
+    id: 'food',
+    title: 'Food priorities',
+    subtitle: 'Snacks or full menu?',
+    options: ['Coffee only', 'Pastries', 'Brunch', 'Full menu'],
+    icon: 'restaurant-outline',
+  },
+  {
+    id: 'budget',
+    title: 'Budget',
+    subtitle: 'Pick your price comfort',
+    options: ['$', '$$', '$$$'],
+    icon: 'cash-outline',
+  },
+  {
+    id: 'mustHave',
+    title: 'Must-haves',
+    subtitle: 'One essential detail',
+    options: ['Wi‑Fi', 'Outlets', 'Quiet corners', 'Big tables'],
+    icon: 'options-outline',
+  },
 ];
 
 const { width } = Dimensions.get('window');
 
+const mapNoisePref = (noise?: string) => {
+  if (!noise) return undefined;
+  if (noise === 'quiet') return 'Pin-drop quiet';
+  if (noise === 'medium') return 'Soft chatter';
+  if (noise === 'lively') return 'Lively café';
+  return undefined;
+};
+
 export default function QuizScreen() {
   const router = useRouter();
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string,string>>({});
+  const currentUser = USERS.find((u) => u._id === CURRENT_USER_ID);
+  const presetMust = [
+    currentUser?.preferences.wifi ? 'Wi‑Fi' : null,
+    currentUser?.preferences.outlets ? 'Outlets' : null,
+  ].filter(Boolean) as string[];
 
-  const complete = step >= QUESTIONS.length;
-  const result = useMemo(() => {
+  const [answers, setAnswers] = useState<Record<string, string | string[]>>({
+    noise: mapNoisePref(currentUser?.preferences.noise) ?? '',
+    mustHave: presetMust,
+  });
+
+  const total = QUESTIONS.length;
+  const current = QUESTIONS[Math.min(step, total - 1)];
+  const progress = Math.round((step / total) * 100);
+  const complete = step >= total;
+
+  const resultLabel = useMemo(() => {
     if (!complete) return '';
     const a = answers;
-    if (a.noise === 'Pin-drop quiet') return 'Library nook nearby';
-    if (a.vibe === 'Warm & cozy')     return 'Cozy café booth';
-    if (a.session === 'Long (3h+)')   return 'Spacious café with outlets';
-    return 'Any chill coffee shop around you';
+    if (a.noise === 'Pin-drop quiet') return 'Silent-focus corner';
+    if (a.vibe === 'Warm & cozy') return 'Cozy booth vibes';
+    if (a.duration === 'Long (3h+)') return 'All‑day friendly cafe';
+    return 'Balanced study spot';
   }, [answers, complete]);
 
-  // ---------- tiny animations (steam + bean wobble) ----------
-  const steam1 = useRef(new Animated.Value(0)).current;
-  const steam2 = useRef(new Animated.Value(0)).current;
-  const beanY  = useRef(new Animated.Value(0)).current;
-  const beanR  = useRef(new Animated.Value(0)).current;
+  const onSelect = (opt: string) => {
+    if (current.id === 'mustHave') {
+      setAnswers((prev) => {
+        const existing = Array.isArray(prev.mustHave) ? prev.mustHave : [];
+        const active = existing.includes(opt);
+        const next = active ? existing.filter((item) => item !== opt) : [...existing, opt];
+        return { ...prev, mustHave: next };
+      });
+      return;
+    }
+    setAnswers((prev) => ({ ...prev, [current.id]: opt }));
+  };
+
+  const isAnswered = (id: string) => {
+    const value = answers[id];
+    if (id === 'mustHave') return Array.isArray(value) && value.length > 0;
+    return typeof value === 'string' && value.length > 0;
+  };
+
+  const onNext = () => setStep((prev) => Math.min(prev + 1, total));
+  const onPrev = () => setStep((prev) => Math.max(prev - 1, 0));
+
+  const cardAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const loopSteam = () => {
-      Animated.parallel([
-        Animated.timing(steam1, { toValue: 1, duration: 1600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-        Animated.timing(steam2, { toValue: 1, duration: 1200, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-      ]).start(() => { steam1.setValue(0); steam2.setValue(0); loopSteam(); });
-    };
-    const loopBean = () => {
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(beanY, { toValue: -6, duration: 600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-          Animated.timing(beanY, { toValue: 0,  duration: 600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-        ]),
-        Animated.sequence([
-          Animated.timing(beanR, { toValue: 1, duration: 600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-          Animated.timing(beanR, { toValue: 0, duration: 600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-        ]),
-      ]).start(() => loopBean());
-    };
-    loopSteam();
-    loopBean();
-  }, [steam1, steam2, beanY, beanR]);
+    cardAnim.setValue(0);
+    Animated.timing(cardAnim, {
+      toValue: 1,
+      duration: 380,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }, [step, cardAnim]);
 
-  const steamStyle1 = {
-    opacity: steam1.interpolate({ inputRange: [0,1], outputRange: [0.0, 0.9] }),
+  const cardStyle = {
+    opacity: cardAnim,
     transform: [
-      { translateY: steam1.interpolate({ inputRange: [0,1], outputRange: [0, -12] }) },
-      { translateX: steam1.interpolate({ inputRange: [0,1], outputRange: [0,  4]  }) },
+      {
+        translateY: cardAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [16, 0],
+        }),
+      },
     ],
   };
-  const steamStyle2 = {
-    opacity: steam2.interpolate({ inputRange: [0,1], outputRange: [0.0, 0.9] }),
-    transform: [
-      { translateY: steam2.interpolate({ inputRange: [0,1], outputRange: [0, -10] }) },
-      { translateX: steam2.interpolate({ inputRange: [0,1], outputRange: [0, -4]  }) },
-    ],
-  };
-  const beanRotate = beanR.interpolate({ inputRange: [0,1], outputRange: ['-8deg','8deg'] });
 
-  // ---------- helpers ----------
-  const onSelect = (opt: string) => {
-    const q = QUESTIONS[step];
-    setAnswers(prev => ({ ...prev, [q.id]: opt }));
-  };
-
-  const onNext = () => setStep(prev => Math.min(prev + 1, QUESTIONS.length));
-  const onPrev = () => setStep(prev => Math.max(prev - 1, 0));
-
-  // ---------- UI ----------
   return (
-    <ScrollView style={{ flex:1, backgroundColor: C.bg }}
-      contentContainerStyle={{ padding: 16, paddingBottom: 120 }}>
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      <AppHeader
+        leftIcon="chevron-back"
+        onLeftPress={() => router.back()}
+        rightIcon={null}
+        showLogo={false}
+        title="Study Match"
+        subtitle="Curate your perfect cafe"
+      />
 
-      {/* Header with cup + steam + bean */}
-      <View style={styles.heroHeader}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Ambient blobs */}
+        <View style={styles.blobTop} />
+        <View style={styles.blobBottom} />
+
         <View style={styles.heroRow}>
-          <View style={styles.cup}>
-            <Ionicons name="cafe" size={30} color={C.accentDark} />
-            <Animated.View style={[styles.steamDot, steamStyle1]} />
-            <Animated.View style={[styles.steamDot, steamStyle2]} />
+          <View style={styles.heroBadge}>
+            <Ionicons name="cafe-outline" size={18} color={C.accentDark} />
           </View>
-
-          <Animated.View style={{ transform: [{ translateY: beanY }, { rotate: beanRotate }] }}>
-            <View style={styles.beanBadge}>
-              <Ionicons name="cafe" size={16} color="#fff" />
-            </View>
-          </Animated.View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.heroTitle}>Find your study vibe</Text>
+            <Text style={styles.heroSub}>Answer a few taps, we’ll curate the best spots.</Text>
+          </View>
+          <View style={styles.stepPill}>
+            <Text style={styles.stepText}>{Math.min(step + 1, total)}/{total}</Text>
+          </View>
         </View>
 
-        <Text style={styles.title}>Find your study vibe</Text>
-        <Text style={styles.subtitle}>Tiny coffee quiz to match your mood <Text>☕️</Text></Text>
-      </View>
+        {/* Progress bar */}
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${progress}%` }]} />
+        </View>
 
-      {/* Progress beans */}
-      <View style={styles.progressRow}>
-        {QUESTIONS.map((_, i) => {
-          const active = i <= step - 1 || (i === step && !complete);
-          const done   = i < step;
-        return (
-          <View key={i} style={[styles.progressBean, active && { backgroundColor: C.accent }, done && { backgroundColor: C.accentDark }]} />
-        );})}
-      </View>
-
-      {/* Card – show current question OR result */}
-      {!complete ? (
-        <View style={styles.card}>
-          <View style={styles.qHeader}>
-            <View style={styles.qIcon}>
-              <Ionicons name={(QUESTIONS[step].icon ?? 'help-circle-outline') as any} size={18} color={C.accentDark} />
+        {/* Question card */}
+        {!complete ? (
+          <Animated.View style={[styles.card, cardStyle]}>
+            <View style={styles.cardHeader}>
+              <View style={styles.iconBubble}>
+                <Ionicons name={current.icon ?? 'help-circle-outline'} size={18} color={C.accentDark} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.qTitle}>{current.title}</Text>
+                <Text style={styles.qSubtitle}>{current.subtitle}</Text>
+              </View>
             </View>
-            <Text style={styles.qTitle}>{QUESTIONS[step].title}</Text>
-          </View>
 
-          <View style={{ gap: 10, marginTop: 6 }}>
-            {QUESTIONS[step].options.map(opt => {
-              const active = answers[QUESTIONS[step].id] === opt;
-              return (
-                <TouchableOpacity
-                  key={opt}
-                  onPress={() => onSelect(opt)}
-                  activeOpacity={0.9}
-                  style={[styles.opt, active && styles.optActive]}>
-                  <View style={styles.optIcon}>
-                    <Ionicons name="cafe-outline" size={16} color={active ? '#fff' : C.accentDark} />
-                  </View>
-                  <Text style={[styles.optLabel, active && { color:'#fff' }]}>{opt}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+            <View style={styles.optionGrid}>
+              {current.options.map((opt) => {
+                const active =
+                  current.id === 'mustHave'
+                    ? Array.isArray(answers.mustHave) && answers.mustHave.includes(opt)
+                    : answers[current.id] === opt;
+                return (
+                  <TouchableOpacity
+                    key={opt}
+                    onPress={() => onSelect(opt)}
+                    activeOpacity={0.9}
+                    style={[styles.option, active && styles.optionActive]}
+                  >
+                    <Text style={[styles.optionText, active && styles.optionTextActive]}>
+                      {opt}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
 
-          <View style={styles.navRow}>
-            <TouchableOpacity disabled={step===0} onPress={onPrev} style={[styles.secondaryBtn, step===0 && { opacity: .5 }]}>
-              <Ionicons name="chevron-back" size={18} color={C.text} />
-              <Text style={styles.secondaryText}>Back</Text>
-            </TouchableOpacity>
+            <View style={styles.navRow}>
+              <TouchableOpacity
+                disabled={step === 0}
+                onPress={onPrev}
+                style={[styles.secondaryBtn, step === 0 && { opacity: 0.5 }]}
+              >
+                <Ionicons name="chevron-back" size={18} color={C.text} />
+                <Text style={styles.secondaryText}>Back</Text>
+              </TouchableOpacity>
 
             <TouchableOpacity
               onPress={onNext}
-              disabled={!answers[QUESTIONS[step].id]}
-              style={[
-                styles.primaryBtn,
-                !answers[QUESTIONS[step].id] && { opacity: .5 }
-              ]}>
-              <Text style={styles.primaryText}>{step === QUESTIONS.length - 1 ? 'See my match' : 'Next'}</Text>
+              disabled={!isAnswered(current.id)}
+              style={[styles.primaryBtn, !isAnswered(current.id) && { opacity: 0.5 }]}
+            >
+              <Text style={styles.primaryText}>{step === total - 1 ? 'See matches' : 'Next'}</Text>
               <Ionicons name="chevron-forward" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
-        </View>
-      ) : (
-        <View style={styles.resultCard}>
-          <View style={styles.resultIcon}>
-            <Ionicons name="cafe" size={22} color="#fff" />
-          </View>
-          <Text style={styles.resultTitle}>Your vibe</Text>
-          <Text style={styles.resultText}>{result}</Text>
+          </Animated.View>
+        ) : (
+          <View style={styles.resultCard}>
+            <View style={styles.resultIcon}>
+              <Ionicons name="sparkles" size={22} color="#fff" />
+            </View>
+            <Text style={styles.resultTitle}>Your match type</Text>
+            <Text style={styles.resultText}>{resultLabel}</Text>
 
-          <View style={styles.resultActions}>
-            <TouchableOpacity style={styles.secondaryBtn} onPress={() => router.replace('/(tabs)/map')}>
-              <Ionicons name="map" size={18} color={C.text} />
-              <Text style={styles.secondaryText}>Open map</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.primaryBtn} onPress={() => router.push('/session/new')}>
-              <Text style={styles.primaryText}>Start a session</Text>
-              <Ionicons name="people" size={18} color="#fff" />
+            <View style={styles.topMatches}>
+              <Text style={styles.topMatchesTitle}>Top cafe picks</Text>
+              <Text style={styles.topMatchesSub}>We’ll show the full list next.</Text>
+              <View style={styles.topMatchList}>
+                {[
+                  { name: 'Savsav', id: 'savsav' },
+                  { name: 'Accio Cup', id: 'accio' },
+                  { name: 'Café Constance', id: 'constance' },
+                ].map((place) => (
+                  <TouchableOpacity
+                    key={place.id}
+                    style={styles.topMatchChip}
+                    onPress={() =>
+                      router.push({ pathname: '/place', params: { id: place.id } })
+                    }
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.topMatchText}>{place.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.resultActions}>
+              <TouchableOpacity
+                style={styles.secondaryBtn}
+                onPress={() =>
+                  router.push({
+                    pathname: '/quiz/results',
+                    params: {
+                      noise: (answers.noise as string) ?? '',
+                      time: (answers.time as string) ?? '',
+                      duration: (answers.duration as string) ?? '',
+                      group: (answers.group as string) ?? '',
+                      vibe: (answers.vibe as string) ?? '',
+                      food: (answers.food as string) ?? '',
+                      budget: (answers.budget as string) ?? '',
+                      mustHave: Array.isArray(answers.mustHave)
+                        ? answers.mustHave.join(',')
+                        : (answers.mustHave as string) ?? '',
+                    },
+                  })
+                }
+              >
+                <Ionicons name="map" size={18} color={C.text} />
+                <Text style={styles.secondaryText}>View cafe list</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.primaryBtn} onPress={() => router.push('/session/new')}>
+                <Text style={styles.primaryText}>Start a session</Text>
+                <Ionicons name="people" size={18} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity onPress={() => { setStep(0); setAnswers({}); }} style={styles.resetLink}>
+              <Text style={styles.resetText}>Retake quiz</Text>
             </TouchableOpacity>
           </View>
+        )}
 
-          <TouchableOpacity onPress={() => { setStep(0); setAnswers({}); }} style={styles.resetLink}>
-            <Text style={{ color: C.accentDark, fontWeight: '700' }}>Retake quiz</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </ScrollView>
+        {/* Live summary */}
+        {!complete && (
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryTitle}>Your current picks</Text>
+            <View style={styles.summaryRow}>
+              {Object.entries(answers).flatMap(([key, value]) => {
+                if (Array.isArray(value)) {
+                  return value.map((item) => (
+                    <View key={`${key}-${item}`} style={styles.summaryChip}>
+                      <Text style={styles.summaryText}>{item}</Text>
+                    </View>
+                  ));
+                }
+                if (!value) return [];
+                return (
+                  <View key={key} style={styles.summaryChip}>
+                    <Text style={styles.summaryText}>{value}</Text>
+                  </View>
+                );
+              })}
+              {Object.keys(answers).length === 0 && (
+                <Text style={styles.summaryEmpty}>Pick options to build your vibe.</Text>
+              )}
+            </View>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
-// ---------- Styles ----------
 const styles = StyleSheet.create({
-  heroHeader: { marginTop: 6, marginBottom: 8 },
-  heroRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
-  cup: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#FFEDE3', alignItems: 'center', justifyContent: 'center' },
-  steamDot: { position: 'absolute', width: 6, height: 6, borderRadius: 3, backgroundColor: '#E3B79D', top: 6 },
-  beanBadge: { width: 28, height: 28, borderRadius: 14, backgroundColor: C.accentDark, alignItems:'center', justifyContent:'center' },
-
-  title: { fontSize: 28, fontWeight: '900', color: C.text, letterSpacing: .2 },
-  subtitle: { color: C.sub, marginTop: 2 },
-
-  progressRow: { flexDirection: 'row', gap: 6, marginTop: 4, marginBottom: 10 },
-  progressBean: { width: 14, height: 10, borderRadius: 8, backgroundColor: C.chip },
-
+  blobTop: {
+    position: 'absolute',
+    top: -40,
+    right: -40,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: '#FFEDE3',
+    opacity: 0.8,
+  },
+  blobBottom: {
+    position: 'absolute',
+    bottom: 140,
+    left: -40,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: '#F9E2D6',
+    opacity: 0.6,
+  },
+  heroRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  heroBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: C.glow,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: C.text,
+  },
+  heroSub: {
+    fontSize: 12,
+    color: C.sub,
+    marginTop: 2,
+  },
+  stepPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: C.border,
+    backgroundColor: '#fff',
+  },
+  stepText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: C.accentDark,
+  },
+  progressTrack: {
+    marginTop: 12,
+    height: 8,
+    borderRadius: 999,
+    backgroundColor: '#F1E5DE',
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: C.accentDark,
+    borderRadius: 999,
+  },
   card: {
-    backgroundColor: C.card, borderWidth: 1, borderColor: C.border,
-    borderRadius: 18, padding: 16,
-    shadowColor: '#7F3B00', shadowOpacity: 0.06, shadowRadius: 12, shadowOffset: { width: 0, height: 6 },
+    marginTop: 16,
+    backgroundColor: C.card,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: C.border,
+    padding: 16,
+    shadowColor: '#7F3B00',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
   },
-
-  qHeader: { flexDirection:'row', alignItems:'center', gap:10 },
-  qIcon: { width:28, height:28, borderRadius:14, backgroundColor:'#FFEDE3', alignItems:'center', justifyContent:'center' },
-  qTitle: { color: C.text, fontWeight:'800', flexShrink: 1 },
-
-  opt: {
-    height: 50, borderRadius: 14, borderWidth: 1, borderColor: C.border,
-    backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center',
-    gap: 10, paddingHorizontal: 12,
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
-  optActive: { backgroundColor: C.accentDark, borderColor: C.accentDark },
-  optLabel: { color: C.text, fontWeight: '700' },
-  optIcon: { width: 26, height: 26, borderRadius: 13, backgroundColor: '#FFEDE3', alignItems:'center', justifyContent:'center' },
-
-  navRow: { flexDirection:'row', alignItems:'center', justifyContent:'space-between', marginTop: 14 },
+  iconBubble: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFEDE3',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  qTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: C.text,
+  },
+  qSubtitle: {
+    fontSize: 12,
+    color: C.sub,
+    marginTop: 2,
+  },
+  optionGrid: {
+    marginTop: 14,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  option: {
+    width: width > 500 ? '48%' : '100%',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: C.border,
+    backgroundColor: '#fff',
+  },
+  optionActive: {
+    backgroundColor: C.accentDark,
+    borderColor: C.accentDark,
+  },
+  optionText: {
+    color: C.text,
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  optionTextActive: {
+    color: '#fff',
+  },
+  navRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   secondaryBtn: {
-    height: 48, borderRadius: 14, borderWidth: 1, borderColor: C.border,
-    paddingHorizontal: 14, backgroundColor: '#fff', flexDirection:'row', alignItems:'center', gap:8,
+    height: 46,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: C.border,
+    paddingHorizontal: 14,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
-  secondaryText: { color: C.text, fontWeight:'700' },
+  secondaryText: {
+    color: C.text,
+    fontWeight: '700',
+  },
   primaryBtn: {
-    height: 48, borderRadius: 14, backgroundColor: C.accentDark,
-    paddingHorizontal: 16, flexDirection:'row', alignItems:'center', gap:8,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: C.accentDark,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
-  primaryText: { color:'#fff', fontWeight:'800' },
-
+  primaryText: {
+    color: '#fff',
+    fontWeight: '800',
+  },
   resultCard: {
-    backgroundColor: C.card, borderWidth: 1, borderColor: C.border,
-    borderRadius: 18, padding: 18, alignItems:'flex-start',
+    marginTop: 16,
+    backgroundColor: C.card,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: C.border,
+    padding: 18,
+    shadowColor: '#7F3B00',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
   },
-  resultIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: C.accentDark, alignItems:'center', justifyContent:'center', marginBottom: 8 },
-  resultTitle: { color: C.text, fontWeight: '900', fontSize: 18 },
-  resultText: { color: C.sub, fontWeight: '700', marginTop: 4 },
-
-  resultActions: { flexDirection:'row', alignItems:'center', gap:10, marginTop: 16 },
-  resetLink: { marginTop: 10 },
+  resultIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: C.accentDark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  resultTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: C.text,
+  },
+  resultText: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: C.accentDark,
+    marginTop: 4,
+  },
+  resultActions: {
+    marginTop: 14,
+    flexDirection: 'row',
+    gap: 10,
+    flexWrap: 'wrap',
+  },
+  topMatches: {
+    marginTop: 14,
+    padding: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: C.border,
+    backgroundColor: '#fff',
+  },
+  topMatchesTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: C.text,
+  },
+  topMatchesSub: {
+    fontSize: 11,
+    color: C.sub,
+    marginTop: 2,
+  },
+  topMatchList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 8,
+  },
+  topMatchChip: {
+    backgroundColor: C.chip,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: C.border,
+  },
+  topMatchText: {
+    fontSize: 11,
+    color: C.accentDark,
+    fontWeight: '600',
+  },
+  resetLink: {
+    marginTop: 12,
+    alignSelf: 'flex-start',
+  },
+  resetText: {
+    color: C.accentDark,
+    fontWeight: '700',
+  },
+  summaryCard: {
+    marginTop: 14,
+    padding: 14,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: C.border,
+    backgroundColor: '#fff',
+  },
+  summaryTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: C.sub,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 8,
+  },
+  summaryChip: {
+    backgroundColor: C.chip,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: C.border,
+  },
+  summaryText: {
+    fontSize: 11,
+    color: C.accentDark,
+    fontWeight: '600',
+  },
+  summaryEmpty: {
+    fontSize: 12,
+    color: C.sub,
+  },
 });

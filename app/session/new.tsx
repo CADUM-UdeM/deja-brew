@@ -9,11 +9,15 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import AppHeader from '../../components/AppHeader';
+import { createSession } from '../../data/api';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -27,8 +31,18 @@ const THEME = {
 };
 
 const COURSE_SUGGESTIONS = ['IFT3355', 'IFT2015', 'Linear Algebra', 'Exam cram'] as const;
-const VIBE_OPTIONS = ['Deep focus', 'Chill & chat', 'Project work', 'Revision'] as const;
-const TIME_OPTIONS = ['This afternoon', 'Tonight', 'Weekend', 'Flexible'] as const;
+const VIBE_OPTIONS = [
+  'Deep focus',
+  'Chill & chat',
+  'Project work',
+  'Revision',
+  'Silent sprint',
+  'Cozy & calm',
+] as const;
+const TIME_OPTIONS = ['This afternoon', 'Tonight', 'Weekend', 'Morning', 'Late night', 'Flexible'] as const;
+const DURATION_OPTIONS = ['30–45 min', '1–2h', '3h+', 'All day'] as const;
+const GROUP_OPTIONS = ['Solo', 'Duo', 'Small group', 'Big group'] as const;
+const MATERIALS = ['Laptop', 'Textbook', 'Headphones', 'Whiteboard', 'Chargers'] as const;
 
 // Hide default header
 export const options = {
@@ -37,29 +51,150 @@ export const options = {
 
 export default function NewStudySession() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ course?: string; location?: string }>();
+  const params = useLocalSearchParams<{
+    title?: string;
+    course?: string;
+    vibe?: string;
+    timeSlot?: string;
+    duration?: string;
+    groupSize?: string;
+    location?: string;
+    placeId?: string;
+    maxPeople?: string;
+    notes?: string;
+    materials?: string;
+    isPublic?: string;
+    date?: string;
+  }>();
 
   const [title, setTitle] = useState('Study date');
-  const [course, setCourse] = useState(
-    typeof params.course === 'string' && params.course.length > 0
-      ? params.course
-      : ''
-  );
+  const [course, setCourse] = useState('');
   const [vibe, setVibe] = useState<string | null>(null);
   const [timeSlot, setTimeSlot] = useState<string | null>('Tonight');
+  const [duration, setDuration] = useState<string | null>('1–2h');
+  const [groupSize, setGroupSize] = useState<string | null>('Duo');
   const [location, setLocation] = useState('');
+  const [placeId, setPlaceId] = useState<string | null>(null);
   const [maxPeople, setMaxPeople] = useState('3');
   const [notes, setNotes] = useState('');
+  const [materials, setMaterials] = useState<string[]>(['Laptop', 'Chargers']);
   const [isPublic, setIsPublic] = useState(true);
+  const [date, setDate] = useState<Date>(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
+  const getParam = (value?: string | string[]) =>
+    Array.isArray(value) ? value[0] : value;
+
+  const parseParam = (value?: string | string[]) => {
+    const raw = getParam(value);
+    if (raw == null) return undefined;
+    try {
+      return JSON.parse(decodeURIComponent(raw));
+    } catch {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        try {
+          return decodeURIComponent(raw);
+        } catch {
+          return raw;
+        }
+      }
+    }
+  };
+
+  const toBoolean = (value: unknown) => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value !== 'string') return undefined;
+    const normalized = value.trim().toLowerCase();
+    if (['true', '1', 'yes'].includes(normalized)) return true;
+    if (['false', '0', 'no'].includes(normalized)) return false;
+    return undefined;
+  };
+
+  const formatDate = (value: Date) =>
+    value.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    });
+
+  const formatTime = (value: Date) =>
+    value.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+
+  useEffect(() => {
+    if (initialized) return;
+    const nextTitle = parseParam(params.title);
+    if (typeof nextTitle === 'string' && nextTitle.length > 0) setTitle(nextTitle);
+
+    const nextCourse = parseParam(params.course);
+    if (typeof nextCourse === 'string') setCourse(nextCourse);
+
+    const nextVibe = parseParam(params.vibe);
+    if (typeof nextVibe === 'string') setVibe(nextVibe);
+
+    const nextTimeSlot = parseParam(params.timeSlot);
+    if (typeof nextTimeSlot === 'string') setTimeSlot(nextTimeSlot);
+
+    const nextDuration = parseParam(params.duration);
+    if (typeof nextDuration === 'string') setDuration(nextDuration);
+
+    const nextGroupSize = parseParam(params.groupSize);
+    if (typeof nextGroupSize === 'string') setGroupSize(nextGroupSize);
+
+    const nextLocation = parseParam(params.location);
+    if (typeof nextLocation === 'string' && nextLocation.length > 0) {
+      setLocation(nextLocation);
+    }
+
+    const nextPlaceId = parseParam(params.placeId);
+    if (typeof nextPlaceId === 'string' && nextPlaceId.length > 0) {
+      setPlaceId(nextPlaceId);
+    }
+
+    const nextMaxPeople = parseParam(params.maxPeople);
+    if (typeof nextMaxPeople === 'string') setMaxPeople(nextMaxPeople);
+
+    const nextNotes = parseParam(params.notes);
+    if (typeof nextNotes === 'string') setNotes(nextNotes);
+
+    const nextMaterials = parseParam(params.materials);
+    if (Array.isArray(nextMaterials)) {
+      setMaterials(nextMaterials.filter((item) => typeof item === 'string'));
+    }
+
+    const nextIsPublic = parseParam(params.isPublic);
+    const nextIsPublicBool = toBoolean(nextIsPublic);
+    if (typeof nextIsPublicBool === 'boolean') setIsPublic(nextIsPublicBool);
+
+    const nextDate = parseParam(params.date);
+    if (typeof nextDate === 'string') {
+      const parsed = new Date(nextDate);
+      if (!Number.isNaN(parsed.getTime())) setDate(parsed);
+    }
+
+    setInitialized(true);
+  }, [initialized, params]);
 
   // met à jour le champ "Café / location" quand on revient de la map
   useEffect(() => {
-    if (typeof params.location === 'string' && params.location.length > 0) {
-      setLocation(params.location);
+    const nextLocation = parseParam(params.location);
+    if (typeof nextLocation === 'string' && nextLocation.length > 0) {
+      setLocation(nextLocation);
     }
-  }, [params.location]);
+    const nextPlaceId = parseParam(params.placeId);
+    if (typeof nextPlaceId === 'string' && nextPlaceId.length > 0) {
+      setPlaceId(nextPlaceId);
+    }
+  }, [params.location, params.placeId]);
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!course.trim() || !location.trim()) {
       Alert.alert(
         'Almost there ✨',
@@ -68,16 +203,47 @@ export default function NewStudySession() {
       return;
     }
 
-    Alert.alert(
-      'Study date created ☕️',
-      `We saved your study date for ${course} at ${location}.`,
-      [
-        {
-          text: 'Nice!',
-          onPress: () => router.back(),
-        },
-      ]
-    );
+    setSaving(true);
+    try {
+      const maxPeopleValue = Number.parseInt(maxPeople, 10);
+      await createSession({
+        title: title.trim() || 'Study date',
+        course: course.trim(),
+        vibe,
+        timeSlot,
+        duration,
+        groupSize,
+        placeId: placeId ?? undefined,
+        locationLabel: location.trim(),
+        location: location.trim(),
+        maxPeople: Number.isNaN(maxPeopleValue) ? 2 : maxPeopleValue,
+        notes: notes.trim(),
+        materials,
+        isPublic,
+        public: isPublic,
+        scheduledFor: date.toISOString(),
+        date: date.toISOString(),
+      });
+      Alert.alert(
+        'Study date created ☕️',
+        `We saved your study date for ${course} at ${location}.`,
+        [
+          {
+            text: 'Nice!',
+            onPress: () => router.replace('/sessions'),
+          },
+        ]
+      );
+    } catch (err: any) {
+      Alert.alert('Create failed', err?.message || 'Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const serializeParam = (value: unknown) => {
+    if (value === undefined) return undefined;
+    return encodeURIComponent(JSON.stringify(value));
   };
 
   const goToMap = () => {
@@ -85,28 +251,39 @@ export default function NewStudySession() {
       pathname: '/map', // le segment (tabs) ne fait pas partie de l'URL
       params: {
         selectMode: 'place',
+        title: serializeParam(title),
+        course: serializeParam(course),
+        vibe: serializeParam(vibe),
+        timeSlot: serializeParam(timeSlot),
+        duration: serializeParam(duration),
+        groupSize: serializeParam(groupSize),
+        location: serializeParam(location),
+        placeId: serializeParam(placeId),
+        maxPeople: serializeParam(maxPeople),
+        notes: serializeParam(notes),
+        materials: serializeParam(materials),
+        isPublic: serializeParam(isPublic),
+        date: serializeParam(date.toISOString()),
       },
     });
   };
 
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
-      <AppHeader />
+      <AppHeader
+        leftIcon="chevron-back"
+        onLeftPress={() => router.back()}
+        rightIcon={null}
+        showLogo={false}
+        title="Create a study date"
+        subtitle="Tell others where to meet you"
+      />
 
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Title + back */}
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="chevron-back" size={20} color={THEME.text} />
-          </TouchableOpacity>
-          <Text style={styles.screenTitle}>Create a study date</Text>
-          <View style={{ width: 32 }} />{/* spacer */}
-        </View>
-
         {/* Main card */}
         <View style={styles.card}>
           {/* Title */}
@@ -169,6 +346,50 @@ export default function NewStudySession() {
 
           {/* When */}
           <Text style={[styles.label, { marginTop: 18 }]}>When</Text>
+          <View style={styles.pickerRow}>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Ionicons name="calendar-outline" size={16} color={THEME.accentDark} />
+              <Text style={styles.pickerText}>{formatDate(date)}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={() => setShowTimePicker(true)}
+            >
+              <Ionicons name="time-outline" size={16} color={THEME.accentDark} />
+              <Text style={styles.pickerText}>{formatTime(date)}</Text>
+            </TouchableOpacity>
+          </View>
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'inline' : 'default'}
+              onChange={(_, selected) => {
+                setShowDatePicker(Platform.OS === 'ios');
+                if (selected) setDate(selected);
+              }}
+              minimumDate={new Date()}
+            />
+          )}
+          {showTimePicker && (
+            <DateTimePicker
+              value={date}
+              mode="time"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={(_, selected) => {
+                setShowTimePicker(Platform.OS === 'ios');
+                if (selected) {
+                  const next = new Date(date);
+                  next.setHours(selected.getHours());
+                  next.setMinutes(selected.getMinutes());
+                  setDate(next);
+                }
+              }}
+            />
+          )}
           <View style={styles.chipRow}>
             {TIME_OPTIONS.map((t) => {
               const active = t === timeSlot;
@@ -188,6 +409,60 @@ export default function NewStudySession() {
                     ]}
                   >
                     {t}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* Duration */}
+          <Text style={[styles.label, { marginTop: 18 }]}>Duration</Text>
+          <View style={styles.chipRow}>
+            {DURATION_OPTIONS.map((d) => {
+              const active = d === duration;
+              return (
+                <TouchableOpacity
+                  key={d}
+                  onPress={() => setDuration(active ? null : d)}
+                  style={[
+                    styles.chip,
+                    active && { backgroundColor: THEME.accentDark },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.chipText,
+                      active && { color: '#fff', fontWeight: '700' },
+                    ]}
+                  >
+                    {d}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* Group size */}
+          <Text style={[styles.label, { marginTop: 18 }]}>Group size</Text>
+          <View style={styles.chipRow}>
+            {GROUP_OPTIONS.map((g) => {
+              const active = g === groupSize;
+              return (
+                <TouchableOpacity
+                  key={g}
+                  onPress={() => setGroupSize(active ? null : g)}
+                  style={[
+                    styles.chip,
+                    active && { backgroundColor: THEME.accent },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.chipText,
+                      active && { color: '#fff', fontWeight: '700' },
+                    ]}
+                  >
+                    {g}
                   </Text>
                 </TouchableOpacity>
               );
@@ -244,6 +519,37 @@ export default function NewStudySession() {
             numberOfLines={3}
           />
 
+          {/* Materials */}
+          <Text style={[styles.label, { marginTop: 18 }]}>Bring</Text>
+          <View style={styles.chipRow}>
+            {MATERIALS.map((m) => {
+              const active = materials.includes(m);
+              return (
+                <TouchableOpacity
+                  key={m}
+                  onPress={() =>
+                    setMaterials((prev) =>
+                      active ? prev.filter((item) => item !== m) : [...prev, m]
+                    )
+                  }
+                  style={[
+                    styles.chip,
+                    active && { backgroundColor: THEME.accentDark },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.chipText,
+                      active && { color: '#fff', fontWeight: '700' },
+                    ]}
+                  >
+                    {m}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
           {/* Visibility */}
           <View style={[styles.inlineRow, { marginTop: 20 }]}>
             <View>
@@ -263,9 +569,19 @@ export default function NewStudySession() {
 
         {/* CTA */}
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
-            <Ionicons name="people-outline" size={18} color="#fff" />
-            <Text style={styles.createButtonText}>Create study date</Text>
+          <TouchableOpacity
+            style={[styles.createButton, saving && styles.createButtonDisabled]}
+            onPress={handleCreate}
+            disabled={saving}
+          >
+            {saving ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <>
+                <Ionicons name="people-outline" size={18} color="#fff" />
+                <Text style={styles.createButtonText}>Create study date</Text>
+              </>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -278,29 +594,6 @@ export default function NewStudySession() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 6,
-    justifyContent: 'space-between',
-  },
-  backButton: {
-    height: 32,
-    width: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: THEME.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFFAA',
-  },
-  screenTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: THEME.text,
   },
   card: {
     marginHorizontal: 20,
@@ -378,6 +671,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: THEME.sub,
   },
+  pickerRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 8,
+  },
+  pickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: '#fff',
+  },
+  pickerText: {
+    color: THEME.text,
+    fontWeight: '600',
+    fontSize: 12,
+  },
   smallText: {
     fontSize: 11,
     color: THEME.sub,
@@ -396,6 +710,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     columnGap: 8,
+  },
+  createButtonDisabled: {
+    opacity: 0.7,
   },
   createButtonText: {
     color: '#fff',

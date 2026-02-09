@@ -11,6 +11,7 @@ export type CafePlace = {
   food: string[];
   hours: string;
   tags: string[];
+  imageUrl?: string;
 
   // Coordonnées pour la map
   coords?: { latitude: number; longitude: number };
@@ -19,8 +20,18 @@ export type CafePlace = {
   rating?: number;                  // ex. 4.7
   walkMinutes?: number;             // temps de marche approximatif
   priceLevel?: '$' | '$$' | '$$$';  // niveau de prix
+  source?: 'curated' | 'osm';
 };
 
+<<<<<<< Updated upstream
+=======
+  // Fonction pour get cafe name par id
+  export const getCafeName = (cafeId: string) : string => {
+    const cafe = ALL_PLACES.find((place) => place.id === cafeId);
+    return cafe ? cafe.name : 'Café inconnu';
+  }
+
+>>>>>>> Stashed changes
 export const PLACES: CafePlace[] = [
   {
     id: "savsav",
@@ -179,4 +190,97 @@ export const PLACES: CafePlace[] = [
     walkMinutes: 8,
     priceLevel: "$$",
   },
+];
+
+const loadOSM = () => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require('./osm_places.json');
+  } catch {
+    return null;
+  }
+};
+
+const osmRaw = loadOSM();
+
+export const OSM_ATTRIBUTION =
+  osmRaw?.attribution ??
+  '© OpenStreetMap contributors (ODbL) https://openstreetmap.org/copyright';
+
+export const OSM_PLACES: CafePlace[] = (osmRaw?.items ?? [])
+  .map((item: any) => ({
+    id: String(item.placeId || '').replace(/\//g, '_'),
+    name: item.name || 'Cafe',
+    address: item.address || '',
+    district: item.district || 'Montréal',
+    vibe: item.vibe || '',
+    studyAtmosphere: item.studyAtmosphere || [],
+    wifi: Boolean(item.wifi),
+    outlets: Boolean(item.outlets),
+    food: Array.isArray(item.food) ? item.food : [],
+    hours: item.hours || '',
+    tags: Array.isArray(item.tags) ? item.tags : [],
+    imageUrl: item.image || item.wikimedia_commons || '',
+    meta: item.meta || {},
+    coords:
+      item.coords && typeof item.coords.lat === 'number' && typeof item.coords.lng === 'number'
+        ? { latitude: item.coords.lat, longitude: item.coords.lng }
+        : undefined,
+    priceLevel: item.priceLevel || undefined,
+    source: 'osm',
+  }))
+  .filter((place) => Boolean(place.address) && Boolean(place.coords))
+  .map((place) => {
+    const tags = new Set(place.tags);
+    const name = place.name.toLowerCase();
+    const food = place.food.map((f) => f.toLowerCase());
+
+    const hours = place.hours?.toLowerCase() ?? '';
+    const isLate =
+      /22|23|24|00:00-24:00|24\/7/.test(hours) ||
+      hours.includes('late');
+
+    if (place.wifi) tags.add('Wi-Fi');
+    if (place.outlets) tags.add('Outlets');
+    if (name.includes('roast') || name.includes('roaster')) tags.add('Roastery');
+    if (food.some((f) => f.includes('brunch'))) tags.add('Brunch');
+    if (food.some((f) => f.includes('dessert') || f.includes('pastr'))) tags.add('Pastries');
+    if (isLate) tags.add('Open late');
+
+    const seatingVal = String((place as any).meta?.seating || '').toLowerCase();
+    const hasSeating = seatingVal === 'yes' || seatingVal === 'true' || seatingVal === 'indoor';
+    if (hasSeating) tags.add('Seating');
+
+    let vibe = place.vibe;
+    if (!vibe) {
+      if (tags.has('Brunch')) vibe = 'Bright, social brunch spot';
+      else if (tags.has('Roastery')) vibe = 'Specialty coffee, focused vibe';
+      else if (tags.has('Open late')) vibe = 'Late-night friendly';
+      else vibe = 'Cafe vibe';
+    }
+
+    const studyAtmosphere = place.studyAtmosphere.length
+      ? place.studyAtmosphere
+      : place.wifi || place.outlets || hasSeating
+        ? ['Laptop friendly', 'Good for solo study']
+        : ['Quick coffee stop'];
+
+    let imageUrl = place.imageUrl;
+    if (imageUrl && imageUrl.startsWith('File:')) {
+      const file = imageUrl.replace(/^File:/, '');
+      imageUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1200`;
+    }
+
+    return {
+      ...place,
+      tags: Array.from(tags),
+      vibe,
+      studyAtmosphere,
+      imageUrl,
+    };
+  });
+
+export const ALL_PLACES: CafePlace[] = [
+  ...PLACES.map((p) => ({ ...p, source: 'curated' as const })),
+  ...OSM_PLACES,
 ];

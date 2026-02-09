@@ -31,6 +31,8 @@ export default {
       favicon: "./assets/images/favicon.png",
     },
     plugins: [
+      "expo-font",
+      "expo-web-browser",
       "expo-router",
       "expo-maps",
       [
@@ -52,6 +54,7 @@ export default {
     },
     extra: {
       EXPO_GEMINI_API_KEY: process.env.EXPO_GEMINI_API_KEY,
+      EXPO_API_BASE_URL: process.env.EXPO_API_BASE_URL || "https://backend-deja-brew.onrender.com",
     },
   },
 };

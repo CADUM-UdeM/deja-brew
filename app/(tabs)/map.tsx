@@ -1,5 +1,5 @@
 // app/(tabs)/map.tsx
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MapView, { Marker } from 'react-native-maps';
 
 import AppHeader from '../../components/AppHeader';
-import { PLACES, CafePlace } from '../../data/places';
+import { ALL_PLACES, CafePlace, OSM_ATTRIBUTION } from '../../data/places';
+import { fetchPlaces } from '../../data/api';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -33,23 +34,38 @@ export default function MapScreen() {
   const [query, setQuery] = useState('');
   const [districtFilter, setDistrictFilter] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [markerLimit, setMarkerLimit] = useState(250);
+  const [places, setPlaces] = useState<CafePlace[]>(ALL_PLACES);
 
   const rawSelectMode = params?.selectMode;
   const isSelectMode =
     typeof rawSelectMode === 'string' ? rawSelectMode === 'place' : false;
+  const serializeParam = (value: unknown) => {
+    if (value === undefined) return undefined;
+    return encodeURIComponent(JSON.stringify(value));
+  };
+
+  const baseParams = useMemo(() => {
+    const next: Record<string, string | string[]> = {};
+    Object.entries(params).forEach(([key, value]) => {
+      if (key === 'selectMode') return;
+      next[key] = value as string | string[];
+    });
+    return next;
+  }, [params]);
 
   // --- districts pour les filtres ---
   const districts = useMemo(() => {
     const set = new Set<string>();
-    PLACES.forEach((p) => set.add(p.district));
+    places.forEach((p) => set.add(p.district));
     return Array.from(set).sort();
-  }, []);
+  }, [places]);
 
   // --- filtrage des cafés (search + district) ---
   const filteredPlaces: CafePlace[] = useMemo(() => {
     const q = query.trim().toLowerCase();
 
-    return PLACES.filter((p) => {
+    return places.filter((p) => {
       if (districtFilter && p.district !== districtFilter) return false;
       if (!q) return true;
 
@@ -65,11 +81,19 @@ export default function MapScreen() {
 
       return haystack.includes(q);
     });
-  }, [query, districtFilter]);
+  }, [query, districtFilter, places]);
+
+  const displayPlaces = useMemo(() => {
+    const withCoords = filteredPlaces.filter((p) => Boolean(p.coords));
+    const withAddress = withCoords.filter(
+      (p) => p.source === 'curated' || (p.address && p.address.length > 0)
+    );
+    return withAddress.slice(0, markerLimit);
+  }, [filteredPlaces, markerLimit]);
 
   // --- région initiale de la map (Montréal ou 1er café) ---
   const initialRegion = useMemo(() => {
-    const first: any = PLACES[0];
+    const first: any = places[0];
 
     const lat =
       first?.latitude ??
@@ -88,7 +112,7 @@ export default function MapScreen() {
       latitudeDelta: 0.05,
       longitudeDelta: 0.05,
     };
-  }, []);
+  }, [places]);
 
   // --- helper coords pour chaque café ---
   const getCoords = (place: CafePlace) => {
@@ -114,8 +138,9 @@ export default function MapScreen() {
       router.push({
         pathname: '/session/new',
         params: {
-          location: locationLabel,
-          placeId: String(place.id),
+          ...baseParams,
+          location: serializeParam(locationLabel),
+          placeId: serializeParam(String(place.id)),
         },
       });
     } else {
@@ -131,6 +156,18 @@ export default function MapScreen() {
     setSelectedId(place.id);
     handlePlacePress(place);
   };
+
+  useEffect(() => {
+    let mounted = true;
+    fetchPlaces()
+      .then((data) => {
+        if (mounted && data.length > 0) setPlaces(data);
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
@@ -230,7 +267,7 @@ export default function MapScreen() {
         {/* MAP + MARKERS */}
         <View style={[styles.padH, { marginTop: 12 }]}>
           <MapView style={styles.map} initialRegion={initialRegion}>
-            {filteredPlaces.map((place) => {
+            {displayPlaces.map((place) => {
               const coords = getCoords(place);
               if (!coords) return null;
 
@@ -259,6 +296,20 @@ export default function MapScreen() {
             })}
           </MapView>
         </View>
+        <View style={styles.mapMetaRow}>
+          <Text style={styles.attribution}>{OSM_ATTRIBUTION}</Text>
+          <Text style={styles.metaCount}>
+            Showing {displayPlaces.length} of {filteredPlaces.length} places
+          </Text>
+        </View>
+        {filteredPlaces.length > markerLimit && (
+          <TouchableOpacity
+            style={styles.moreBtn}
+            onPress={() => setMarkerLimit((prev) => prev + 250)}
+          >
+            <Text style={styles.moreText}>Show more on map</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Liste des cafés */}
         <View style={[styles.padH, { marginTop: 16 }]}>
@@ -300,7 +351,9 @@ export default function MapScreen() {
                   />
                   <Text style={styles.placeMeta}>{place.district}</Text>
                   <Text style={styles.dot}>•</Text>
-                  <Text style={styles.placeMeta}>{place.address}</Text>
+                  <Text style={styles.placeMeta}>
+                    {place.address || 'Address not listed'}
+                  </Text>
                 </View>
 
                 <ScrollView
@@ -386,6 +439,39 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     height: 260,
     overflow: 'hidden',
+  },
+  attribution: {
+    marginTop: 8,
+    marginLeft: 20,
+    fontSize: 11,
+    color: THEME.sub,
+  },
+  mapMetaRow: {
+    marginTop: 8,
+    marginLeft: 20,
+    marginRight: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  metaCount: {
+    fontSize: 11,
+    color: THEME.sub,
+  },
+  moreBtn: {
+    marginTop: 8,
+    marginHorizontal: 20,
+    alignSelf: 'flex-start',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: THEME.border,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
+  },
+  moreText: {
+    color: THEME.accentDark,
+    fontWeight: '700',
+    fontSize: 12,
   },
   markerBubble: {
     height: 28,

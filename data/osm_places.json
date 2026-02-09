@@ -1,0 +1,1873 @@
+{
+  "generatedAt": "2026-01-31T08:54:04.420Z",
+  "attribution": "© OpenStreetMap contributors (ODbL) https://openstreetmap.org/copyright",
+  "items": [
+    {
+      "placeId": "node/458918543",
+      "name": "Starbucks",
+      "address": "3601 Boulevard Saint-Laurent",
+      "district": "Le Plateau-Mont-Royal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Su 06:30-23:00",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.5140638,
+        "lng": -73.5726243
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Su 06:30-23:00"
+      }
+    },
+    {
+      "placeId": "node/942874457",
+      "name": "Atomic Café",
+      "address": "3606 Rue Ontario Est Montreal",
+      "district": "Mercier-Hochelaga-Maisonneuve",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "pizza",
+        "american",
+        "international"
+      ],
+      "hours": "Mo-Fr 08:00-22:00; Sa 09:00-22:00; Su 09:00-21:00",
+      "tags": [
+        "coffee_shop",
+        "pizza",
+        "american",
+        "international"
+      ],
+      "coords": {
+        "lat": 45.5452307,
+        "lng": -73.544586
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;pizza;american;international",
+        "opening_hours": "Mo-Fr 08:00-22:00; Sa 09:00-22:00; Su 09:00-21:00"
+      }
+    },
+    {
+      "placeId": "node/1743949810",
+      "name": "Caffe Grazie Mille",
+      "address": "58 Avenue Fairmount Ouest",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "italian",
+        "sandwich",
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 07:30-17:30; Sa,Su 08:00-17:30",
+      "tags": [
+        "italian",
+        "sandwich",
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5231373,
+        "lng": -73.5949985
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "italian;sandwich;coffee_shop",
+        "opening_hours": "Mo-Fr 07:30-17:30; Sa,Su 08:00-17:30"
+      }
+    },
+    {
+      "placeId": "node/1751182525",
+      "name": "Maestro Café",
+      "address": "80 Rue Saint-Viateur Ouest Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "sandwich",
+        "coffee_shop",
+        "pastry"
+      ],
+      "hours": "Mo-Sa 09:00-16:00",
+      "tags": [
+        "sandwich",
+        "coffee_shop",
+        "pastry"
+      ],
+      "coords": {
+        "lat": 45.5247051,
+        "lng": -73.5997359
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "sandwich;coffee_shop;pastry",
+        "opening_hours": "Mo-Sa 09:00-16:00"
+      }
+    },
+    {
+      "placeId": "node/1966795948",
+      "name": "Café Saint-Henri",
+      "address": "3632 Rue Notre-Dame Ouest Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Sa-Su 08:00-18:00; Mo-Fr 07:30-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.479372,
+        "lng": -73.5811096
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Sa-Su 08:00-18:00; Mo-Fr 07:30-18:00"
+      }
+    },
+    {
+      "placeId": "node/2023153129",
+      "name": "Myriade",
+      "address": "4627 Rue Saint-Denis Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 07:30-18:00; Sa-Su 08:00-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5248698,
+        "lng": -73.5845167
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 07:30-18:00; Sa-Su 08:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/2420001046",
+      "name": "Station In Vivo",
+      "address": "4545 Avenue Pierre de Coubertin Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "07:00-19:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5558974,
+        "lng": -73.5511125
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "07:00-19:00"
+      }
+    },
+    {
+      "placeId": "node/2422238973",
+      "name": "Café Pamplemousse",
+      "address": "1251 Rue Ontario Est",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "breakfast",
+        "sandwich"
+      ],
+      "hours": "Tu-Su 08:30-14:30",
+      "tags": [
+        "breakfast",
+        "sandwich"
+      ],
+      "coords": {
+        "lat": 45.5216665,
+        "lng": -73.5621916
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "breakfast;sandwich",
+        "opening_hours": "Tu-Su 08:30-14:30"
+      }
+    },
+    {
+      "placeId": "node/2500240186",
+      "name": "Second Cup",
+      "address": "7345 Rue Sherbrooke Ouest Montréal",
+      "district": "Côte-des-Neiges–NDG",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 06:30-23:00, Sa-Su 07:00-23:00",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.4561072,
+        "lng": -73.6408899
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 06:30-23:00, Sa-Su 07:00-23:00"
+      }
+    },
+    {
+      "placeId": "node/2505434857",
+      "name": "Canard Café",
+      "address": "4299 Rue Ontario Est Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Sa-Su 08:00-17:30; Mo-Fr 07:00-17:30",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5524657,
+        "lng": -73.5400034
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Sa-Su 08:00-17:30; Mo-Fr 07:00-17:30"
+      }
+    },
+    {
+      "placeId": "node/3219613959",
+      "name": "Café OUI MAIS NON",
+      "address": "72 Rue Jarry Est Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Su 07:00-22:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5396913,
+        "lng": -73.6306748
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Su 07:00-22:00"
+      }
+    },
+    {
+      "placeId": "node/4311277291",
+      "name": "Pista",
+      "address": "500 Rue Beaubien Est Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 07:30-18:00; Sa-Su 08:00-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5348004,
+        "lng": -73.6041187
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 07:30-18:00; Sa-Su 08:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/4358905890",
+      "name": "Café Saint-Henri",
+      "address": "260 Place du Marché-du-Nord",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 07:30-18:00; Sa,Su 08:00-15:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5359238,
+        "lng": -73.6140438
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 07:30-18:00; Sa,Su 08:00-15:00"
+      }
+    },
+    {
+      "placeId": "node/4359410291",
+      "name": "Chez Greenberg",
+      "address": "5159 Avenue du Parc Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "bagel",
+        "brunch",
+        "pastry"
+      ],
+      "hours": "Mo-Su 09:00-17:00",
+      "tags": [
+        "coffee_shop",
+        "bagel",
+        "brunch",
+        "pastry"
+      ],
+      "coords": {
+        "lat": 45.5202678,
+        "lng": -73.5968847
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "https://images.tastet.ca/_/rs:fit:1080:720:false:0/plain/https://tastet-public-production.nyc3.cdn.digitaloceanspaces.com/directus/7dd50f22-5bd8-4247-9253-b8068b25e0c0.jpg@jpg",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;bagel;brunch;pastry",
+        "opening_hours": "Mo-Su 09:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/4359699450",
+      "name": "Café Larue",
+      "address": "405 Rue Jarry Est Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 06:30-18:00; Sa-Su 07:30-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5428431,
+        "lng": -73.6292366
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 06:30-18:00; Sa-Su 07:30-18:00"
+      }
+    },
+    {
+      "placeId": "node/4402725300",
+      "name": "Tim Hortons",
+      "address": "Rue Peel Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "24/7",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.4940986,
+        "lng": -73.5590807
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "24/7"
+      }
+    },
+    {
+      "placeId": "node/4770245201",
+      "name": "Crèmerie Mix",
+      "address": "6737 Rue de Marseille Montréal",
+      "district": "Montréal",
+      "vibe": "Nous sommes un petit bar laitier au cœur du quartier Honoré-Mercier qui sert des délices glacés depuis le milieu des années 90.",
+      "studyAtmosphere": [],
+      "wifi": false,
+      "outlets": null,
+      "food": [
+        "ice_cream"
+      ],
+      "hours": "12:00-22:30 \"summer\"",
+      "tags": [
+        "ice_cream"
+      ],
+      "coords": {
+        "lat": 45.5829161,
+        "lng": -73.5385471
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "ice_cream",
+        "opening_hours": "12:00-22:30 \"summer\""
+      }
+    },
+    {
+      "placeId": "node/5028558529",
+      "name": "Café Dei Campi",
+      "address": "6201 Rue Chabot",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "cake",
+        "coffee_shop",
+        "pastry",
+        "bakery"
+      ],
+      "hours": "Mo-Su,PH 10:00-16:00",
+      "tags": [
+        "cake",
+        "coffee_shop",
+        "pastry",
+        "bakery"
+      ],
+      "coords": {
+        "lat": 45.5428575,
+        "lng": -73.5923177
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "cake;coffee_shop;pastry;bakery",
+        "opening_hours": "Mo-Su,PH 10:00-16:00"
+      }
+    },
+    {
+      "placeId": "node/5235458084",
+      "name": "Léché Desserts",
+      "address": "640 Rue de Courcelle Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "donut"
+      ],
+      "hours": "Mo-Su 09:00-15:00",
+      "tags": [
+        "coffee_shop",
+        "donut"
+      ],
+      "coords": {
+        "lat": 45.4741901,
+        "lng": -73.5921866
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;donut",
+        "opening_hours": "Mo-Su 09:00-15:00"
+      }
+    },
+    {
+      "placeId": "node/5403934724",
+      "name": "Café Jardin",
+      "address": "4437 Rue Wellington",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "sandwich"
+      ],
+      "hours": "Mo-Fr 8:00-18:00; Sa, Su 09:00-18:00",
+      "tags": [
+        "sandwich"
+      ],
+      "coords": {
+        "lat": 45.454378,
+        "lng": -73.5676139
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "sandwich",
+        "opening_hours": "Mo-Fr 8:00-18:00; Sa, Su 09:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/5480682987",
+      "name": "Paquebot Café",
+      "address": "2110 Rue Bélanger Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "cafe"
+      ],
+      "hours": "Mo-Fr 07:00-18:00; Sa-Su 09:00-17:00",
+      "tags": [
+        "coffee_shop",
+        "cafe"
+      ],
+      "coords": {
+        "lat": 45.5488035,
+        "lng": -73.6011456
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;cafe",
+        "opening_hours": "Mo-Fr 07:00-18:00; Sa-Su 09:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/5596853025",
+      "name": "Café Le Club",
+      "address": "3801 Rue Saint-Denis",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 07:30-18:00; Sa-Su 09:00-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5194472,
+        "lng": -73.5726077
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 07:30-18:00; Sa-Su 09:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/5653967560",
+      "name": "Café Ma Bicyclette",
+      "address": "2727 Rue Saint-Patrick Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 08:00-19:00; Sa-Su 08:00-19:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.478748,
+        "lng": -73.5735997
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 08:00-19:00; Sa-Su 08:00-19:00"
+      }
+    },
+    {
+      "placeId": "node/5809163554",
+      "name": "Ütea",
+      "address": "2051 Rue de la Montagne Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "bubble_tea"
+      ],
+      "hours": "24/7",
+      "tags": [
+        "bubble_tea"
+      ],
+      "coords": {
+        "lat": 45.4990351,
+        "lng": -73.5771587
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "bubble_tea",
+        "opening_hours": "24/7"
+      }
+    },
+    {
+      "placeId": "node/5816010699",
+      "name": "Vegâteau",
+      "address": "1215 Avenue du Mont-Royal Est",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "pastry",
+        "cake",
+        "cookie",
+        "ice_cream",
+        "coffee_shop",
+        "dessert"
+      ],
+      "hours": "Mo-Su 10:00-19:00",
+      "tags": [
+        "pastry",
+        "cake",
+        "cookie",
+        "ice_cream",
+        "coffee_shop",
+        "dessert"
+      ],
+      "coords": {
+        "lat": 45.5289862,
+        "lng": -73.5784458
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "pastry;cake;cookie;ice_cream;coffee_shop;dessert",
+        "opening_hours": "Mo-Su 10:00-19:00"
+      }
+    },
+    {
+      "placeId": "node/5824255153",
+      "name": "Café Chiado no 28",
+      "address": "1404 Rue Beaubien Est Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-We 07:30-19:00; Th 07:30-18:00; Fr 07:30-19:00; Sa 08:00-19:00; Su 09:00-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5412086,
+        "lng": -73.598299
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-We 07:30-19:00; Th 07:30-18:00; Fr 07:30-19:00; Sa 08:00-19:00; Su 09:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/6034611897",
+      "name": "Cantinova",
+      "address": "4035 Rue Saint-Ambroise",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Th 08:00-16:00; Fr 08:00-15:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.4757547,
+        "lng": -73.5805204
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Th 08:00-16:00; Fr 08:00-15:00"
+      }
+    },
+    {
+      "placeId": "node/6800194998",
+      "name": "Café Velours",
+      "address": "373 Rue Villeray Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "local",
+        "sandwich",
+        "tea"
+      ],
+      "hours": "Mo-Fr 07:30-20:00; Sa-Su 08:00-20:00",
+      "tags": [
+        "coffee_shop",
+        "local",
+        "sandwich",
+        "tea"
+      ],
+      "coords": {
+        "lat": 45.5403376,
+        "lng": -73.623472
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;local;sandwich;tea",
+        "opening_hours": "Mo-Fr 07:30-20:00; Sa-Su 08:00-20:00"
+      }
+    },
+    {
+      "placeId": "node/7214587793",
+      "name": "Chez José",
+      "address": "173 Avenue Duluth Est",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "sandwich",
+        "pastry"
+      ],
+      "hours": "Th-Mo 09:00-22:00; Tu,We 09:00-17:00",
+      "tags": [
+        "sandwich",
+        "pastry"
+      ],
+      "coords": {
+        "lat": 45.518713,
+        "lng": -73.5778841
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "sandwich;pastry",
+        "opening_hours": "Th-Mo 09:00-22:00; Tu,We 09:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/7280591785",
+      "name": "Lili & Oli",
+      "address": "4554 Rue Wellington",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Th 07:00-22:00; Fr 07:00-20:00; Sa-Su 08:00-20:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.4587092,
+        "lng": -73.5672233
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Th 07:00-22:00; Fr 07:00-20:00; Sa-Su 08:00-20:00"
+      }
+    },
+    {
+      "placeId": "node/7838101085",
+      "name": "Péché",
+      "address": "3998 Rue Saint-Denis Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "sandwich",
+        "coffee_shop"
+      ],
+      "hours": "Mo off; Tu off; We-Su 10:00-19:00",
+      "tags": [
+        "sandwich",
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5204692,
+        "lng": -73.5756225
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "sandwich;coffee_shop",
+        "opening_hours": "Mo off; Tu off; We-Su 10:00-19:00"
+      }
+    },
+    {
+      "placeId": "node/8791997323",
+      "name": "Café Pista",
+      "address": "2650 Rue Masson Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "sandwich"
+      ],
+      "hours": "Mo-Th 07:30-17:00; Sa,Su 08:00-18:00; Fr 07:30-18:00; PH 08:00-17:00",
+      "tags": [
+        "coffee_shop",
+        "sandwich",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.5460004,
+        "lng": -73.5760156
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop;sandwich",
+        "opening_hours": "Mo-Th 07:30-17:00; Sa,Su 08:00-18:00; Fr 07:30-18:00; PH 08:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/9212741219",
+      "name": "Tim Hortons",
+      "address": "2980 Rue Masson",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "24/7",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.5485132,
+        "lng": -73.574473
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "24/7"
+      }
+    },
+    {
+      "placeId": "node/9549749177",
+      "name": "Café des Habitudes",
+      "address": "1104 Rue Saint-Zotique Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-We 08:30-17:00; Th,Fr 08:30-19:00; Sa,Su 10:00-18:00",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.5394687,
+        "lng": -73.604717
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-We 08:30-17:00; Th,Fr 08:30-19:00; Sa,Su 10:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/9923655741",
+      "name": "Baristello Griffintown",
+      "address": "248 Rue de la Montagne Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "sandwich"
+      ],
+      "hours": "Mo-Su 08:00-17:00",
+      "tags": [
+        "coffee_shop",
+        "sandwich"
+      ],
+      "coords": {
+        "lat": 45.4919101,
+        "lng": -73.560871
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;sandwich",
+        "opening_hours": "Mo-Su 08:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/10264972178",
+      "name": "Kiosk café",
+      "address": "1010 rue de La Gauchetière Ouest Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 08:00-16:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.4975329,
+        "lng": -73.5666338
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 08:00-16:00"
+      }
+    },
+    {
+      "placeId": "node/11018636653",
+      "name": "Brûlerie St. Denis",
+      "address": "3039 Rue Masson",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "cafe"
+      ],
+      "hours": "Mo-Sa 07:00-19:00; Su 08:00-19:00",
+      "tags": [
+        "cafe"
+      ],
+      "coords": {
+        "lat": 45.5491415,
+        "lng": -73.5744114
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "cafe",
+        "opening_hours": "Mo-Sa 07:00-19:00; Su 08:00-19:00"
+      }
+    },
+    {
+      "placeId": "node/11059863229",
+      "name": "Brûlerie St. Denis",
+      "address": "3967 Rue Saint-Denis",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Su 08:00-18:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5205308,
+        "lng": -73.5749873
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Su 08:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/11108904483",
+      "name": "Café la Ligne Verte",
+      "address": "2531 Rue Ontario Est",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "pastry",
+        "breakfast",
+        "sandwich"
+      ],
+      "hours": "Mo 09:00-23:00; Tu-We 09:00-23:30; Th-Sa 09:00-24:00; Su 09:00-17:00",
+      "tags": [
+        "coffee_shop",
+        "pastry",
+        "breakfast",
+        "sandwich"
+      ],
+      "coords": {
+        "lat": 45.5328273,
+        "lng": -73.5529689
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;pastry;breakfast;sandwich",
+        "opening_hours": "Mo 09:00-23:00; Tu-We 09:00-23:30; Th-Sa 09:00-24:00; Su 09:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/11220887204",
+      "name": "Café Alphabet",
+      "address": "5765 Rue Clark Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 08:00-19:00; Sa 08:00-19:00; Su 08:30-19:00",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.5268468,
+        "lng": -73.6024219
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 08:00-19:00; Sa 08:00-19:00; Su 08:30-19:00"
+      }
+    },
+    {
+      "placeId": "node/11223490713",
+      "name": "Van houtte",
+      "address": "1001 Avenue Bernard",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 07:00-19:00; Sa-Su 07:30-19:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.5229103,
+        "lng": -73.6064514
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 07:00-19:00; Sa-Su 07:30-19:00"
+      }
+    },
+    {
+      "placeId": "node/11449804955",
+      "name": "Café Sorbier",
+      "address": "2651 Rue Beaubien Est",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "sandwich"
+      ],
+      "hours": "Mo-Sa 07:00-17:00; Su 08:00-15:00",
+      "tags": [
+        "coffee_shop",
+        "sandwich"
+      ],
+      "coords": {
+        "lat": 45.5511867,
+        "lng": -73.5898286
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;sandwich",
+        "opening_hours": "Mo-Sa 07:00-17:00; Su 08:00-15:00"
+      }
+    },
+    {
+      "placeId": "node/11972858163",
+      "name": "Cass Café",
+      "address": "4281 Boulevard Saint-Laurent Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop",
+        "végétalien",
+        "végane"
+      ],
+      "hours": "Mo-Fr 08:00-17:00; Sa,Su 09:00-17:00",
+      "tags": [
+        "coffee_shop",
+        "végétalien",
+        "végane"
+      ],
+      "coords": {
+        "lat": 45.5188441,
+        "lng": -73.5829565
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop;végétalien;végane",
+        "opening_hours": "Mo-Fr 08:00-17:00; Sa,Su 09:00-17:00"
+      }
+    },
+    {
+      "placeId": "node/11986536621",
+      "name": "La Maison Oflore",
+      "address": "511 Avenue Duluth Est",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "waffle"
+      ],
+      "hours": "Mo-Su 8:00-19:00",
+      "tags": [
+        "waffle"
+      ],
+      "coords": {
+        "lat": 45.5219409,
+        "lng": -73.5748976
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "waffle",
+        "opening_hours": "Mo-Su 8:00-19:00"
+      }
+    },
+    {
+      "placeId": "node/12001584044",
+      "name": "La Chouette",
+      "address": "3864 Rue Saint-Denis",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "cake",
+        "bakery"
+      ],
+      "hours": "Mo off; Tu-We 10:00-18:30; Th-Sa 10:00",
+      "tags": [
+        "cake",
+        "bakery"
+      ],
+      "coords": {
+        "lat": 45.5196036,
+        "lng": -73.5737523
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "cake;bakery",
+        "opening_hours": "Mo off; Tu-We 10:00-18:30; Th-Sa 10:00"
+      }
+    },
+    {
+      "placeId": "node/12005113562",
+      "name": "Lady Porcelaine",
+      "address": "4545 Rue Saint-Denis",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "tea"
+      ],
+      "hours": "Mo off; Tu off; We off; Th off; Fr off; Sa-Su 11:00-18:00",
+      "tags": [
+        "tea"
+      ],
+      "coords": {
+        "lat": 45.5243977,
+        "lng": -73.5834798
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "tea",
+        "opening_hours": "Mo off; Tu off; We off; Th off; Fr off; Sa-Su 11:00-18:00"
+      }
+    },
+    {
+      "placeId": "node/12155513440",
+      "name": "cafe rene-leveque",
+      "address": "1600 Boulevard René-Lévesque Ouest Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "sandwich"
+      ],
+      "hours": "Mo-Sa 07:00-14:00",
+      "tags": [
+        "sandwich"
+      ],
+      "coords": {
+        "lat": 45.4927418,
+        "lng": -73.5749371
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "sandwich",
+        "opening_hours": "Mo-Sa 07:00-14:00"
+      }
+    },
+    {
+      "placeId": "node/12177232344",
+      "name": "Dreamy",
+      "address": "3780 Rue Saint-Patrick Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Su 09:00-16:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.4698323,
+        "lng": -73.581203
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Su 09:00-16:00"
+      }
+    },
+    {
+      "placeId": "node/12900206455",
+      "name": "Le Café Pick Me Up",
+      "address": "111 Boulevard Robert-Bourassa Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": null,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "Mo-Fr 08:00-16:00; Sa 10:00-14:00; Su 10:30-14:00",
+      "tags": [
+        "coffee_shop"
+      ],
+      "coords": {
+        "lat": 45.4968795,
+        "lng": -73.556413
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "Mo-Fr 08:00-16:00; Sa 10:00-14:00; Su 10:30-14:00"
+      }
+    },
+    {
+      "placeId": "node/13185281684",
+      "name": "B.Hive Café",
+      "address": "2313 Rue Sainte-Catherine Ouest Montreal",
+      "district": "Montreal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "lebanese",
+        "pizza",
+        "dessert"
+      ],
+      "hours": "Mo-Fr 07:00-21:00; Sa,Su 08:00-21:00",
+      "tags": [
+        "lebanese",
+        "pizza",
+        "dessert"
+      ],
+      "coords": {
+        "lat": 45.4898149,
+        "lng": -73.5842061
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "",
+        "menu": "",
+        "cuisine": "lebanese;pizza;dessert",
+        "opening_hours": "Mo-Fr 07:00-21:00; Sa,Su 08:00-21:00"
+      }
+    },
+    {
+      "placeId": "way/1248619834",
+      "name": "Tim Hortons",
+      "address": "Rue Hochelaga Montréal",
+      "district": "Montréal",
+      "vibe": "",
+      "studyAtmosphere": [],
+      "wifi": true,
+      "outlets": null,
+      "food": [
+        "coffee_shop"
+      ],
+      "hours": "24/7",
+      "tags": [
+        "coffee_shop",
+        "Takeaway: yes"
+      ],
+      "coords": {
+        "lat": 45.5804218,
+        "lng": -73.531926
+      },
+      "priceLevel": "",
+      "ratingSummary": null,
+      "savesCount": 0,
+      "likesCount": 0,
+      "source": "OpenStreetMap",
+      "image": "",
+      "wikimedia_commons": "",
+      "meta": {
+        "seating": "yes",
+        "takeaway": "yes",
+        "menu": "",
+        "cuisine": "coffee_shop",
+        "opening_hours": "24/7"
+      }
+    }
+  ]
+}

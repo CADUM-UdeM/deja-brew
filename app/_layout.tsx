@@ -24,6 +24,7 @@ export default function RootLayout() {
           options={{ presentation: 'modal', headerShown: false }}
         />
 
+<<<<<<< Updated upstream
         {/* Quiz flow */}
         <Stack.Screen
           name="quiz/index"
@@ -33,6 +34,35 @@ export default function RootLayout() {
             headerBackButtonDisplayMode: 'minimal',
           }}
         />
+=======
+            {/* Quiz flow */}
+            <Stack.Screen
+              name="quiz/index"
+              options={{
+                headerShown: false,
+              }}
+            />
+
+            {/* New study session */}
+            <Stack.Screen
+              name="session/new"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="notifications"
+              options={{
+                presentation: 'pageSheet',
+                headerShown: false
+              }}
+            />
+          </Stack>
+          <StatusBar style="dark" />
+        </ThemeProvider>
+      </SavedPromosProvider>
+    </LikedPromosProvider>
+>>>>>>> Stashed changes
 
         {/* New study session */}
         <Stack.Screen
@@ -47,4 +77,3 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
-

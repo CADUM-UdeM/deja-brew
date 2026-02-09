@@ -1,7 +1,14 @@
 // app/(tabs)/promos.tsx
 import React from 'react';
+<<<<<<< Updated upstream
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import AppHeader from '../../components/AppHeader';
+=======
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { useRouter } from 'expo-router';
+import AppHeader from '@/components/AppHeader';
+>>>>>>> Stashed changes
 
 const THEME = {
   bg: '#FFF6EF',
@@ -40,6 +47,7 @@ const PROMOS = [
 ];
 
 export default function PromosScreen() {
+<<<<<<< Updated upstream
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
       <AppHeader rightIcon="pricetag-outline" />
@@ -49,6 +57,17 @@ export default function PromosScreen() {
         contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
       >
+=======
+  const router = useRouter();
+  const layout = useWindowDimensions();
+  const [index, setIndex] = React.useState(0);
+
+  return (
+    <View style={{ flex: 1, backgroundColor: THEME.bg }}>
+      <AppHeader onRightPress={() => router.push('/notifications')} />
+
+      <View style={{paddingTop: 12, paddingHorizontal: 20}}>
+>>>>>>> Stashed changes
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.

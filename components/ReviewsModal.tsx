@@ -1,8 +1,8 @@
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { X } from 'lucide-react-native';
 import React from 'react';
 import { Modal, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { ReviewCard } from './ReviewCard';
+import { THEME } from '@/data/THEME';
 
 interface Review {
   name: string;
@@ -17,9 +17,6 @@ interface ReviewsModalProps {
 }
 
 export function ReviewsModal({ visible, onClose, reviews }: ReviewsModalProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-
   return (
     <Modal
       visible={visible}
@@ -29,7 +26,7 @@ export function ReviewsModal({ visible, onClose, reviews }: ReviewsModalProps) {
     >
       <View style={{ 
         flex: 1, 
-        backgroundColor: isDark ? '#000' : '#fff'
+        backgroundColor: THEME.bg
       }}>
         {/* Header */}
         <View style={{ 
@@ -40,10 +37,10 @@ export function ReviewsModal({ visible, onClose, reviews }: ReviewsModalProps) {
           paddingTop: Platform.OS === 'ios' ? 16 : 30,
           paddingBottom: 16,
           borderBottomWidth: 1,
-          borderBottomColor: isDark ? '#333' : '#ddd'
+          borderBottomColor: THEME.border
         }}>
           <Text style={{ 
-            color: isDark ? 'white' : 'black', 
+            color: THEME.text, 
             fontSize: 24, 
             fontWeight: '700' 
           }}>
@@ -54,17 +51,17 @@ export function ReviewsModal({ visible, onClose, reviews }: ReviewsModalProps) {
             style={{ 
               padding: 8,
               borderRadius: 20,
-              backgroundColor: isDark ? '#222' : '#f0f0f0'
+              backgroundColor: '#F3E7E0'
             }}
           >
-            <X size={24} color={isDark ? 'white' : 'black'} />
+            <X size={22} color={THEME.text} />
           </Pressable>
         </View>
 
         {/* Reviews list */}
         <ScrollView 
           style={{ flex: 1 }}
-          contentContainerStyle={{ padding: 16 }}
+          contentContainerStyle={{ padding: 16, paddingBottom: 32 }}
         >
           {reviews.map((review, index) => (
             <ReviewCard

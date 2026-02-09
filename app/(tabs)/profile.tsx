@@ -1,8 +1,12 @@
 // app/(tabs)/profile.tsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 import AppHeader from '../../components/AppHeader';
+import { fetchMe } from '../../data/api';
+import { clearAuth, getAuthUser } from '../../data/auth';
+import type { UserProfile } from '../../data/users';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -14,9 +18,33 @@ const THEME = {
 };
 
 export default function ProfileScreen() {
+  const router = useRouter();
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    getAuthUser<UserProfile>()
+      .then((cached) => {
+        if (mounted && cached) setUser(cached);
+      })
+      .finally(() => setLoading(false));
+
+    fetchMe()
+      .then((res) => {
+        if (mounted) setUser(res.data.user);
+      })
+      .catch(() => {});
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
-      <AppHeader rightIcon="person-circle-outline" />
+      <AppHeader rightIcon={null} />
 
       <ScrollView
         style={{ flex: 1 }}
@@ -29,28 +57,79 @@ export default function ProfileScreen() {
             <Ionicons name="cafe-outline" size={32} color="#fff" />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.name}>Deja Brew guest</Text>
-            <Text style={styles.handle}>@studylover</Text>
+            {loading && !user ? (
+              <ActivityIndicator color={THEME.accentDark} />
+            ) : (
+              <>
+                <Text style={styles.name}>{user?.displayName ?? 'Deja Brew guest'}</Text>
+                <Text style={styles.handle}>@{user?.username ?? 'studylover'}</Text>
+              </>
+            )}
           </View>
         </View>
 
         {/* Preferences */}
         <Text style={styles.sectionTitle}>Study preferences</Text>
         <View style={styles.chipsRow}>
-          {['Quiet', 'Wi-Fi stable', 'Many outlets', 'Open late'].map((pref) => (
-            <View key={pref} style={styles.chip}>
-              <Text style={styles.chipText}>{pref}</Text>
-            </View>
-          ))}
+          {(user?.preferences?.noise ? [user.preferences.noise] : ['Quiet'])
+            .concat(user?.preferences?.wifi ? ['Wi‑Fi stable'] : [])
+            .concat(user?.preferences?.outlets ? ['Many outlets'] : [])
+            .concat(user?.preferences?.tags ?? ['Open late'])
+            .slice(0, 4)
+            .map((pref) => (
+              <View key={pref} style={styles.chip}>
+                <Text style={styles.chipText}>{pref}</Text>
+              </View>
+            ))}
         </View>
 
         {/* Actions */}
         <Text style={[styles.sectionTitle, { marginTop: 22 }]}>Account & app</Text>
 
-        <TouchableOpacity style={styles.rowItem} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.rowItem}
+          activeOpacity={0.7}
+          onPress={() => router.push('/profile/edit')}
+        >
           <View style={styles.rowLeft}>
             <Ionicons name="options-outline" size={20} color={THEME.accentDark} />
             <Text style={styles.rowText}>Edit study profile</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.rowItem}
+          activeOpacity={0.7}
+          onPress={() => router.push('/friends')}
+        >
+          <View style={styles.rowLeft}>
+            <Ionicons name="people-outline" size={20} color={THEME.accentDark} />
+            <Text style={styles.rowText}>Friends</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.rowItem}
+          activeOpacity={0.7}
+          onPress={() => router.push('/users/search')}
+        >
+          <View style={styles.rowLeft}>
+            <Ionicons name="search-outline" size={20} color={THEME.accentDark} />
+            <Text style={styles.rowText}>Find users</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.rowItem}
+          activeOpacity={0.7}
+          onPress={() => router.push('/sessions')}
+        >
+          <View style={styles.rowLeft}>
+            <Ionicons name="calendar-outline" size={20} color={THEME.accentDark} />
+            <Text style={styles.rowText}>Study sessions</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
         </TouchableOpacity>
@@ -71,7 +150,40 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.rowItem, { marginTop: 10 }]} activeOpacity={0.7}>
+        <Text style={[styles.sectionTitle, { marginTop: 22 }]}>Auth</Text>
+
+        <TouchableOpacity
+          style={styles.rowItem}
+          activeOpacity={0.7}
+          onPress={() => router.push('/auth/login')}
+        >
+          <View style={styles.rowLeft}>
+            <Ionicons name="log-in-outline" size={20} color={THEME.accentDark} />
+            <Text style={styles.rowText}>Log in</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.rowItem}
+          activeOpacity={0.7}
+          onPress={() => router.push('/auth/register')}
+        >
+          <View style={styles.rowLeft}>
+            <Ionicons name="person-add-outline" size={20} color={THEME.accentDark} />
+            <Text style={styles.rowText}>Create account</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.rowItem, { marginTop: 10 }]}
+          activeOpacity={0.7}
+          onPress={async () => {
+            await clearAuth();
+            setUser(null);
+          }}
+        >
           <View style={styles.rowLeft}>
             <Ionicons name="log-out-outline" size={20} color="#C05621" />
             <Text style={[styles.rowText, { color: '#C05621' }]}>Log out</Text>

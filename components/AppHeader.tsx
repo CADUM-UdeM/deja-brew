@@ -13,28 +13,57 @@ const C = {
 
 // keyof typeof Ionicons.glyphMap = n'importe quel nom d'icône Ionicons valide
 type Props = {
+  leftIcon?: keyof typeof Ionicons.glyphMap;
+  onLeftPress?: () => void;
   rightIcon?: keyof typeof Ionicons.glyphMap;
   onRightPress?: () => void;
+  showLogo?: boolean;
+  title?: string;
+  subtitle?: string;
 };
 
-export default function AppHeader({ rightIcon = 'notifications-outline', onRightPress }: Props) {
+export default function AppHeader({
+  leftIcon,
+  onLeftPress,
+  rightIcon,
+  onRightPress,
+  showLogo = true,
+  title,
+  subtitle,
+}: Props) {
   const insets = useSafeAreaInsets();
+  const resolvedRightIcon =
+    rightIcon === undefined ? 'notifications-outline' : rightIcon;
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 4 }]}>
       <View style={styles.leftRow}>
-        <View style={styles.logoCircle}>
-          <Ionicons name="cafe-outline" size={18} />
-        </View>
-        <View>
-          <Text style={styles.title}>Deja Brew</Text>
-          <Text style={styles.subtitle}>bean there, learned that.</Text>
-        </View>
+        {leftIcon && (
+          <Pressable onPress={onLeftPress} hitSlop={8} style={styles.leftIcon}>
+            <Ionicons name={leftIcon} size={22} color={C.accent} />
+          </Pressable>
+        )}
+        {showLogo ? (
+          <>
+            <View style={styles.logoCircle}>
+              <Ionicons name="cafe-outline" size={18} />
+            </View>
+            <View>
+              <Text style={styles.title}>Deja Brew</Text>
+              <Text style={styles.subtitle}>bean there, learned that.</Text>
+            </View>
+          </>
+        ) : (
+          <View>
+            {title && <Text style={styles.title}>{title}</Text>}
+            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          </View>
+        )}
       </View>
 
-      {rightIcon && (
+      {resolvedRightIcon && (
         <Pressable onPress={onRightPress} hitSlop={8}>
-          <Ionicons name={rightIcon} size={22} style={styles.rightIcon} />
+          <Ionicons name={resolvedRightIcon} size={22} style={styles.rightIcon} />
         </Pressable>
       )}
     </View>
@@ -49,6 +78,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8D9D1',
   },
   leftRow: {
     flexDirection: 'row',
@@ -74,5 +105,8 @@ const styles = StyleSheet.create({
   },
   rightIcon: {
     color: C.accent,
+  },
+  leftIcon: {
+    marginRight: 6,
   },
 });
