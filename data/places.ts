@@ -23,6 +23,15 @@ export type CafePlace = {
   source?: 'curated' | 'osm';
 };
 
+<<<<<<< Updated upstream
+=======
+  // Fonction pour get cafe name par id
+  export const getCafeName = (cafeId: string) : string => {
+    const cafe = ALL_PLACES.find((place) => place.id === cafeId);
+    return cafe ? cafe.name : 'Café inconnu';
+  }
+
+>>>>>>> Stashed changes
 export const PLACES: CafePlace[] = [
   {
     id: "savsav",
@@ -275,8 +284,11 @@ export const ALL_PLACES: CafePlace[] = [
   ...PLACES.map((p) => ({ ...p, source: 'curated' as const })),
   ...OSM_PLACES,
 ];
+<<<<<<< Updated upstream
 // Fonction pour get cafe name par id
 export const getCafeName = (cafeId: string): string => {
   const cafe = ALL_PLACES.find((place) => place.id === cafeId);
   return cafe ? cafe.name : 'Cafe inconnu';
 };
+=======
+>>>>>>> Stashed changes

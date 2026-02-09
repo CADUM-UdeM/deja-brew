@@ -10,10 +10,20 @@ import AppHeader from '../../components/AppHeader';
 import PromoCard from '../../components/PromoCard';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
+<<<<<<< Updated upstream
 import { ALL_PLACES } from '../../data/places';
 import type { CafePlace } from '../../data/places';
 import type { Promo } from '@/data/promos';
 import { fetchPlaceDetail, fetchPromos } from '../../data/api';
+=======
+import AppHeader from '../../components/AppHeader';
+import { ALL_PLACES } from '../../data/places';
+import { fetchPlaceDetail, fetchPromos } from '../../data/api';
+import type { CafePlace } from '../../data/places';
+import type { Promo } from '@/data/promos';
+// import AppHeader from '../../components/AppHeader';
+// import { PLACES } from '../../data/places'; // ajuste si ton dossier est ailleurs
+>>>>>>> Stashed changes
 
 const THEME = {
   bg: '#FFF6EF',
@@ -118,6 +128,7 @@ export default function PlaceScreen() {
   }, [reviews]);
 
   const handleToggleLike = () => {
+<<<<<<< Updated upstream
     const nextLiked = !liked;
     setLiked(nextLiked);
     setLikesCount((prev) => (nextLiked ? prev + 1 : Math.max(0, prev - 1)));
@@ -127,6 +138,15 @@ export default function PlaceScreen() {
     const nextSaved = !saved;
     setSaved(nextSaved);
     setSavesCount((prev) => (nextSaved ? prev + 1 : Math.max(0, prev - 1)));
+=======
+    setLiked((prev) => !prev);
+    setLikesCount((prev) => (liked ? Math.max(0, prev - 1) : prev + 1));
+  };
+
+  const handleToggleSave = () => {
+    setSaved((prev) => !prev);
+    setSavesCount((prev) => (saved ? Math.max(0, prev - 1) : prev + 1));
+>>>>>>> Stashed changes
   };
 
   const handleSubmitReview = () => {
@@ -210,7 +230,15 @@ export default function PlaceScreen() {
       >
         {/* HERO IMAGE */}
         <View style={styles.heroWrapper}>
+<<<<<<< Updated upstream
           <Image source={heroImage} style={styles.heroImage} contentFit="cover" />
+=======
+          <Image
+            source={heroImage}
+            style={styles.heroImage}
+          />
+
+>>>>>>> Stashed changes
           <View style={styles.heroOverlay} />
         </View>
 

@@ -29,12 +29,29 @@ export default function RootLayout() {
             />
 
             {/* Quiz flow */}
+<<<<<<< Updated upstream
             <Stack.Screen name="quiz/index" options={{ headerShown: false }} />
 
             {/* New study session */}
             <Stack.Screen name="session/new" options={{ headerShown: false }} />
 
             {/* Notifications */}
+=======
+            <Stack.Screen
+              name="quiz/index"
+              options={{
+                headerShown: false,
+              }}
+            />
+
+            {/* New study session */}
+            <Stack.Screen
+              name="session/new"
+              options={{
+                headerShown: false,
+              }}
+            />
+>>>>>>> Stashed changes
             <Stack.Screen
               name="notifications"
               options={{ presentation: 'pageSheet', headerShown: false }}

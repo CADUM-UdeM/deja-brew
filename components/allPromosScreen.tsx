@@ -20,6 +20,7 @@ export default function AllPromosScreen() {
     };
   }, []);
 
+<<<<<<< Updated upstream
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -31,4 +32,17 @@ export default function AllPromosScreen() {
       ))}
     </ScrollView>
   );
+=======
+  return(
+    <ScrollView>
+      {promos.map((promo) => (
+        <PromoCard
+          key={promo.id}
+          promo={promo} 
+          enableCafeRoute={true}
+          />
+        ))}
+    </ScrollView>
+  )
+>>>>>>> Stashed changes
 }

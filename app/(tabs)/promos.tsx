@@ -7,6 +7,14 @@ import AppHeader from '@/components/AppHeader';
 import AllPromosScreen from '@/components/allPromosScreen';
 import SavedPromosScreen from '@/components/savedPromosScreen';
 import { THEME } from '@/data/THEME';
+<<<<<<< Updated upstream
+=======
+import React from 'react';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { useRouter } from 'expo-router';
+import AppHeader from '@/components/AppHeader';
+>>>>>>> Stashed changes
 
 const routes = [
   { key: 'promos', title: 'All promos' },
@@ -41,7 +49,11 @@ export default function PromosScreen() {
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
       <AppHeader onRightPress={() => router.push('/notifications')} />
 
+<<<<<<< Updated upstream
       <View style={styles.header}>
+=======
+      <View style={{paddingTop: 12, paddingHorizontal: 20}}>
+>>>>>>> Stashed changes
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked for your study sessions.
