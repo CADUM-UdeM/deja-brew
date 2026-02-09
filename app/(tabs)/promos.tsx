@@ -10,6 +10,9 @@ import { useRouter } from 'expo-router';
 import AppHeader from '@/components/AppHeader';
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -56,6 +59,7 @@ export default function PromosScreen() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
       <AppHeader rightIcon="pricetag-outline" />
@@ -66,6 +70,8 @@ export default function PromosScreen() {
         showsVerticalScrollIndicator={false}
       >
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -81,6 +87,9 @@ export default function PromosScreen() {
       <View style={{paddingTop: 12, paddingHorizontal: 20}}>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
