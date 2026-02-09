@@ -4,24 +4,25 @@ import SavedPromosScreen from '@/components/savedPromosScreen';
 import { THEME } from '@/data/THEME';
 import React from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 
 // routes for the tabs
 const routes = [
-  {key: 'promos', title: 'All promos'},
-  {key: 'saved', title: 'My saved promos'},
+  { key: 'promos', title: 'All promos' },
+  { key: 'saved', title: 'My saved promos' },
 ];
 
 // renders screen of all promos 
 function PromoTab() {
-  return(
-  <AllPromosScreen />)
+  return (
+    <AllPromosScreen />)
 }
 
 // renders screen of saved promos
 function SavedPromoTab() {
-  return(
-   <SavedPromosScreen />
+  return (
+    <SavedPromosScreen />
   )
 }
 
@@ -32,19 +33,20 @@ const renderScene = SceneMap({
 });
 
 // modification (styles) fait à la tab bar
- const renderTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      indicatorStyle={{backgroundColor: THEME.accentDark, height: 3}}
-      activeColor={THEME.accentDark}
-      inactiveColor={THEME.sub}
-      style={{backgroundColor: THEME.bg,
-              elevation: 0, // removes the shadow on android
-              shadowOpacity: 0, // removes the shadow on IOS
-              marginBottom: 8,
-      }}
-      />
-  )
+const renderTabBar = (props: any) => (
+  <TabBar
+    {...props}
+    indicatorStyle={{ backgroundColor: THEME.accentDark, height: 3 }}
+    activeColor={THEME.accentDark}
+    inactiveColor={THEME.sub}
+    style={{
+      backgroundColor: THEME.bg,
+      elevation: 0, // removes the shadow on android
+      shadowOpacity: 0, // removes the shadow on IOS
+      marginBottom: 8,
+    }}
+  />
+)
 
 
 export default function PromosScreen() {
@@ -52,25 +54,25 @@ export default function PromosScreen() {
   const [index, setIndex] = React.useState(0);
 
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 20}}>
+    <View style={{ flex: 1, backgroundColor: THEME.bg, padding: 20 }}>
       {/* <AppHeader rightIcon="pricetag-outline" /> */}
 
-      <View style={{paddingTop: 32}}>
+      <View style={{ paddingTop: useSafeAreaInsets().top }}>
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked just for your study sessions.
         </Text>
       </View>
-        
-        {/* Tab all promos and saved promos done here! */}
-        <TabView 
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
-          renderTabBar={renderTabBar}
-          >
-        </TabView>
+
+      {/* Tab all promos and saved promos done here! */}
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={renderTabBar}
+      >
+      </TabView>
 
     </View>
   );

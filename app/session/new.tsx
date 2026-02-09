@@ -1,19 +1,19 @@
 // app/session/new.tsx
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
+  Alert,
+  Platform,
   ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
   TextInput,
   TouchableOpacity,
-  Switch,
-  Alert,
+  View,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
-import AppHeader from '../../components/AppHeader';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -91,10 +91,10 @@ export default function NewStudySession() {
 
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
-      <AppHeader />
+
 
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 36 : 16 }}
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >

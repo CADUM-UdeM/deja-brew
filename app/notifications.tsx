@@ -1,8 +1,8 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import AppHeader from "../components/AppHeader";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const THEME = {
   bg: "#FFF6EF",
@@ -65,16 +65,23 @@ export default function Notifications() {
       <StatusBar style="dark" backgroundColor={THEME.bg} />
 
       <View style={{ flex: 1, backgroundColor: THEME.bg }}>
-        {/* Ton header custom, avec une flèche retour */}
-        <AppHeader rightIcon="close" onRightPress={() => router.back()} />
+
 
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Notifications</Text>
-          <Text style={styles.subtitle}>Promotions, study invites & more.</Text>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <View>
+              <Text style={styles.title}>Notifications</Text>
+              <Text style={styles.subtitle}>Promotions, study invites & more.</Text>
+            </View>
+
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="close" size={32} color={THEME.sub} />
+            </TouchableOpacity>
+          </View>
 
           {NOTIFS.map((notif) => (
             <View key={notif.id} style={styles.card}>

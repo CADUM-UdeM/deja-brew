@@ -1,19 +1,19 @@
 // app/(tabs)/map.tsx
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import MapView, { Marker } from 'react-native-maps';
 
-import AppHeader from '../../components/AppHeader';
-import { PLACES, CafePlace } from '../../data/places';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CafePlace, PLACES } from '../../data/places';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -133,8 +133,8 @@ export default function MapScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: THEME.bg }]}>
-      <AppHeader />
+    <View style={[styles.container, { backgroundColor: THEME.bg, paddingTop: useSafeAreaInsets().top }]}>
+
 
       <ScrollView
         style={{ flex: 1 }}

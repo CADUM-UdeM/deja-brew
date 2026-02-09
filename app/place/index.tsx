@@ -3,7 +3,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import PromoCard from '@/components/PromoCard';
@@ -81,9 +81,9 @@ export default function PlaceScreen() {
 
   const place = useMemo(() => PLACES.find((p) => p.id === id), [id]);
   const promos = useMemo(() => {
-    if(!id) return [];
+    if (!id) return [];
     return PROMOS.filter((promo) => promo.cafe_id === id);
-  },[id]); 
+  }, [id]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -128,15 +128,15 @@ export default function PlaceScreen() {
   }
 
   // const et fonction pour scroll à la section promo
-  const {scrollTo} = useLocalSearchParams();
+  const { scrollTo } = useLocalSearchParams();
   const scrollRef = useRef<ScrollView>(null);
   const promoRef = useRef<Text>(null);
 
   const scrollToPromo = () => {
     promoRef.current?.measureLayout(
-      scrollRef.current as any, 
+      scrollRef.current as any,
       (x, y) => {
-        scrollRef.current?.scrollTo({y, animated: true});
+        scrollRef.current?.scrollTo({ y, animated: true });
       }
     )
   }
@@ -153,7 +153,6 @@ export default function PlaceScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
-      <AppHeader rightIcon="close-outline" onRightPress={() => router.back()} />
 
       <ScrollView
         style={{ flex: 1 }}
@@ -174,10 +173,26 @@ export default function PlaceScreen() {
               <Text style={styles.heroChipText}>{place.district}</Text>
             </View>
           </View>
+
+          <TouchableOpacity onPress={() => router.back()} style={{
+            position: 'absolute',
+            top: 12,
+            left: 12,
+            backgroundColor: '#FFFFFFDD',
+            borderRadius: 20,
+            padding: 6,
+          }}>
+            <Ionicons
+              name="close"
+              size={28}
+              color={THEME.text}
+
+            />
+          </TouchableOpacity>
         </View>
 
         {/* HEADER TEXTE */}
-        <View style={{ marginTop: 14}}>
+        <View style={{ marginTop: 14 }}>
           <View style={styles.titleRow}>
             {/* view cafe name and address */}
             <View style={{ flex: 1 }}>
@@ -220,7 +235,7 @@ export default function PlaceScreen() {
             <Text style={styles.quickInfoText}>Horaires :</Text>
           </View> */}
         </View>
-        
+
 
         {/* VIBE */}
         <Text style={styles.sectionTitle}>Vibe</Text>
@@ -324,10 +339,10 @@ export default function PlaceScreen() {
               key={promo.id}
               promo={promo}
               enableCafeRoute={false}
-              />
+            />
           ))
         )}
-        
+
         {/* <View style={styles.promoCard}>
           <Text style={styles.promoTitle}>☕ -15% pour les étudiants</Text>
           <Text style={styles.promoText}>

@@ -1,8 +1,8 @@
 // app/(tabs)/profile.tsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AppHeader from '../../components/AppHeader';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -15,8 +15,7 @@ const THEME = {
 
 export default function ProfileScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg }}>
-      <AppHeader rightIcon="person-circle-outline" />
+    <View style={{ flex: 1, backgroundColor: THEME.bg, paddingTop: useSafeAreaInsets().top }}>
 
       <ScrollView
         style={{ flex: 1 }}

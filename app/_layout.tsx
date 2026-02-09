@@ -32,9 +32,7 @@ export default function RootLayout() {
             <Stack.Screen
               name="quiz/index"
               options={{
-                headerTitle: 'Study vibe',
-                // native-stack doesn’t support headerBackTitleVisible; use this instead
-                headerBackButtonDisplayMode: 'minimal',
+                headerShown: false,
               }}
             />
 
@@ -42,8 +40,8 @@ export default function RootLayout() {
             <Stack.Screen
               name="session/new"
               options={{
-                headerTitle: 'New session',
-                headerBackButtonDisplayMode: 'minimal',
+                headerShown: false,
+                presentation: 'pageSheet',
               }}
             />
             <Stack.Screen

@@ -11,9 +11,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import { CafePlace, PLACES } from '../../data/places';
 
@@ -39,6 +40,8 @@ export default function Home() {
   const router = useRouter();
   const [selected, setSelected] = useState<Category>('Tous');
   const [query, setQuery] = useState('');
+
+  const insets = useSafeAreaInsets();
 
   const items: CafePlace[] = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -123,7 +126,9 @@ export default function Home() {
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
       {/* global brand header */}
+
       <AppHeader onRightPress={() => router.push('/notifications')} />
+
 
       <ScrollView
         style={{ flex: 1 }}
