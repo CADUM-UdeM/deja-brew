@@ -1,21 +1,21 @@
 // app/(tabs)/map.tsx
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
-import AppHeader from '../../components/AppHeader';
-import { ALL_PLACES, CafePlace, OSM_ATTRIBUTION } from '../../data/places';
-import { fetchPlaces } from '../../data/api';
-import { PlatformMap } from '@/components/platform-map';
 import type { PlatformMapMarker } from '@/components/platform-map';
+import { PlatformMap } from '@/components/platform-map';
+import AppHeader from '../../components/AppHeader';
+import { fetchPlaces } from '../../data/api';
+import { ALL_PLACES, CafePlace, OSM_ATTRIBUTION } from '../../data/places';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -92,6 +92,21 @@ export default function MapScreen() {
     return withAddress.slice(0, markerLimit);
   }, [filteredPlaces, markerLimit]);
 
+  // --- helper coords pour chaque café ---
+  const getCoords = (place: CafePlace) => {
+    const p = place as CafePlace & { latitude?: number; lat?: number; longitude?: number; lng?: number };
+    const lat =
+      p.latitude ??
+      p.lat ??
+      p.coords?.latitude;
+    const lng =
+      p.longitude ??
+      p.lng ??
+      p.coords?.longitude;
+    if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+    return { latitude: lat, longitude: lng };
+  };
+
   const mapMarkers = useMemo(
     () =>
       displayPlaces
@@ -150,20 +165,7 @@ export default function MapScreen() {
     };
   }, [places]);
 
-  // --- helper coords pour chaque café ---
-  const getCoords = (place: CafePlace) => {
-    const p = place as CafePlace & { latitude?: number; lat?: number; longitude?: number; lng?: number };
-    const lat =
-      p.latitude ??
-      p.lat ??
-      p.coords?.latitude;
-    const lng =
-      p.longitude ??
-      p.lng ??
-      p.coords?.longitude;
-    if (typeof lat !== 'number' || typeof lng !== 'number') return null;
-    return { latitude: lat, longitude: lng };
-  };
+
 
   // --- quand on clique sur un café (card ou marker) ---
   const handlePlacePress = (place: CafePlace) => {
@@ -199,7 +201,7 @@ export default function MapScreen() {
       .then((data) => {
         if (mounted && data.length > 0) setPlaces(data);
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       mounted = false;
     };
