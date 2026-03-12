@@ -1,40 +1,14 @@
 import { Stack, useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AppHeader from '../../components/AppHeader';
 import { THEME } from '../../data/THEME';
 import AllSessionsScreen from '@/components/allSessionsScreen';
 import MySessionsScreen from '@/components/mySessionsScreen';
 
-const routes = [
-  { key: 'sessions', title: 'Sessions' },
-  { key: 'mine', title: 'Mes sessions' },
-];
-
-const renderScene = SceneMap({
-  sessions: AllSessionsScreen,
-  mine: MySessionsScreen,
-});
-
-const renderTabBar = (props: any) => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: THEME.accentDark, height: 3 }}
-    activeColor={THEME.accentDark}
-    inactiveColor={THEME.sub}
-    style={{
-      backgroundColor: THEME.bg,
-      elevation: 0,
-      shadowOpacity: 0,
-    }}
-  />
-);
-
 export default function SessionsFeedScreen() {
   const router = useRouter();
-  const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
+  const [tab, setTab] = React.useState<'sessions' | 'mine'>('sessions');
 
   return (
     <>
@@ -55,13 +29,28 @@ export default function SessionsFeedScreen() {
           </TouchableOpacity>
         </View>
 
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
-          renderTabBar={renderTabBar}
-        />
+        <View style={styles.tabRow}>
+          <TouchableOpacity
+            style={[styles.tabButton, tab === 'sessions' && styles.tabButtonActive]}
+            onPress={() => setTab('sessions')}
+          >
+            <Text style={[styles.tabText, tab === 'sessions' && styles.tabTextActive]}>
+              Sessions
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tabButton, tab === 'mine' && styles.tabButtonActive]}
+            onPress={() => setTab('mine')}
+          >
+            <Text style={[styles.tabText, tab === 'mine' && styles.tabTextActive]}>
+              Mes sessions
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.content}>
+          {tab === 'sessions' ? <AllSessionsScreen /> : <MySessionsScreen />}
+        </View>
       </View>
     </>
   );
@@ -76,5 +65,35 @@ const styles = StyleSheet.create({
   link: {
     color: THEME.accentDark,
     fontWeight: '700',
+  },
+  tabRow: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: 'center',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+  },
+  tabButtonActive: {
+    backgroundColor: THEME.accentDark,
+    borderColor: THEME.accentDark,
+  },
+  tabText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: THEME.text,
+  },
+  tabTextActive: {
+    color: '#fff',
+  },
+  content: {
+    flex: 1,
   },
 });

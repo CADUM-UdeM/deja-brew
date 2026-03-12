@@ -15,7 +15,6 @@ export default function SavedPromosScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg, paddingHorizontal: 20, paddingTop: 12 }}>
       {savedPromos.length === 0 ? (
-<<<<<<< Updated upstream
         <View
           style={{
             flex: 1,
@@ -26,11 +25,6 @@ export default function SavedPromosScreen() {
         >
           <Text style={styles.emptyText}>You have not saved any promos yet.</Text>
         </View>
-=======
-      <View style={{flex: 1, backgroundColor: THEME.bg, justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={styles.emptyText}>You have not saved any promos yet.</Text>
-      </View>
->>>>>>> Stashed changes
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}

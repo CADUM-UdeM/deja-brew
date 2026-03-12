@@ -22,16 +22,6 @@ export type CafePlace = {
   priceLevel?: '$' | '$$' | '$$$';  // niveau de prix
   source?: 'curated' | 'osm';
 };
-
-<<<<<<< Updated upstream
-=======
-  // Fonction pour get cafe name par id
-  export const getCafeName = (cafeId: string) : string => {
-    const cafe = ALL_PLACES.find((place) => place.id === cafeId);
-    return cafe ? cafe.name : 'Café inconnu';
-  }
-
->>>>>>> Stashed changes
 export const PLACES: CafePlace[] = [
   {
     id: "savsav",
@@ -229,11 +219,11 @@ export const OSM_PLACES: CafePlace[] = (osmRaw?.items ?? [])
     priceLevel: item.priceLevel || undefined,
     source: 'osm',
   }))
-  .filter((place) => Boolean(place.address) && Boolean(place.coords))
-  .map((place) => {
+  .filter((place: CafePlace) => Boolean(place.address) && Boolean(place.coords))
+  .map((place: CafePlace) => {
     const tags = new Set(place.tags);
     const name = place.name.toLowerCase();
-    const food = place.food.map((f) => f.toLowerCase());
+    const food = place.food.map((f: string) => f.toLowerCase());
 
     const hours = place.hours?.toLowerCase() ?? '';
     const isLate =
@@ -243,8 +233,8 @@ export const OSM_PLACES: CafePlace[] = (osmRaw?.items ?? [])
     if (place.wifi) tags.add('Wi-Fi');
     if (place.outlets) tags.add('Outlets');
     if (name.includes('roast') || name.includes('roaster')) tags.add('Roastery');
-    if (food.some((f) => f.includes('brunch'))) tags.add('Brunch');
-    if (food.some((f) => f.includes('dessert') || f.includes('pastr'))) tags.add('Pastries');
+    if (food.some((f: string) => f.includes('brunch'))) tags.add('Brunch');
+    if (food.some((f: string) => f.includes('dessert') || f.includes('pastr'))) tags.add('Pastries');
     if (isLate) tags.add('Open late');
 
     const seatingVal = String((place as any).meta?.seating || '').toLowerCase();
@@ -284,11 +274,9 @@ export const ALL_PLACES: CafePlace[] = [
   ...PLACES.map((p) => ({ ...p, source: 'curated' as const })),
   ...OSM_PLACES,
 ];
-<<<<<<< Updated upstream
+
 // Fonction pour get cafe name par id
 export const getCafeName = (cafeId: string): string => {
   const cafe = ALL_PLACES.find((place) => place.id === cafeId);
   return cafe ? cafe.name : 'Cafe inconnu';
 };
-=======
->>>>>>> Stashed changes

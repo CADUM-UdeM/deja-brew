@@ -1,72 +1,47 @@
 // app/(tabs)/promos.tsx
 import React from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import AppHeader from '@/components/AppHeader';
 import AllPromosScreen from '@/components/allPromosScreen';
 import SavedPromosScreen from '@/components/savedPromosScreen';
 import { THEME } from '@/data/THEME';
-<<<<<<< Updated upstream
-=======
-import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
-import { useRouter } from 'expo-router';
-import AppHeader from '@/components/AppHeader';
->>>>>>> Stashed changes
-
-const routes = [
-  { key: 'promos', title: 'All promos' },
-  { key: 'saved', title: 'Saved' },
-];
-
-const renderScene = SceneMap({
-  promos: AllPromosScreen,
-  saved: SavedPromosScreen,
-});
-
-const renderTabBar = (props: any) => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: THEME.accentDark, height: 3 }}
-    activeColor={THEME.accentDark}
-    inactiveColor={THEME.sub}
-    style={{
-      backgroundColor: THEME.bg,
-      elevation: 0,
-      shadowOpacity: 0,
-    }}
-  />
-);
 
 export default function PromosScreen() {
   const router = useRouter();
-  const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
+  const [tab, setTab] = React.useState<'promos' | 'saved'>('promos');
 
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg }}>
       <AppHeader onRightPress={() => router.push('/notifications')} />
 
-<<<<<<< Updated upstream
       <View style={styles.header}>
-=======
-      <View style={{paddingTop: 12, paddingHorizontal: 20}}>
->>>>>>> Stashed changes
         <Text style={styles.title}>Promos & perks</Text>
         <Text style={styles.subtitle}>
           Coffee deals, late-night discounts and student perks picked for your study sessions.
         </Text>
       </View>
 
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
-        renderTabBar={renderTabBar}
-      />
+      <View style={styles.tabRow}>
+        <TouchableOpacity
+          style={[styles.tabButton, tab === 'promos' && styles.tabButtonActive]}
+          onPress={() => setTab('promos')}
+        >
+          <Text style={[styles.tabText, tab === 'promos' && styles.tabTextActive]}>
+            All promos
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tabButton, tab === 'saved' && styles.tabButtonActive]}
+          onPress={() => setTab('saved')}
+        >
+          <Text style={[styles.tabText, tab === 'saved' && styles.tabTextActive]}>
+            Saved
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.content}>{tab === 'promos' ? <AllPromosScreen /> : <SavedPromosScreen />}</View>
     </View>
   );
 }
@@ -86,5 +61,35 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: THEME.sub,
     marginBottom: 12,
+  },
+  tabRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+    gap: 10,
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: 'center',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+  },
+  tabButtonActive: {
+    backgroundColor: THEME.accentDark,
+    borderColor: THEME.accentDark,
+  },
+  tabText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: THEME.text,
+  },
+  tabTextActive: {
+    color: '#fff',
+  },
+  content: {
+    flex: 1,
   },
 });

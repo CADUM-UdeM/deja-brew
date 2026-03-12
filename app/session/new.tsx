@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
+import { PlatformDateTimePicker } from '@/components/date-time-picker';
 import AppHeader from '../../components/AppHeader';
 import { createSession } from '../../data/api';
 
@@ -363,7 +363,7 @@ export default function NewStudySession() {
             </TouchableOpacity>
           </View>
           {showDatePicker && (
-            <DateTimePicker
+            <PlatformDateTimePicker
               value={date}
               mode="date"
               display={Platform.OS === 'ios' ? 'inline' : 'default'}
@@ -375,7 +375,7 @@ export default function NewStudySession() {
             />
           )}
           {showTimePicker && (
-            <DateTimePicker
+            <PlatformDateTimePicker
               value={date}
               mode="time"
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}

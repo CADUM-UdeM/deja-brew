@@ -10,11 +10,12 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import MapView, { Marker } from 'react-native-maps';
 
 import AppHeader from '../../components/AppHeader';
 import { ALL_PLACES, CafePlace, OSM_ATTRIBUTION } from '../../data/places';
 import { fetchPlaces } from '../../data/api';
+import { PlatformMap } from '@/components/platform-map';
+import type { PlatformMapMarker } from '@/components/platform-map';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -90,6 +91,41 @@ export default function MapScreen() {
     );
     return withAddress.slice(0, markerLimit);
   }, [filteredPlaces, markerLimit]);
+
+  const mapMarkers = useMemo(
+    () =>
+      displayPlaces
+        .map((place): PlatformMapMarker | null => {
+          const coords = getCoords(place);
+          if (!coords) return null;
+
+          const selected = selectedId === place.id;
+          return {
+            id: place.id,
+            coordinate: coords,
+            title: place.name,
+            description: `${place.district} · ${place.address}`,
+            highlighted: selected,
+            onPress: () => handleMarkerPress(place),
+            icon: (
+              <View
+                style={[
+                  styles.markerBubble,
+                  selected && styles.markerBubbleActive,
+                ]}
+              >
+                <Ionicons
+                  name="cafe"
+                  size={14}
+                  color={selected ? '#7F3B00' : '#FFFFFF'}
+                />
+              </View>
+            ),
+          };
+        })
+        .filter((marker): marker is PlatformMapMarker => marker !== null),
+    [displayPlaces, selectedId]
+  );
 
   // --- région initiale de la map (Montréal ou 1er café) ---
   const initialRegion = useMemo(() => {
@@ -266,35 +302,11 @@ export default function MapScreen() {
 
         {/* MAP + MARKERS */}
         <View style={[styles.padH, { marginTop: 12 }]}>
-          <MapView style={styles.map} initialRegion={initialRegion}>
-            {displayPlaces.map((place) => {
-              const coords = getCoords(place);
-              if (!coords) return null;
-
-              return (
-                <Marker
-                  key={place.id}
-                  coordinate={coords}
-                  title={place.name}
-                  description={`${place.district} · ${place.address}`}
-                  onPress={() => handleMarkerPress(place)}
-                >
-                  <View
-                    style={[
-                      styles.markerBubble,
-                      selectedId === place.id && styles.markerBubbleActive,
-                    ]}
-                  >
-                    <Ionicons
-                      name="cafe"
-                      size={14}
-                      color={selectedId === place.id ? '#7F3B00' : '#FFFFFF'}
-                    />
-                  </View>
-                </Marker>
-              );
-            })}
-          </MapView>
+          <PlatformMap
+            style={styles.map}
+            initialRegion={initialRegion}
+            markers={mapMarkers}
+          />
         </View>
         <View style={styles.mapMetaRow}>
           <Text style={styles.attribution}>{OSM_ATTRIBUTION}</Text>

@@ -13,9 +13,9 @@ const C = {
 
 // keyof typeof Ionicons.glyphMap = n'importe quel nom d'icône Ionicons valide
 type Props = {
-  leftIcon?: keyof typeof Ionicons.glyphMap;
+  leftIcon?: keyof typeof Ionicons.glyphMap | null;
   onLeftPress?: () => void;
-  rightIcon?: keyof typeof Ionicons.glyphMap;
+  rightIcon?: keyof typeof Ionicons.glyphMap | null;
   onRightPress?: () => void;
   showLogo?: boolean;
   title?: string;

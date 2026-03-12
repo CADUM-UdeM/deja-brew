@@ -6,14 +6,46 @@ import type { UserSummary, UserProfile } from '@/data/users';
 import { getAuthToken, getAuthUser } from '@/data/auth';
 
 const fallbackUrl = 'https://backend-deja-brew.onrender.com';
+const localDevPort = '3000';
 
 const extra =
   Constants.expoConfig?.extra ??
   (Constants.manifest as { extra?: Record<string, string> } | null)?.extra ??
   {};
 
-export const API_BASE_URL =
-  (extra.EXPO_API_BASE_URL as string | undefined) || fallbackUrl;
+const getExpoHost = () => {
+  const constants = Constants as typeof Constants & {
+    expoGoConfig?: { debuggerHost?: string } | null;
+    manifest2?: { extra?: { expoClient?: { hostUri?: string } } } | null;
+    manifest?: { debuggerHost?: string } | null;
+  };
+
+  const hostUri =
+    constants.expoConfig?.hostUri ??
+    constants.expoGoConfig?.debuggerHost ??
+    constants.manifest2?.extra?.expoClient?.hostUri ??
+    constants.manifest?.debuggerHost ??
+    '';
+
+  if (!hostUri) return null;
+  const host = hostUri.split(':')[0]?.trim();
+  return host || null;
+};
+
+const resolveApiBaseUrl = () => {
+  const configuredUrl = (extra.EXPO_API_BASE_URL as string | undefined)?.trim();
+  if (configuredUrl) return configuredUrl;
+
+  if (__DEV__) {
+    const expoHost = getExpoHost();
+    if (expoHost) return `http://${expoHost}:${localDevPort}`;
+    return `http://localhost:${localDevPort}`;
+  }
+
+  return fallbackUrl;
+};
+
+export const API_BASE_URL = resolveApiBaseUrl();
 
 export const buildApiUrl = (path: string) => {
   const cleaned = path.startsWith('/') ? path : `/${path}`;
@@ -253,7 +285,7 @@ const extractCreator = (session: any) =>
 
 const matchesUser = (session: any, user: UserProfile | null) => {
   if (!user) return false;
-  const userId = String(user._id ?? user.id ?? '');
+  const userId = String(user._id ?? '');
   const username = user.username ?? '';
   const creator = extractCreator(session);
 

@@ -1,4 +1,5 @@
 import { USER_SUMMARIES } from './users';
+import type { UserSummary } from './users';
 
 export type FriendRequest = {
   _id: string;
@@ -8,10 +9,10 @@ export type FriendRequest = {
   createdAt: string;
 };
 
-export const FRIENDS = [
+export const FRIENDS: UserSummary[] = [
   USER_SUMMARIES.find((user) => user.username === 'sara7'),
   USER_SUMMARIES.find((user) => user.username === 'nora.studies'),
-].filter(Boolean);
+].filter((user): user is UserSummary => Boolean(user));
 
 export const FRIEND_REQUESTS: FriendRequest[] = [
   {
