@@ -1,9 +1,9 @@
 // app/(tabs)/profile.tsx
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import AppHeader from '../../components/AppHeader';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { fetchMe } from '../../data/api';
 import { clearAuth, getAuthUser } from '../../data/auth';
 import type { UserProfile } from '../../data/users';
@@ -21,7 +21,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const insets = useSafeAreaInsets();
   useEffect(() => {
     let mounted = true;
     setLoading(true);
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
       .then((res) => {
         if (mounted) setUser(res.data.user);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       mounted = false;
@@ -43,8 +43,8 @@ export default function ProfileScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg }}>
-      <AppHeader rightIcon={null} />
+    <View style={{ flex: 1, backgroundColor: THEME.bg, paddingTop: insets.top }}>
+
 
       <ScrollView
         style={{ flex: 1, backgroundColor: THEME.bg }}

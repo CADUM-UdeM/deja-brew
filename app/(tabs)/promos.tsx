@@ -1,19 +1,19 @@
 // app/(tabs)/promos.tsx
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
-import AppHeader from '@/components/AppHeader';
 import AllPromosScreen from '@/components/allPromosScreen';
 import SavedPromosScreen from '@/components/savedPromosScreen';
 import { THEME } from '@/data/THEME';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function PromosScreen() {
   const router = useRouter();
   const [tab, setTab] = React.useState<'promos' | 'saved'>('promos');
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: THEME.bg }}>
-      <AppHeader onRightPress={() => router.push('/notifications')} />
+    <View style={{ flex: 1, backgroundColor: THEME.bg, paddingTop: insets.top }}>
 
       <View style={styles.header}>
         <Text style={styles.title}>Promos & perks</Text>

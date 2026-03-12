@@ -13,7 +13,7 @@ import {
 
 import type { PlatformMapMarker } from '@/components/platform-map';
 import { PlatformMap } from '@/components/platform-map';
-import AppHeader from '../../components/AppHeader';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { fetchPlaces } from '../../data/api';
 import { ALL_PLACES, CafePlace, OSM_ATTRIBUTION } from '../../data/places';
 
@@ -31,7 +31,7 @@ const THEME = {
 export default function MapScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-
+  const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
   const [districtFilter, setDistrictFilter] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -208,8 +208,9 @@ export default function MapScreen() {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: THEME.bg }]}>
-      <AppHeader />
+    <View style={[styles.container, { backgroundColor: THEME.bg, paddingTop: insets.top }]}>
+
+
 
       <ScrollView
         style={{ flex: 1, backgroundColor: THEME.bg }}
@@ -413,7 +414,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: '800',
     color: THEME.text,
   },
