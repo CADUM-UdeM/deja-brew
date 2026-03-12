@@ -495,7 +495,7 @@ export default function NewStudySession() {
 
           {/* Max people */}
           <Text style={[styles.label, { marginTop: 18 }]}>Max people</Text>
-          <View className="inline" style={styles.inlineRow}>
+          <View style={styles.inlineRow}>
             <TextInput
               style={[styles.input, { flex: 0, width: 80, marginTop: 0 }]}
               value={maxPeople}

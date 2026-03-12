@@ -19,6 +19,7 @@ export function PlatformDateTimePicker({
   mode,
   minimumDate,
   onChange,
+  display: _display,
 }: PlatformDateTimePickerProps) {
   const step = (amount: number) => {
     const next = new Date(value);

@@ -14,7 +14,7 @@ export default function AllPromosScreen() {
       .then((data) => {
         if (mounted && data.length > 0) setPromos(data);
       })
-      .catch(() => {});
+      .catch((err) => console.error('[AllPromos] fetch failed:', err));
     return () => {
       mounted = false;
     };

@@ -129,16 +129,16 @@ export default function MapScreen() {
 
   // --- région initiale de la map (Montréal ou 1er café) ---
   const initialRegion = useMemo(() => {
-    const first: any = places[0];
+    const first = places[0] as CafePlace & { latitude?: number; lat?: number; longitude?: number; lng?: number } | undefined;
 
     const lat =
-      first?.latitude ??
-      first?.lat ??
+      (first as any)?.latitude ??
+      (first as any)?.lat ??
       first?.coords?.latitude ??
       45.5019; // Montréal fallback
     const lng =
-      first?.longitude ??
-      first?.lng ??
+      (first as any)?.longitude ??
+      (first as any)?.lng ??
       first?.coords?.longitude ??
       -73.5674; // Montréal fallback
 
@@ -152,7 +152,7 @@ export default function MapScreen() {
 
   // --- helper coords pour chaque café ---
   const getCoords = (place: CafePlace) => {
-    const p: any = place;
+    const p = place as CafePlace & { latitude?: number; lat?: number; longitude?: number; lng?: number };
     const lat =
       p.latitude ??
       p.lat ??

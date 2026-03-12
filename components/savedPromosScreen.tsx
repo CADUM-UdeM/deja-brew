@@ -40,12 +40,6 @@ export default function SavedPromosScreen() {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: THEME.text,
-    marginBottom: 12,
-  },
   emptyText: {
     fontSize: 14,
     color: THEME.sub,

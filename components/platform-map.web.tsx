@@ -47,6 +47,7 @@ export function PlatformMap({ initialRegion, markers, style }: PlatformMapProps)
             style={[styles.markerChip, marker.highlighted && styles.markerChipActive]}
             onPress={marker.onPress}
           >
+            {marker.icon ?? null}
             <Text style={[styles.markerText, marker.highlighted && styles.markerTextActive]}>
               {marker.title ?? 'Cafe'}
             </Text>

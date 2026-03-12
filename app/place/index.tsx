@@ -292,7 +292,7 @@ export default function PlaceScreen() {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.vibeText}>{place.vibe}</Text>
-              {place.studyAtmosphere.map((line, idx) => (
+              {(place.studyAtmosphere ?? []).map((line, idx) => (
                 <View key={idx} style={styles.bulletRow}>
                   <Text style={styles.bullet}>•</Text>
                   <Text style={styles.bulletText}>{line}</Text>
@@ -401,7 +401,7 @@ export default function PlaceScreen() {
                 <Text style={styles.vibePillText}>Study‑friendly</Text>
               </View>
               <Text style={styles.reviewSummaryText}>
-                Most say: {place.studyAtmosphere[0] || 'Balanced study atmosphere'}
+                Most say: {place.studyAtmosphere?.[0] || 'Balanced study atmosphere'}
               </Text>
               <View style={styles.miniStatRow}>
                 <View style={styles.miniStat}>
