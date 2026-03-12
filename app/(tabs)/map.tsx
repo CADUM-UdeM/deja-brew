@@ -212,7 +212,7 @@ export default function MapScreen() {
       <AppHeader />
 
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: THEME.bg }}
         contentContainerStyle={{ paddingBottom: 80, paddingTop: 12 }}
         showsVerticalScrollIndicator={false}
       >

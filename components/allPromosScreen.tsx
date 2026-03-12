@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
+import { THEME } from '@/data/THEME';
 import { PROMOS, Promo } from '@/data/promos';
 import PromoCard from './PromoCard';
 import { fetchPromos } from '@/data/api';
@@ -22,7 +23,7 @@ export default function AllPromosScreen() {
 
   return (
     <ScrollView
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: THEME.bg }}
       contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120, paddingTop: 12 }}
       showsVerticalScrollIndicator={false}
     >

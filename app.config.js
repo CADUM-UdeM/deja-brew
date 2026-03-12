@@ -6,9 +6,10 @@ export default {
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "studyplaces",
-    userInterfaceStyle: "automatic",
+    userInterfaceStyle: "light",
     newArchEnabled: true,
     ios: {
+      userInterfaceStyle: "light",
       supportsTablet: true,
       infoPlist: {
         NSAppTransportSecurity: {
@@ -41,9 +42,9 @@ export default {
           image: "./assets/images/splash-icon.png",
           imageWidth: 200,
           resizeMode: "contain",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#FFF6EF",
           dark: {
-            backgroundColor: "#000000",
+            backgroundColor: "#FFF6EF",
           },
         },
       ],

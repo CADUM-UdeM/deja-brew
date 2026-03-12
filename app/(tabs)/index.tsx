@@ -155,7 +155,7 @@ export default function Home() {
       <AppHeader onRightPress={() => router.push('/notifications')} />
 
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: THEME.bg }}
         contentContainerStyle={{ paddingBottom: 120, paddingTop: 12 }}
         showsVerticalScrollIndicator={false}
       >

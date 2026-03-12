@@ -1,24 +1,28 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { LikedPromosProvider } from '@/data/likedPromosContext';
 import { SavedPromosProvider } from '@/data/savedPromosContext';
+
+const BG = '#FFF6EF';
+
+const AppTheme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, background: BG },
+};
 
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <LikedPromosProvider>
       <SavedPromosProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack>
+        <ThemeProvider value={AppTheme}>
+          <Stack screenOptions={{ contentStyle: { backgroundColor: BG } }}>
             {/* Bottom tabs */}
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 

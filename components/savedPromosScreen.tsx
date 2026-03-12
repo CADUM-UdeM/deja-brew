@@ -27,6 +27,7 @@ export default function SavedPromosScreen() {
         </View>
       ) : (
         <ScrollView
+          style={{ flex: 1, backgroundColor: THEME.bg }}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 120 }}
         >

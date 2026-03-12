@@ -47,7 +47,7 @@ export default function ProfileScreen() {
       <AppHeader rightIcon={null} />
 
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: THEME.bg }}
         contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
       >
