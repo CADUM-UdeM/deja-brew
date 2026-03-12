@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { AuthProvider } from '@/data/AuthContext';
 import { LikedPromosProvider } from '@/data/likedPromosContext';
 import { SavedPromosProvider } from '@/data/savedPromosContext';
 
@@ -19,8 +20,9 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <LikedPromosProvider>
-      <SavedPromosProvider>
+    <AuthProvider>
+      <LikedPromosProvider>
+        <SavedPromosProvider>
         <ThemeProvider value={AppTheme}>
           <Stack screenOptions={{ contentStyle: { backgroundColor: BG } }}>
             {/* Bottom tabs */}
@@ -57,6 +59,7 @@ export default function RootLayout() {
           <StatusBar style="dark" />
         </ThemeProvider>
       </SavedPromosProvider>
-    </LikedPromosProvider>
+      </LikedPromosProvider>
+    </AuthProvider>
   );
 }

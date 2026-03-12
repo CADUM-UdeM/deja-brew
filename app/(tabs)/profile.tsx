@@ -4,8 +4,10 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AuthModal from '../../components/AuthModal';
 import { fetchMe } from '../../data/api';
-import { clearAuth, getAuthUser } from '../../data/auth';
+import { clearAuth } from '../../data/auth';
+import { useAuth } from '../../data/AuthContext';
 import type { UserProfile } from '../../data/users';
 
 const THEME = {
@@ -19,33 +21,79 @@ const THEME = {
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const { user: authUser, loading: authLoading, refreshAuth } = useAuth();
+  const [user, setUser] = useState<UserProfile | null>(authUser ?? null);
   const [loading, setLoading] = useState(false);
+  const [authModalVisible, setAuthModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
+
   useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    getAuthUser<UserProfile>()
-      .then((cached) => {
-        if (mounted && cached) setUser(cached);
-      })
-      .finally(() => setLoading(false));
+    if (authUser) {
+      setUser(authUser);
+      setLoading(true);
+      fetchMe()
+        .then((res) => setUser(res.data.user))
+        .catch(() => {})
+        .finally(() => setLoading(false));
+    } else {
+      setUser(null);
+    }
+  }, [authUser]);
 
-    fetchMe()
-      .then((res) => {
-        if (mounted) setUser(res.data.user);
-      })
-      .catch(() => { });
+  useEffect(() => {
+    if (!authLoading && !authUser) {
+      setAuthModalVisible(true);
+    }
+  }, [authLoading, authUser]);
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const handleAuthSuccess = () => {
+    refreshAuth();
+    setAuthModalVisible(false);
+  };
+
+  if (authLoading) {
+    return (
+      <View style={[styles.centered, { flex: 1, backgroundColor: THEME.bg, paddingTop: insets.top }]}>
+        <ActivityIndicator color={THEME.accentDark} size="large" />
+      </View>
+    );
+  }
+
+  if (!authUser) {
+    return (
+      <View style={{ flex: 1, backgroundColor: THEME.bg, paddingTop: insets.top }}>
+        <View style={[styles.centered, styles.guestContainer]}>
+          <View style={styles.avatar}>
+            <Ionicons name="cafe-outline" size={48} color="#fff" />
+          </View>
+          <Text style={styles.guestTitle}>Create an account</Text>
+          <Text style={styles.guestSubtitle}>
+            Sign up to save your study preferences, find friends, and join sessions.
+          </Text>
+          <TouchableOpacity
+            style={styles.createAccountBtn}
+            onPress={() => setAuthModalVisible(true)}
+          >
+            <Text style={styles.createAccountBtnText}>Create account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginLink}
+            onPress={() => setAuthModalVisible(true)}
+          >
+            <Text style={styles.loginLinkText}>Already have an account? Log in</Text>
+          </TouchableOpacity>
+        </View>
+        <AuthModal
+          visible={authModalVisible}
+          onClose={() => setAuthModalVisible(false)}
+          onSuccess={handleAuthSuccess}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: THEME.bg, paddingTop: insets.top }}>
-
-
       <ScrollView
         style={{ flex: 1, backgroundColor: THEME.bg }}
         contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
@@ -153,35 +201,11 @@ export default function ProfileScreen() {
         <Text style={[styles.sectionTitle, { marginTop: 22 }]}>Auth</Text>
 
         <TouchableOpacity
-          style={styles.rowItem}
-          activeOpacity={0.7}
-          onPress={() => router.push('/auth/login')}
-        >
-          <View style={styles.rowLeft}>
-            <Ionicons name="log-in-outline" size={20} color={THEME.accentDark} />
-            <Text style={styles.rowText}>Log in</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.rowItem}
-          activeOpacity={0.7}
-          onPress={() => router.push('/auth/register')}
-        >
-          <View style={styles.rowLeft}>
-            <Ionicons name="person-add-outline" size={20} color={THEME.accentDark} />
-            <Text style={styles.rowText}>Create account</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color={THEME.sub} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
           style={[styles.rowItem, { marginTop: 10 }]}
           activeOpacity={0.7}
           onPress={async () => {
             await clearAuth();
-            setUser(null);
+            refreshAuth();
           }}
         >
           <View style={styles.rowLeft}>
@@ -195,19 +219,62 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  guestContainer: {
+    padding: 32,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: THEME.accentDark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  guestTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: THEME.text,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  guestSubtitle: {
+    fontSize: 15,
+    color: THEME.sub,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 28,
+  },
+  createAccountBtn: {
+    backgroundColor: THEME.accentDark,
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  createAccountBtnText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  loginLink: {
+    paddingVertical: 8,
+  },
+  loginLinkText: {
+    color: THEME.accentDark,
+    fontWeight: '600',
+    fontSize: 14,
+  },
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
     columnGap: 14,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: THEME.accentDark,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   name: {
     fontSize: 20,

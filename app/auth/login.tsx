@@ -15,9 +15,11 @@ import AppHeader from '../../components/AppHeader';
 import { THEME } from '../../data/THEME';
 import { login } from '../../data/api';
 import { setAuth } from '../../data/auth';
+import { useAuth } from '../../data/AuthContext';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,6 +33,7 @@ export default function LoginScreen() {
     try {
       const res = await login(email.trim(), password);
       await setAuth(res.data.token, res.data.user);
+      await refreshAuth();
       router.replace('/(tabs)');
     } catch (err: any) {
       Alert.alert('Login failed', err?.message || 'Please try again.');

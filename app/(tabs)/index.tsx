@@ -198,7 +198,7 @@ export default function Home() {
               <TextInput
                 value={query}
                 onChangeText={setQuery}
-                placeholder="Wi-Fi, calme, prises, brunch, Vieux-Montréal..."
+                placeholder="Wi-Fi, calme, prises, brunch..."
                 placeholderTextColor={THEME.sub}
                 returnKeyType="search"
                 style={[styles.input, { color: THEME.text }]}

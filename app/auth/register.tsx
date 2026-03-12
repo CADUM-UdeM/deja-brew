@@ -1,23 +1,25 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
+  View,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import AppHeader from '../../components/AppHeader';
-import { THEME } from '../../data/THEME';
 import { register } from '../../data/api';
 import { setAuth } from '../../data/auth';
+import { useAuth } from '../../data/AuthContext';
+import { THEME } from '../../data/THEME';
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -38,6 +40,7 @@ export default function RegisterScreen() {
         password,
       });
       await setAuth(res.data.token, res.data.user);
+      await refreshAuth();
       router.replace('/(tabs)');
     } catch (err: any) {
       Alert.alert('Signup failed', err?.message || 'Please try again.');
