@@ -598,3 +598,31 @@ export const declineFriendRequest = async (requestId: string) =>
     method: 'POST',
     auth: true,
   });
+
+export const removeFriend = async (friendId: string) =>
+  apiRequest(`/api/friends/${friendId}`, {
+    method: 'DELETE',
+    auth: true,
+  });
+
+export const submitReview = async (
+  placeId: string,
+  payload: { rating: number; text: string }
+) =>
+  apiRequest(`/api/places/${placeId}/reviews`, {
+    method: 'POST',
+    auth: true,
+    body: payload,
+  });
+
+export const likePlace = async (placeId: string) =>
+  apiRequest(`/api/places/${placeId}/like`, { method: 'POST', auth: true });
+
+export const unlikePlace = async (placeId: string) =>
+  apiRequest(`/api/places/${placeId}/like`, { method: 'DELETE', auth: true });
+
+export const savePlace = async (placeId: string) =>
+  apiRequest(`/api/places/${placeId}/save`, { method: 'POST', auth: true });
+
+export const unsavePlace = async (placeId: string) =>
+  apiRequest(`/api/places/${placeId}/save`, { method: 'DELETE', auth: true });

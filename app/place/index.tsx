@@ -13,7 +13,7 @@ import { ReviewsModal } from '@/components/ReviewsModal';
 import { ALL_PLACES } from '../../data/places';
 import type { CafePlace } from '../../data/places';
 import type { Promo } from '@/data/promos';
-import { fetchPlaceDetail, fetchPromos } from '../../data/api';
+import { fetchPlaceDetail, fetchPromos, submitReview, likePlace, unlikePlace, savePlace, unsavePlace } from '../../data/api';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -121,15 +121,21 @@ export default function PlaceScreen() {
     const nextLiked = !liked;
     setLiked(nextLiked);
     setLikesCount((prev) => (nextLiked ? prev + 1 : Math.max(0, prev - 1)));
+    if (placeData) {
+      (nextLiked ? likePlace(placeData.id) : unlikePlace(placeData.id)).catch(() => {});
+    }
   };
 
   const handleToggleSave = () => {
     const nextSaved = !saved;
     setSaved(nextSaved);
     setSavesCount((prev) => (nextSaved ? prev + 1 : Math.max(0, prev - 1)));
+    if (placeData) {
+      (nextSaved ? savePlace(placeData.id) : unsavePlace(placeData.id)).catch(() => {});
+    }
   };
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (!reviewText.trim() || !reviewRating) return;
     const existingIndex = reviews.findIndex((r) => r.name === 'You');
     if (existingIndex >= 0) {
@@ -138,6 +144,9 @@ export default function PlaceScreen() {
       setReviews(next);
     } else {
       setReviews([{ name: 'You', text: reviewText, rating: reviewRating }, ...reviews]);
+    }
+    if (placeData) {
+      submitReview(placeData.id, { rating: reviewRating, text: reviewText }).catch(() => {});
     }
     setReviewText('');
     setReviewRating(null);

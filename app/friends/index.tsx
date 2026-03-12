@@ -1,16 +1,34 @@
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AppHeader from '../../components/AppHeader';
 import { THEME } from '../../data/THEME';
 import { FRIENDS } from '../../data/friends';
-import { fetchFriends } from '../../data/api';
+import { fetchFriends, removeFriend } from '../../data/api';
 import type { UserSummary } from '../../data/users';
 
 export default function FriendsScreen() {
   const router = useRouter();
   const [friends, setFriends] = useState<UserSummary[]>(FRIENDS);
+
+  const handleRemove = (friendId: string) => {
+    Alert.alert('Remove friend', 'Are you sure?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Remove',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await removeFriend(friendId);
+            setFriends((prev) => prev.filter((f) => f._id !== friendId));
+          } catch (err: any) {
+            Alert.alert('Error', err?.message || 'Could not remove friend.');
+          }
+        },
+      },
+    ]);
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -67,7 +85,9 @@ export default function FriendsScreen() {
                 <Text style={styles.cardTitle}>{friend?.displayName}</Text>
                 <Text style={styles.cardSub}>@{friend?.username}</Text>
               </View>
-              <Ionicons name="chatbubble-outline" size={16} color={THEME.sub} />
+              <TouchableOpacity onPress={() => handleRemove(friend._id)} hitSlop={8}>
+                <Ionicons name="person-remove-outline" size={18} color={THEME.sub} />
+              </TouchableOpacity>
             </TouchableOpacity>
           ))}
         </ScrollView>

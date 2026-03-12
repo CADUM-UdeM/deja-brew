@@ -1,21 +1,21 @@
 // app/(tabs)/map.tsx
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  ScrollView,
-  StyleSheet,
+  View,
   Text,
+  StyleSheet,
+  ScrollView,
   TextInput,
   TouchableOpacity,
-  View,
 } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-import type { PlatformMapMarker } from '@/components/platform-map';
-import { PlatformMap } from '@/components/platform-map';
 import AppHeader from '../../components/AppHeader';
-import { fetchPlaces } from '../../data/api';
 import { ALL_PLACES, CafePlace, OSM_ATTRIBUTION } from '../../data/places';
+import { fetchPlaces } from '../../data/api';
+import { PlatformMap } from '@/components/platform-map';
+import type { PlatformMapMarker } from '@/components/platform-map';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -165,8 +165,6 @@ export default function MapScreen() {
     };
   }, [places]);
 
-
-
   // --- quand on clique sur un café (card ou marker) ---
   const handlePlacePress = (place: CafePlace) => {
     if (isSelectMode) {
@@ -201,7 +199,7 @@ export default function MapScreen() {
       .then((data) => {
         if (mounted && data.length > 0) setPlaces(data);
       })
-      .catch(() => { });
+      .catch(() => {});
     return () => {
       mounted = false;
     };
