@@ -2,24 +2,24 @@ import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  ActivityIndicator,
+  View,
 } from "react-native";
 import AppHeader from "../components/AppHeader";
 import {
-  acceptSessionParticipant,
   acceptFriendRequest,
+  acceptSessionParticipant,
   declineFriendRequest,
   declineSessionParticipant,
   fetchFriendRequests,
   fetchNotifications,
   joinSession,
-  markNotificationRead,
   markAllNotificationsRead,
+  markNotificationRead,
 } from "../data/api";
 
 const THEME = {
@@ -182,7 +182,7 @@ export default function Notifications() {
           return [...mergedFriendNotifs, ...nonFriendNotifs];
         });
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => {
         if (mounted) setLoading(false);
       });
@@ -208,57 +208,57 @@ export default function Notifications() {
             const id = String(notif?._id ?? notif?.id ?? notif?.notificationId ?? "");
             const sessionId = String(
               data?.sessionId ??
-                data?.session?._id ??
-                data?.session?.id ??
-                data?.session?._id ??
-                data?.session?.id ??
-                data?.session ??
-                notif?.sessionId ??
-                ""
+              data?.session?._id ??
+              data?.session?.id ??
+              data?.session?._id ??
+              data?.session?.id ??
+              data?.session ??
+              notif?.sessionId ??
+              ""
             );
             const userId = String(
               data?.userId ??
-                data?.fromUserId ??
-                data?.requesterId ??
-                data?.senderId ??
-                data?.user?._id ??
-                data?.user?.id ??
-                fromUser?._id ??
-                fromUser?.id ??
-                notif?.userId ??
-                ""
+              data?.fromUserId ??
+              data?.requesterId ??
+              data?.senderId ??
+              data?.user?._id ??
+              data?.user?.id ??
+              fromUser?._id ??
+              fromUser?.id ??
+              notif?.userId ??
+              ""
             );
             const requestId = String(
               data?.requestId ??
-                data?.friendRequestId ??
-                data?.sessionRequestId ??
-                data?.request?._id ??
-                data?.request?.id ??
-                notif?.requestId ??
-                ""
+              data?.friendRequestId ??
+              data?.sessionRequestId ??
+              data?.request?._id ??
+              data?.request?.id ??
+              notif?.requestId ??
+              ""
             );
             const normalizedType: NotifType | null =
               rawType.includes("FRIEND") && rawType.includes("REQUEST")
                 ? "FRIEND_REQUEST"
                 : rawType.includes("FRIEND") && rawType.includes("ACCEPT")
-                ? "FRIEND_ACCEPTED"
-                : rawType.includes("SESSION") && rawType.includes("INVITE")
-                ? "SESSION_INVITE"
-                : rawType.includes("SESSION") && rawType.includes("REQUEST")
-                ? "SESSION_REQUEST"
-                : rawType.includes("SESSION") && rawType.includes("ACCEPT")
-                ? "SESSION_ACCEPTED"
-                : rawType.includes("SESSION") && rawType.includes("CANCEL")
-                ? "SESSION_CANCELLED"
-                : rawType.includes("PROMO") && rawType.includes("SAVED")
-                ? "PROMO_SAVED"
-                : rawType.includes("PROMO")
-                ? "PROMO_LIKED"
-                : rawType.includes("REVIEW")
-                ? "REVIEW_LIKED"
-                : rawType.includes("NEW_PROMO")
-                ? "NEW_PROMO_NEARBY"
-                : null;
+                  ? "FRIEND_ACCEPTED"
+                  : rawType.includes("SESSION") && rawType.includes("INVITE")
+                    ? "SESSION_INVITE"
+                    : rawType.includes("SESSION") && rawType.includes("REQUEST")
+                      ? "SESSION_REQUEST"
+                      : rawType.includes("SESSION") && rawType.includes("ACCEPT")
+                        ? "SESSION_ACCEPTED"
+                        : rawType.includes("SESSION") && rawType.includes("CANCEL")
+                          ? "SESSION_CANCELLED"
+                          : rawType.includes("PROMO") && rawType.includes("SAVED")
+                            ? "PROMO_SAVED"
+                            : rawType.includes("PROMO")
+                              ? "PROMO_LIKED"
+                              : rawType.includes("REVIEW")
+                                ? "REVIEW_LIKED"
+                                : rawType.includes("NEW_PROMO")
+                                  ? "NEW_PROMO_NEARBY"
+                                  : null;
 
             if (!normalizedType) return null;
 
@@ -278,8 +278,8 @@ export default function Notifications() {
               (normalizedType === "SESSION_INVITE" && fromName
                 ? `${fromName} invited you to a session`
                 : normalizedType === "SESSION_REQUEST" && fromName
-                ? `${fromName} wants to join your session`
-                : "New notification");
+                  ? `${fromName} wants to join your session`
+                  : "New notification");
 
             const description =
               notif?.description ??
@@ -291,8 +291,8 @@ export default function Notifications() {
               (notif?.status === "accepted"
                 ? "accepted"
                 : notif?.status === "declined"
-                ? "declined"
-                : "none");
+                  ? "declined"
+                  : "none");
 
             return {
               id: `api-${id || Math.random().toString(36).slice(2)}`,
@@ -303,10 +303,10 @@ export default function Notifications() {
                 normalizedType === "SESSION_REQUEST"
                   ? "Session request"
                   : normalizedType === "SESSION_INVITE"
-                  ? "Session invite"
-                  : normalizedType === "FRIEND_REQUEST"
-                  ? "Friend request"
-                  : "Notification",
+                    ? "Session invite"
+                    : normalizedType === "FRIEND_REQUEST"
+                      ? "Friend request"
+                      : "Notification",
               isRead: Boolean(notif?.isRead ?? notif?.read),
               action,
               requestId: requestId || undefined,
@@ -327,7 +327,7 @@ export default function Notifications() {
           return Array.from(existing.values());
         });
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       mounted = false;
@@ -376,7 +376,7 @@ export default function Notifications() {
 
   const markAllRead = () => {
     setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
-    markAllNotificationsRead().catch(() => {});
+    markAllNotificationsRead().catch(() => { });
   };
 
   const ordered = [...notifications].sort(
@@ -400,6 +400,7 @@ export default function Notifications() {
           showLogo={false}
           title="Notifications"
           subtitle="Promotions, study invites & more"
+          isModal={true}
         />
 
         <ScrollView
@@ -453,36 +454,36 @@ export default function Notifications() {
                   {(notif.type === "FRIEND_REQUEST" ||
                     notif.type === "SESSION_REQUEST" ||
                     notif.type === "SESSION_INVITE") && (
-                    <View style={styles.actionRow}>
-                      {notif.action === "none" && (
-                        <>
-                          <TouchableOpacity
-                            style={[styles.acceptBtn, !canAct && styles.actionDisabled]}
-                            onPress={() => canAct && handleAction(notif, "accepted")}
-                            disabled={!canAct}
-                          >
-                            <Text style={styles.acceptText}>
-                              {notif.type === "SESSION_INVITE" ? "Join" : "Accept"}
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={[styles.declineBtn, !canAct && styles.actionDisabled]}
-                            onPress={() => canAct && handleAction(notif, "declined")}
-                            disabled={!canAct}
-                          >
-                            <Text style={styles.declineText}>
-                              {notif.type === "SESSION_INVITE" ? "Ignore" : "Decline"}
-                            </Text>
-                          </TouchableOpacity>
-                        </>
-                      )}
-                      {notif.action !== "none" && (
-                        <View style={styles.statusPill}>
-                          <Text style={styles.statusText}>{notif.action}</Text>
-                        </View>
-                      )}
-                    </View>
-                  )}
+                      <View style={styles.actionRow}>
+                        {notif.action === "none" && (
+                          <>
+                            <TouchableOpacity
+                              style={[styles.acceptBtn, !canAct && styles.actionDisabled]}
+                              onPress={() => canAct && handleAction(notif, "accepted")}
+                              disabled={!canAct}
+                            >
+                              <Text style={styles.acceptText}>
+                                {notif.type === "SESSION_INVITE" ? "Join" : "Accept"}
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={[styles.declineBtn, !canAct && styles.actionDisabled]}
+                              onPress={() => canAct && handleAction(notif, "declined")}
+                              disabled={!canAct}
+                            >
+                              <Text style={styles.declineText}>
+                                {notif.type === "SESSION_INVITE" ? "Ignore" : "Decline"}
+                              </Text>
+                            </TouchableOpacity>
+                          </>
+                        )}
+                        {notif.action !== "none" && (
+                          <View style={styles.statusPill}>
+                            <Text style={styles.statusText}>{notif.action}</Text>
+                          </View>
+                        )}
+                      </View>
+                    )}
                 </TouchableOpacity>
               </View>
             );

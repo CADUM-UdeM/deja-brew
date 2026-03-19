@@ -1,7 +1,7 @@
 // components/AppHeader.tsx
-import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import React from 'react';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const C = {
@@ -10,6 +10,8 @@ const C = {
   sub: '#7A6B62',
   accent: '#C27C4A',
 };
+
+
 
 // keyof typeof Ionicons.glyphMap = n'importe quel nom d'icône Ionicons valide
 type Props = {
@@ -20,6 +22,7 @@ type Props = {
   showLogo?: boolean;
   title?: string;
   subtitle?: string;
+  isModal?: boolean;
 };
 
 export default function AppHeader({
@@ -30,13 +33,16 @@ export default function AppHeader({
   showLogo = true,
   title,
   subtitle,
+  isModal = false,
 }: Props) {
   const insets = useSafeAreaInsets();
   const resolvedRightIcon =
     rightIcon === undefined ? 'notifications-outline' : rightIcon;
 
+
+
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 4 }]}>
+    <View style={[styles.container, { paddingTop: isModal ? Platform.OS === 'android' ? 35 : 25 : insets.top }]}>
       <View style={styles.leftRow}>
         {leftIcon && (
           <Pressable onPress={onLeftPress} hitSlop={8} style={styles.leftIcon}>

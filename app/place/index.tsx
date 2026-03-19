@@ -5,15 +5,15 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import AppHeader from '../../components/AppHeader';
-import PromoCard from '../../components/PromoCard';
 import { PlatformMap } from '@/components/platform-map';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewsModal } from '@/components/ReviewsModal';
-import { ALL_PLACES } from '../../data/places';
-import type { CafePlace } from '../../data/places';
 import type { Promo } from '@/data/promos';
+import AppHeader from '../../components/AppHeader';
+import PromoCard from '../../components/PromoCard';
 import { fetchPlaceDetail, fetchPromos } from '../../data/api';
+import type { CafePlace } from '../../data/places';
+import { ALL_PLACES } from '../../data/places';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -87,13 +87,13 @@ export default function PlaceScreen() {
       .then((data) => {
         if (mounted) setPlaceData(data);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     fetchPromos(String(id))
       .then((data) => {
         if (mounted) setPromos(data);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       mounted = false;
@@ -186,9 +186,9 @@ export default function PlaceScreen() {
     10,
     Math.round(
       (Number(averageRating) || 4) * 2 +
-        (place.outlets ? 1 : 0) +
-        (place.wifi ? 1 : 0) +
-        (place.tags.includes('Seating') ? 1 : 0)
+      (place.outlets ? 1 : 0) +
+      (place.wifi ? 1 : 0) +
+      (place.tags.includes('Seating') ? 1 : 0)
     )
   );
 
@@ -201,6 +201,7 @@ export default function PlaceScreen() {
         showLogo={false}
         title="Cafe details"
         subtitle="Study vibe & perks"
+        isModal={true}
       />
 
       <ScrollView
