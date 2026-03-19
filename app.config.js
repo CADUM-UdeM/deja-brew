@@ -26,6 +26,7 @@ export default {
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
+      "package": "com.cadum.dejabrew"
     },
     web: {
       output: "single",
