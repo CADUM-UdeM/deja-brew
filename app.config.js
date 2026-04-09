@@ -26,7 +26,12 @@ export default {
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
-      "package": "com.cadum.dejabrew"
+      "package": "com.cadum.dejabrew",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBLPZng6Gr0UCGxWrovmdbBaVmptRQEUHs"
+        }
+      },
     },
     web: {
       output: "single",
@@ -55,8 +60,10 @@ export default {
       reactCompiler: true,
     },
     extra: {
-      EXPO_GEMINI_API_KEY: process.env.EXPO_GEMINI_API_KEY,
-      EXPO_API_BASE_URL: process.env.EXPO_API_BASE_URL || "https://backend-deja-brew.onrender.com",
-    },
+      EXPO_API_BASE_URL: "https://backend-deja-brew.onrender.com",
+      "eas": {
+        "projectId": "81075e89-e3f2-42db-aea9-e5f02b8eb4b6"
+      }
+    }
   },
 };
