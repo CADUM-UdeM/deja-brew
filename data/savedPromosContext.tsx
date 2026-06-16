@@ -4,15 +4,15 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 const STORAGE_KEY = 'savedPromoIds';
 
 type SavedPromosContextValue = {
-  savedPromoIds: number[];
-  toggleSavedPromo: (id: number) => void;
-  isSaved: (id: number) => boolean;
+  savedPromoIds: string[];
+  toggleSavedPromo: (id: string) => void;
+  isSaved: (id: string) => boolean;
 };
 
 const SavedPromosContext = createContext<SavedPromosContextValue | undefined>(undefined);
 
 export function SavedPromosProvider({ children }: { children: React.ReactNode }) {
-  const [savedPromoIds, setSavedPromoIds] = useState<number[]>([]);
+  const [savedPromoIds, setSavedPromoIds] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,12 @@ export function SavedPromosProvider({ children }: { children: React.ReactNode })
         if (!mounted || !raw) return;
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
-          setSavedPromoIds(parsed.filter((id) => typeof id === 'number'));
+          setSavedPromoIds(
+            parsed
+              .filter((id) => typeof id === 'number' || typeof id === 'string')
+              .map((id) => String(id))
+              .filter((id) => id.length > 0)
+          );
         }
       })
       .catch(() => {})
@@ -40,7 +45,7 @@ export function SavedPromosProvider({ children }: { children: React.ReactNode })
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(savedPromoIds)).catch(() => {});
   }, [hydrated, savedPromoIds]);
 
-  const toggleSavedPromo = (id: number) => {
+  const toggleSavedPromo = (id: string) => {
     setSavedPromoIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -50,7 +55,7 @@ export function SavedPromosProvider({ children }: { children: React.ReactNode })
     () => ({
       savedPromoIds,
       toggleSavedPromo,
-      isSaved: (id: number) => savedPromoIds.includes(id),
+      isSaved: (id: string) => savedPromoIds.includes(id),
     }),
     [savedPromoIds]
   );

@@ -36,6 +36,14 @@ export default {
       "expo-router",
       "expo-maps",
       [
+        "expo-location",
+        {
+          locationAlwaysAndWhenInUsePermission: "Deja Brew uses your location to show cafés near you.",
+          locationWhenInUsePermission: "Deja Brew uses your location to show cafés near you.",
+          isIosBackgroundLocationEnabled: false,
+        },
+      ],
+      [
         "expo-splash-screen",
         {
           image: "./assets/images/splash-icon.png",

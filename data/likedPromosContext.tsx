@@ -4,15 +4,15 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 const STORAGE_KEY = 'likedPromoIds';
 
 type LikedPromosContextValue = {
-  likedPromoIds: number[];
-  toggleLikedPromo: (id: number) => void;
-  isLiked: (id: number) => boolean;
+  likedPromoIds: string[];
+  toggleLikedPromo: (id: string) => void;
+  isLiked: (id: string) => boolean;
 };
 
 const LikedPromosContext = createContext<LikedPromosContextValue | undefined>(undefined);
 
 export function LikedPromosProvider({ children }: { children: React.ReactNode }) {
-  const [likedPromoIds, setLikedPromoIds] = useState<number[]>([]);
+  const [likedPromoIds, setLikedPromoIds] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,12 @@ export function LikedPromosProvider({ children }: { children: React.ReactNode })
         if (!mounted || !raw) return;
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
-          setLikedPromoIds(parsed.filter((id) => typeof id === 'number'));
+          setLikedPromoIds(
+            parsed
+              .filter((id) => typeof id === 'number' || typeof id === 'string')
+              .map((id) => String(id))
+              .filter((id) => id.length > 0)
+          );
         }
       })
       .catch(() => {})
@@ -40,7 +45,7 @@ export function LikedPromosProvider({ children }: { children: React.ReactNode })
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(likedPromoIds)).catch(() => {});
   }, [hydrated, likedPromoIds]);
 
-  const toggleLikedPromo = (id: number) => {
+  const toggleLikedPromo = (id: string) => {
     setLikedPromoIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -50,7 +55,7 @@ export function LikedPromosProvider({ children }: { children: React.ReactNode })
     () => ({
       likedPromoIds,
       toggleLikedPromo,
-      isLiked: (id: number) => likedPromoIds.includes(id),
+      isLiked: (id: string) => likedPromoIds.includes(id),
     }),
     [likedPromoIds]
   );

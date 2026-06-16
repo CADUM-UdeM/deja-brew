@@ -6,7 +6,12 @@ import AppHeader from '../../components/AppHeader';
 import { THEME } from '../../data/THEME';
 import { FRIEND_REQUESTS } from '../../data/friends';
 import { getUserById } from '../../data/users';
-import { acceptFriendRequest, declineFriendRequest, fetchFriendRequests } from '../../data/api';
+import {
+  acceptFriendRequest,
+  cacheLocalFriend,
+  declineFriendRequest,
+  fetchFriendRequests,
+} from '../../data/api';
 
 export default function FriendRequestsScreen() {
   const router = useRouter();
@@ -23,18 +28,37 @@ export default function FriendRequestsScreen() {
       .catch(() => {
         if (mounted) setRequests(FRIEND_REQUESTS);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
     return () => {
       mounted = false;
     };
   }, []);
 
-  const updateStatus = async (id: string, status: 'accepted' | 'declined') => {
+  const updateStatus = async (request: any, id: string, status: 'accepted' | 'declined') => {
     setRequests((prev) =>
       prev.map((req) => (req._id === id ? { ...req, status } : req))
     );
     try {
-      if (status === 'accepted') await acceptFriendRequest(id);
+      if (status === 'accepted') {
+        await acceptFriendRequest(id);
+        const fromUser =
+          request.fromUser ??
+          request.from ??
+          request.sender ??
+          request.requester ??
+          request.user ??
+          getUserById(request.fromUserId);
+        if (fromUser?._id) {
+          await cacheLocalFriend({
+            _id: fromUser._id,
+            username: fromUser.username ?? 'user',
+            displayName: fromUser.displayName ?? fromUser.name ?? 'User',
+            avatarUrl: fromUser.avatarUrl ?? null,
+          });
+        }
+      }
       if (status === 'declined') await declineFriendRequest(id);
     } catch {
       // keep optimistic UI
@@ -108,7 +132,7 @@ export default function FriendRequestsScreen() {
                       !canAct && styles.actionDisabled,
                     ]}
                     disabled={!canAct}
-                    onPress={() => apiRequestId && updateStatus(apiRequestId, 'accepted')}
+                    onPress={() => apiRequestId && updateStatus(request, apiRequestId, 'accepted')}
                   >
                     <Text style={styles.acceptText}>Accept</Text>
                   </TouchableOpacity>
@@ -118,7 +142,7 @@ export default function FriendRequestsScreen() {
                       !canAct && styles.actionDisabled,
                     ]}
                     disabled={!canAct}
-                    onPress={() => apiRequestId && updateStatus(apiRequestId, 'declined')}
+                    onPress={() => apiRequestId && updateStatus(request, apiRequestId, 'declined')}
                   >
                     <Text style={styles.declineText}>Decline</Text>
                   </TouchableOpacity>

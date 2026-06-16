@@ -16,7 +16,12 @@ export const getAuthToken = async () => {
 export const getAuthUser = async <T = any>() => {
   if (cachedUser !== null) return cachedUser as T;
   const raw = await AsyncStorage.getItem(USER_KEY);
-  cachedUser = raw ? JSON.parse(raw) : null;
+  try {
+    cachedUser = raw ? JSON.parse(raw) : null;
+  } catch {
+    cachedUser = null;
+    await AsyncStorage.removeItem(USER_KEY);
+  }
   return cachedUser as T;
 };
 

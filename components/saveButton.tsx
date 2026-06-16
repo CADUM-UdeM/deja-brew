@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { useSavedPromos } from '@/data/savedPromosContext';
 import { THEME } from '@/data/THEME';
 
 type Props = {
-  promoId: number;
+  promoId: string;
 };
 
 export default function SaveButton({ promoId }: Props) {
@@ -13,7 +14,13 @@ export default function SaveButton({ promoId }: Props) {
   const saved = isSaved(promoId);
 
   return (
-    <Pressable onPress={() => toggleSavedPromo(promoId)} style={styles.button}>
+    <Pressable
+      onPress={() => {
+        Haptics.selectionAsync().catch(() => {});
+        toggleSavedPromo(promoId);
+      }}
+      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+    >
       <Ionicons
         name={saved ? 'bookmark' : 'bookmark-outline'}
         size={16}
@@ -45,5 +52,9 @@ const styles = StyleSheet.create({
   },
   labelActive: {
     color: THEME.accentDark,
+  },
+  buttonPressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.98 }],
   },
 });

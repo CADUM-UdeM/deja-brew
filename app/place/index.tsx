@@ -14,6 +14,12 @@ import { ALL_PLACES } from '../../data/places';
 import type { CafePlace } from '../../data/places';
 import type { Promo } from '@/data/promos';
 import { fetchPlaceDetail, fetchPromos, submitReview, likePlace, unlikePlace, savePlace, unsavePlace } from '../../data/api';
+import {
+  getGoodForBadges,
+  getPlaceImage,
+  getStudySignals,
+  getWhyPicked,
+} from '@/data/recommendations';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -22,28 +28,6 @@ const THEME = {
   card: '#FFFFFF',
   border: '#E8D9D1',
   accentDark: '#7F3B00',
-};
-
-// petite fonction pour donner une image par café
-const getPlaceImage = (id?: string) => {
-  switch (id) {
-    case 'savsav':
-      return 'https://images.pexels.com/photos/4109990/pexels-photo-4109990.jpeg';
-    case 'crew':
-      return 'https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg';
-    case 'accio':
-      return 'https://images.pexels.com/photos/3806439/pexels-photo-3806439.jpeg';
-    case 'tranquille':
-      return 'https://images.pexels.com/photos/2179212/pexels-photo-2179212.jpeg';
-    case 'tommy':
-      return 'https://images.pexels.com/photos/4352247/pexels-photo-4352247.jpeg';
-    case 'amea':
-      return 'https://images.pexels.com/photos/4050347/pexels-photo-4050347.jpeg';
-    case 'constance':
-      return 'https://images.pexels.com/photos/3741475/pexels-photo-3741475.jpeg';
-    default:
-      return 'https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg';
-  }
 };
 
 // reviews mock
@@ -176,7 +160,10 @@ export default function PlaceScreen() {
   }
 
   const place = placeData;
-  const heroImage = place.imageUrl || getPlaceImage(place.id);
+  const heroImage = getPlaceImage(place);
+  const studySignals = getStudySignals(place);
+  const goodForBadges = getGoodForBadges(place);
+  const whyPicked = getWhyPicked(place);
   const amenities = [
     place.wifi ? 'Wi‑Fi strong' : 'Limited Wi‑Fi',
     place.outlets ? 'Outlets nearby' : 'Few outlets',
@@ -269,6 +256,36 @@ export default function PlaceScreen() {
               />
               <Text style={styles.socialText}>{savesCount}</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* STUDY INTEL */}
+        <View style={styles.infoCard}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="analytics-outline" size={16} color={THEME.accentDark} />
+            <Text style={styles.sectionTitle}>Study intel</Text>
+          </View>
+          <View style={styles.intelGrid}>
+            {[
+              ['Noise', studySignals.noiseLevel],
+              ['Outlets', studySignals.outletScore],
+              ['Wi-Fi', studySignals.wifiConfidence],
+              ['Best time', studySignals.bestTime],
+            ].map(([label, value]) => (
+              <View key={label} style={styles.intelTile}>
+                <Text style={styles.intelLabel}>{label}</Text>
+                <Text style={styles.intelValue}>{value}</Text>
+              </View>
+            ))}
+          </View>
+          <Text style={styles.whyText}>{whyPicked}</Text>
+          <View style={styles.tagsRow}>
+            {goodForBadges.map((badge) => (
+              <View key={badge} style={styles.goodForChip}>
+                <Ionicons name="checkmark-circle-outline" size={13} color={THEME.accentDark} />
+                <Text style={styles.goodForText}>{badge}</Text>
+              </View>
+            ))}
           </View>
         </View>
 
@@ -713,6 +730,53 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: THEME.text,
     fontWeight: '600',
+  },
+  intelGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  intelTile: {
+    flexGrow: 1,
+    flexBasis: '45%',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: '#FFF8F3',
+    padding: 10,
+  },
+  intelLabel: {
+    fontSize: 11,
+    color: THEME.sub,
+    fontWeight: '700',
+  },
+  intelValue: {
+    fontSize: 14,
+    color: THEME.text,
+    fontWeight: '800',
+    marginTop: 3,
+  },
+  whyText: {
+    color: THEME.text,
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 12,
+  },
+  goodForChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+    backgroundColor: '#F3E7E0',
+    borderWidth: 1,
+    borderColor: THEME.border,
+  },
+  goodForText: {
+    color: THEME.accentDark,
+    fontSize: 11,
+    fontWeight: '800',
   },
   foodTag: {
     paddingHorizontal: 10,

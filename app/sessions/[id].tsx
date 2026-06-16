@@ -35,7 +35,7 @@ export default function SessionDetailScreen() {
   const [decisionLoading, setDecisionLoading] = useState<string | null>(null);
   const [me, setMe] = useState<UserProfile | null>(null);
 
-  const participants = session?.participants ?? [];
+  const participants = useMemo(() => session?.participants ?? [], [session?.participants]);
 
   const acceptedCount =
     participants.length > 0
@@ -153,6 +153,7 @@ export default function SessionDetailScreen() {
   const isClosed = status === 'full' || status === 'cancelled' || status === 'ended';
   const canJoin = !isClosed && joinStatus === 'none' && !isCreator && Boolean(me);
   const canLeave = joinStatus === 'accepted' || joinStatus === 'pending';
+  const joinDisabled = !canJoin || joinLoading || isCreator;
 
   const updateParticipants = (
     updater: (items: SessionDetail['participants']) => SessionDetail['participants']
@@ -355,18 +356,19 @@ export default function SessionDetailScreen() {
           <TouchableOpacity
             style={[
               styles.primaryBtn,
-              (!canJoin && joinStatus === 'none') || isCreator ? styles.disabledBtn : null,
+              joinDisabled ? styles.disabledBtn : null,
             ]}
             onPress={handleJoin}
-            disabled={!canJoin || joinLoading || isCreator}
+            disabled={joinDisabled}
           >
             {joinLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
               <Text style={styles.primaryBtnText}>
                 {isCreator && 'You are the host'}
-                {!isCreator && joinStatus === 'none' && !isClosed && 'Request to join'}
-                {!isCreator && joinStatus === 'none' && isClosed && 'Session closed'}
+                {!isCreator && !me && 'Log in to join'}
+                {!isCreator && me && joinStatus === 'none' && !isClosed && 'Request to join'}
+                {!isCreator && me && joinStatus === 'none' && isClosed && 'Session closed'}
                 {joinStatus === 'pending' && 'Request pending'}
                 {joinStatus === 'accepted' && 'You are in'}
               </Text>

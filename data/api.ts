@@ -1,12 +1,16 @@
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { CafePlace } from '@/data/places';
 import type { Promo } from '@/data/promos';
 import type { SessionFeedItem, SessionDetail, SessionParticipant } from '@/data/sessions';
 import type { UserSummary, UserProfile } from '@/data/users';
+import { CURRENT_USER_ID, getUserById, searchUsers as searchLocalUsers } from '@/data/users';
 import { getAuthToken, getAuthUser } from '@/data/auth';
 
 const fallbackUrl = 'https://backend-deja-brew.onrender.com';
 const localDevPort = '3000';
+const LOCAL_SESSIONS_KEY = 'localStudySessions';
+const LOCAL_FRIENDS_KEY = 'localFriends';
 
 const extra =
   Constants.expoConfig?.extra ??
@@ -158,7 +162,7 @@ export const normalizePlace = (place: any): CafePlace => {
 };
 
 export const normalizePromo = (promo: any, index: number): Promo => ({
-  id: Number(promo.id ?? promo._id ?? promo.promoId ?? index + 1),
+  id: String(promo.id ?? promo._id ?? promo.promoId ?? index + 1),
   title: promo.title ?? 'Promo',
   description: promo.description ?? '',
   cafe_id: String(promo.placeId ?? promo.cafe_id ?? ''),
@@ -166,6 +170,34 @@ export const normalizePromo = (promo: any, index: number): Promo => ({
   promoStart: promo.promoStart ?? new Date().toISOString(),
   promoEnd: promo.promoEnd ?? new Date().toISOString(),
 });
+
+const normalizeSessionStatus = (value: any): SessionFeedItem['status'] => {
+  const status = String(value ?? '').toLowerCase();
+  if (status === 'canceled') return 'cancelled';
+  if (status === 'full' || status === 'cancelled' || status === 'ended') {
+    return status;
+  }
+  return 'open';
+};
+
+const normalizeJoinStatus = (value: any): SessionFeedItem['joinStatusByMe'] => {
+  const status = String(value ?? '').toLowerCase();
+  if (status === 'pending' || status === 'accepted') return status;
+  return 'none';
+};
+
+const normalizeParticipantStatus = (value: any): SessionParticipant['status'] => {
+  const status = String(value ?? '').toLowerCase();
+  if (
+    status === 'pending' ||
+    status === 'accepted' ||
+    status === 'declined' ||
+    status === 'left'
+  ) {
+    return status;
+  }
+  return 'pending';
+};
 
 export const normalizeSession = (session: any): SessionFeedItem => {
   const rawCreator =
@@ -215,17 +247,18 @@ export const normalizeSession = (session: any): SessionFeedItem => {
     maxPeople: session.maxPeople ?? 4,
     participantsCount: session.participantsCount ?? session.acceptedCount ?? 1,
     acceptedCount: session.acceptedCount ?? 1,
-    status: session.status ?? 'open',
+    status: normalizeSessionStatus(session.status),
     createdBy,
     isJoinedByMe: Boolean(
       session.isJoinedByMe ?? session.joinedByMe ?? session.isMember ?? false
     ),
-    joinStatusByMe:
+    joinStatusByMe: normalizeJoinStatus(
       session.joinStatusByMe ??
       session.joinStatus ??
       session.myStatus ??
       session.statusByMe ??
-      'none',
+      'none'
+    ),
   };
 };
 
@@ -243,7 +276,7 @@ const normalizeParticipant = (participant: any): SessionParticipant => ({
     participant?.user?.name ??
     'Guest',
   username: participant?.username ?? participant?.user?.username ?? 'user',
-  status: (participant?.status ?? participant?.state ?? 'pending') as SessionParticipant['status'],
+  status: normalizeParticipantStatus(participant?.status ?? participant?.state),
 });
 
 export const normalizeSessionDetail = (session: any): SessionDetail => ({
@@ -345,6 +378,139 @@ const normalizeUserProfile = (user: any): UserProfile => ({
   },
 });
 
+const getCurrentUserOrGuest = async (): Promise<UserProfile> => {
+  try {
+    const cached = await getAuthUser<UserProfile>();
+    if (cached?._id) return cached;
+  } catch {
+    // Fall back to the bundled demo user if persisted auth is unavailable.
+  }
+
+  return getUserById(CURRENT_USER_ID) ?? {
+    _id: CURRENT_USER_ID,
+    username: 'studylover',
+    displayName: 'Deja Brew guest',
+    avatarUrl: null,
+    email: '',
+    bio: '',
+    school: '',
+    preferences: {
+      noise: 'quiet',
+      wifi: true,
+      outlets: true,
+      favoriteDistricts: [],
+      tags: [],
+    },
+    stats: {
+      sessionsCreated: 0,
+      sessionsJoined: 0,
+      reviewsCount: 0,
+      likesGiven: 0,
+    },
+    status: {
+      isBanned: false,
+      bannedReason: null,
+    },
+  };
+};
+
+const readLocalSessions = async (): Promise<SessionDetail[]> => {
+  try {
+    const raw = await AsyncStorage.getItem(LOCAL_SESSIONS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((session) => normalizeSessionDetail(session))
+      .filter((session) => Boolean(session._id));
+  } catch {
+    return [];
+  }
+};
+
+const writeLocalSessions = async (sessions: SessionDetail[]) => {
+  await AsyncStorage.setItem(LOCAL_SESSIONS_KEY, JSON.stringify(sessions));
+};
+
+const mergeSessionLists = <T extends SessionFeedItem>(
+  preferred: T[],
+  fallback: T[]
+) => {
+  const seen = new Set<string>();
+  return [...preferred, ...fallback].filter((session) => {
+    if (seen.has(session._id)) return false;
+    seen.add(session._id);
+    return true;
+  });
+};
+
+const createLocalSession = async (payload: Record<string, any>) => {
+  const me = await getCurrentUserOrGuest();
+  const maxPeople = Math.max(1, Number.parseInt(String(payload.maxPeople ?? 2), 10) || 2);
+  const createdAt = new Date().toISOString();
+  const localSession = normalizeSessionDetail({
+    _id: `local_${Date.now()}`,
+    title: payload.title ?? 'Study date',
+    course: payload.course ?? 'Study',
+    vibe: payload.vibe ?? 'Deep focus',
+    timeSlot: payload.timeSlot ?? 'Today',
+    placeId: payload.placeId ?? '',
+    locationLabel: payload.locationLabel ?? payload.location ?? 'Cafe',
+    maxPeople,
+    participantsCount: 1,
+    acceptedCount: 1,
+    status: maxPeople <= 1 ? 'full' : 'open',
+    createdBy: {
+      _id: me._id,
+      username: me.username,
+      displayName: me.displayName,
+    },
+    isJoinedByMe: true,
+    joinStatusByMe: 'accepted',
+    notes: payload.notes ?? '',
+    participants: [
+      {
+        userId: me._id,
+        displayName: me.displayName,
+        username: me.username,
+        status: 'accepted',
+      },
+    ],
+    createdAt,
+  });
+
+  const existing = await readLocalSessions();
+  await writeLocalSessions(mergeSessionLists([localSession], existing));
+  return normalizeSession(localSession);
+};
+
+const readLocalFriends = async (): Promise<UserSummary[]> => {
+  try {
+    const raw = await AsyncStorage.getItem(LOCAL_FRIENDS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map(normalizeUserSummary).filter((user) => Boolean(user._id));
+  } catch {
+    return [];
+  }
+};
+
+const writeLocalFriends = async (friends: UserSummary[]) => {
+  await AsyncStorage.setItem(LOCAL_FRIENDS_KEY, JSON.stringify(friends));
+};
+
+export const cacheLocalFriend = async (friend: UserSummary) => {
+  const existing = await readLocalFriends();
+  if (existing.some((item) => item._id === friend._id)) return;
+  await writeLocalFriends([friend, ...existing]);
+};
+
+const removeLocalFriend = async (friendId: string) => {
+  const existing = await readLocalFriends();
+  await writeLocalFriends(existing.filter((friend) => friend._id !== friendId));
+};
+
 const extractRequestUser = (request: any) =>
   pickFirst(
     request?.fromUser,
@@ -436,37 +602,65 @@ export const fetchPromos = async (placeId?: string) => {
 };
 
 export const fetchSessions = async () => {
-  const res = await apiGet<any>('/api/sessions?public=true');
-  const sessions = res?.data?.sessions ?? res?.data ?? res?.sessions ?? [];
-  return (sessions ?? []).map(normalizeSession);
+  const localSessions = (await readLocalSessions()).map(normalizeSession);
+  try {
+    const res = await apiGet<any>('/api/sessions?public=true');
+    const sessions = res?.data?.sessions ?? res?.data ?? res?.sessions ?? [];
+    return mergeSessionLists(localSessions, (sessions ?? []).map(normalizeSession));
+  } catch (err) {
+    if (localSessions.length > 0) return localSessions;
+    throw err;
+  }
 };
 
 export const fetchMySessions = async () => {
-  const me = await getAuthUser<UserProfile>();
-  const res = await apiGet<any>('/api/sessions', true);
-  const sessions = res?.data?.sessions ?? res?.data ?? res?.sessions ?? [];
-  const mine = Array.isArray(sessions)
-    ? sessions.filter((session) => matchesUser(session, me))
-    : [];
-  return mine.map(normalizeSession);
+  const me = await getAuthUser<UserProfile>().catch(() => null);
+  const localMine = (await readLocalSessions())
+    .filter((session) => (me ? matchesUser(session, me) : session._id.startsWith('local_')))
+    .map(normalizeSession);
+
+  try {
+    const res = await apiGet<any>('/api/sessions', true);
+    const sessions = res?.data?.sessions ?? res?.data ?? res?.sessions ?? [];
+    const mine = Array.isArray(sessions)
+      ? sessions.filter((session) => matchesUser(session, me))
+      : [];
+    return mergeSessionLists(localMine, mine.map(normalizeSession));
+  } catch (err) {
+    if (localMine.length > 0) return localMine;
+    throw err;
+  }
 };
 
 export const createSession = async (payload: Record<string, any>) => {
-  const res = await apiRequest<any>('/api/sessions', {
-    method: 'POST',
-    auth: true,
-    body: payload,
-  });
-  const session = res?.data?.session ?? res?.data ?? res?.session ?? res;
-  return normalizeSession(session);
+  try {
+    const res = await apiRequest<any>('/api/sessions', {
+      method: 'POST',
+      auth: true,
+      body: payload,
+    });
+    const session = res?.data?.session ?? res?.data ?? res?.session ?? res;
+    return normalizeSession(session);
+  } catch {
+    return createLocalSession(payload);
+  }
 };
 
 export const fetchSessionById = async (sessionId: string) => {
-  const res = await apiRequest<any>(`/api/sessions/${sessionId}`, {
-    auth: true,
-  });
-  const session = res?.data?.session ?? res?.data ?? res?.session ?? res;
-  return normalizeSessionDetail(session);
+  const local = (await readLocalSessions()).find((session) => session._id === sessionId);
+  if (local) return local;
+
+  try {
+    const res = await apiRequest<any>(`/api/sessions/${sessionId}`, {
+      auth: true,
+    });
+    const session = res?.data?.session ?? res?.data ?? res?.session ?? res;
+    return normalizeSessionDetail(session);
+  } catch (err) {
+    const fallback = (await readLocalSessions()).find((session) => session._id === sessionId);
+    if (fallback) return fallback;
+    throw err;
+  }
 };
 
 export const joinSession = async (sessionId: string) =>
@@ -555,11 +749,15 @@ export const updateMe = async (payload: Partial<UserProfile>) => {
 export const searchUsers = async (query: string) => {
   const q = query.trim();
   if (!q) return [] as UserSummary[];
-  const res = await apiRequest<any>(`/api/users/search?q=${encodeURIComponent(q)}`, {
-    auth: true,
-  });
-  const users = res?.data?.users ?? res?.data ?? res?.users ?? [];
-  return (users ?? []).map(normalizeUserSummary);
+  try {
+    const res = await apiRequest<any>(`/api/users/search?q=${encodeURIComponent(q)}`, {
+      auth: true,
+    });
+    const users = res?.data?.users ?? res?.data ?? res?.users ?? [];
+    return (users ?? []).map(normalizeUserSummary);
+  } catch {
+    return searchLocalUsers(q);
+  }
 };
 
 export const fetchUserById = async (userId: string) => {
@@ -575,9 +773,18 @@ export const sendFriendRequest = async (toUserId: string) =>
   });
 
 export const fetchFriends = async () => {
-  const res = await apiGet<any>('/api/friends', true);
-  const friends = res?.data?.friends ?? res?.data ?? res?.friends ?? [];
-  return (friends ?? []).map(normalizeUserSummary);
+  const localFriends = await readLocalFriends();
+  try {
+    const res = await apiGet<any>('/api/friends', true);
+    const friends = res?.data?.friends ?? res?.data ?? res?.friends ?? [];
+    const normalized = (friends ?? []).map(normalizeUserSummary);
+    return [...localFriends, ...normalized].filter(
+      (friend, index, list) => list.findIndex((item) => item._id === friend._id) === index
+    );
+  } catch (err) {
+    if (localFriends.length > 0) return localFriends;
+    throw err;
+  }
 };
 
 export const fetchFriendRequests = async () => {
@@ -599,11 +806,16 @@ export const declineFriendRequest = async (requestId: string) =>
     auth: true,
   });
 
-export const removeFriend = async (friendId: string) =>
-  apiRequest(`/api/friends/${friendId}`, {
-    method: 'DELETE',
-    auth: true,
-  });
+export const removeFriend = async (friendId: string) => {
+  try {
+    await apiRequest(`/api/friends/${friendId}`, {
+      method: 'DELETE',
+      auth: true,
+    });
+  } finally {
+    await removeLocalFriend(friendId);
+  }
+};
 
 export const submitReview = async (
   placeId: string,

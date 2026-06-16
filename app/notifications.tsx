@@ -13,10 +13,12 @@ import AppHeader from "../components/AppHeader";
 import {
   acceptSessionParticipant,
   acceptFriendRequest,
+  cacheLocalFriend,
   declineFriendRequest,
   declineSessionParticipant,
   fetchFriendRequests,
   fetchNotifications,
+  fetchUserById,
   joinSession,
   markNotificationRead,
   markAllNotificationsRead,
@@ -145,6 +147,14 @@ export default function Notifications() {
           const username =
             fromUser?.username ?? request.fromUsername ?? request.fromHandle ?? null;
           const requestId = String(request._id ?? request.id ?? request.requestId ?? "");
+          const fromUserId = String(
+            request.fromUserId ??
+              request.fromId ??
+              request.senderId ??
+              fromUser?._id ??
+              fromUser?.id ??
+              ""
+          );
           const status = String(request.status ?? request.state ?? "pending").toLowerCase();
           const action: NotifAction =
             status === "accepted" ? "accepted" : status === "declined" ? "declined" : "none";
@@ -158,6 +168,7 @@ export default function Notifications() {
             isRead: action !== "none",
             action,
             requestId: requestId || undefined,
+            userId: fromUserId || undefined,
           };
         });
 
@@ -350,7 +361,20 @@ export default function Notifications() {
     );
     try {
       if (notif.type === "FRIEND_REQUEST" && notif.requestId) {
-        if (action === "accepted") await acceptFriendRequest(notif.requestId);
+        if (action === "accepted") {
+          await acceptFriendRequest(notif.requestId);
+          if (notif.userId) {
+            const friend = await fetchUserById(notif.userId).catch(() => null);
+            if (friend) {
+              await cacheLocalFriend({
+                _id: friend._id,
+                username: friend.username,
+                displayName: friend.displayName,
+                avatarUrl: friend.avatarUrl,
+              });
+            }
+          }
+        }
         if (action === "declined") await declineFriendRequest(notif.requestId);
       }
       if (notif.type === "SESSION_REQUEST" && notif.sessionId && notif.userId) {

@@ -4,6 +4,7 @@ import { THEME } from '@/data/THEME';
 import { SESSION_FEED, SessionFeedItem } from '@/data/sessions';
 import { fetchSessions } from '@/data/api';
 import SessionCard from '@/components/SessionCard';
+import EmptyState from '@/components/EmptyState';
 
 export default function AllSessionsScreen() {
   const [courseFilter, setCourseFilter] = useState<string | null>(null);
@@ -52,6 +53,16 @@ export default function AllSessionsScreen() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
     >
+      <View style={styles.nearbyStrip}>
+        <View style={styles.nearbyIcon}>
+          <Text style={styles.nearbyDot}>●</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.nearbyTitle}>{sessionsData.length} people studying nearby</Text>
+          <Text style={styles.nearbySub}>Mocked city signal for now · Montréal study pulse</Text>
+        </View>
+      </View>
+
       {courses.length > 0 && (
         <ScrollView
           horizontal
@@ -84,9 +95,11 @@ export default function AllSessionsScreen() {
       )}
 
       {!loading && sessions.length === 0 && (
-        <View style={styles.emptyWrap}>
-          <Text style={styles.emptyText}>No sessions yet.</Text>
-        </View>
+        <EmptyState
+          icon="people-outline"
+          title="No sessions match this filter"
+          message="Start a session and it will appear here for other students to join."
+        />
       )}
 
       {sessions.map((session) => (
@@ -121,12 +134,37 @@ const styles = StyleSheet.create({
   chipTextActive: {
     color: '#fff',
   },
-  emptyWrap: {
-    paddingVertical: 40,
+  nearbyStrip: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    borderRadius: 16,
+    backgroundColor: '#FFF8F3',
+    padding: 12,
+    marginBottom: 12,
   },
-  emptyText: {
+  nearbyIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: THEME.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nearbyDot: {
+    color: THEME.accentDark,
+    fontSize: 16,
+  },
+  nearbyTitle: {
+    color: THEME.text,
     fontSize: 13,
+    fontWeight: '800',
+  },
+  nearbySub: {
     color: THEME.sub,
+    fontSize: 11,
+    marginTop: 2,
   },
 });

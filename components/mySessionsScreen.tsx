@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 import { THEME } from '@/data/THEME';
 import type { SessionFeedItem } from '@/data/sessions';
 import { fetchMySessions } from '@/data/api';
 import SessionCard from '@/components/SessionCard';
+import EmptyState from '@/components/EmptyState';
 
 export default function MySessionsScreen() {
+  const router = useRouter();
   const [sessions, setSessions] = useState<SessionFeedItem[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -35,9 +38,13 @@ export default function MySessionsScreen() {
       )}
 
       {!loading && sessions.length === 0 && (
-        <View style={styles.emptyWrap}>
-          <Text style={styles.emptyText}>No sessions yet.</Text>
-        </View>
+        <EmptyState
+          icon="calendar-outline"
+          title="No sessions yet"
+          message="Create a study date, pick a cafe, then invite friends right away."
+          actionLabel="Create session"
+          onAction={() => router.push('/session/new')}
+        />
       )}
 
       {sessions.map((session) => (
@@ -52,13 +59,5 @@ const styles = StyleSheet.create({
     color: THEME.sub,
     fontSize: 12,
     marginTop: 4,
-  },
-  emptyWrap: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: 13,
-    color: THEME.sub,
   },
 });

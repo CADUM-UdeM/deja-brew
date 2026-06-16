@@ -9,7 +9,7 @@ import { PROMOS } from '../../data/promos';
 import { SESSIONS } from '../../data/sessions';
 
 const SAVED_PLACE_IDS = ['savsav', 'accio'];
-const SAVED_PROMO_IDS = [1, 3];
+const SAVED_PROMO_IDS = ['1', '3'];
 const SAVED_SESSION_IDS = ['s_001'];
 
 export default function SavedContentScreen() {

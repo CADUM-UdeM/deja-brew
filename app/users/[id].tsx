@@ -15,6 +15,9 @@ import { THEME } from '../../data/THEME';
 import { getUserById } from '../../data/users';
 import { ApiError, fetchUserById, sendFriendRequest } from '../../data/api';
 import type { UserProfile } from '../../data/users';
+import { SESSIONS } from '../../data/sessions';
+
+const serializeParam = (value: unknown) => encodeURIComponent(JSON.stringify(value));
 
 export default function UserProfileScreen() {
   const router = useRouter();
@@ -104,6 +107,18 @@ export default function UserProfileScreen() {
     favoriteDistricts: [],
     tags: [],
   };
+  const personalityBadges = [
+    preferences.noise === 'quiet' ? 'Quiet hunter' : null,
+    preferences.wifi ? 'Wi-Fi loyalist' : null,
+    preferences.outlets ? 'Outlet scout' : null,
+    user.stats.sessionsCreated > 2 ? 'Session host' : null,
+    user.stats.reviewsCount > 3 ? 'Cafe reviewer' : null,
+  ].filter(Boolean) as string[];
+  const recentSessions = SESSIONS.filter(
+    (session) =>
+      session.createdBy._id === user._id ||
+      session.participants.some((participant) => participant.userId === user._id)
+  ).slice(0, 3);
 
   return (
     <>
@@ -152,6 +167,14 @@ export default function UserProfileScreen() {
 
           <Text style={styles.sectionTitle}>Study preferences</Text>
           <View style={styles.chipRow}>
+            {personalityBadges.map((badge) => (
+              <View key={badge} style={styles.badgeChip}>
+                <Ionicons name="sparkles-outline" size={12} color={THEME.accentDark} />
+                <Text style={styles.chipText}>{badge}</Text>
+              </View>
+            ))}
+          </View>
+          <View style={styles.chipRow}>
             <View style={styles.chip}>
               <Text style={styles.chipText}>Noise: {preferences.noise}</Text>
             </View>
@@ -173,6 +196,30 @@ export default function UserProfileScreen() {
               </View>
             ))}
           </View>
+          {preferences.favoriteDistricts.length > 0 && (
+            <View style={styles.infoCard}>
+              <Text style={styles.infoTitle}>Favorite districts</Text>
+              <Text style={styles.infoText}>{preferences.favoriteDistricts.join(' · ')}</Text>
+            </View>
+          )}
+
+          <Text style={styles.sectionTitle}>Recent study activity</Text>
+          {recentSessions.length === 0 ? (
+            <Text style={styles.emptyText}>No recent sessions yet.</Text>
+          ) : (
+            recentSessions.map((session) => (
+              <TouchableOpacity
+                key={session._id}
+                style={styles.activityCard}
+                onPress={() => router.push(`/sessions/${session._id}`)}
+              >
+                <Text style={styles.activityTitle}>{session.title}</Text>
+                <Text style={styles.activitySub}>
+                  {session.course} · {session.locationLabel}
+                </Text>
+              </TouchableOpacity>
+            ))
+          )}
 
           <TouchableOpacity
             style={[
@@ -193,10 +240,18 @@ export default function UserProfileScreen() {
 
           <TouchableOpacity
             style={styles.secondaryBtn}
-            onPress={() => router.push('/sessions')}
+            onPress={() =>
+              router.push({
+                pathname: '/session/new',
+                params: {
+                  title: serializeParam(`Study with ${user.displayName}`),
+                  notes: serializeParam(`Invite @${user.username} to this study session.`),
+                },
+              })
+            }
           >
             <Ionicons name="people-outline" size={16} color={THEME.accentDark} />
-            <Text style={styles.secondaryBtnText}>View their sessions</Text>
+            <Text style={styles.secondaryBtnText}>Invite to a session</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -292,6 +347,58 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: THEME.accentDark,
     fontWeight: '600',
+  },
+  badgeChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+    backgroundColor: '#FFF3E6',
+    borderWidth: 1,
+    borderColor: THEME.border,
+  },
+  infoCard: {
+    marginTop: 14,
+    backgroundColor: THEME.card,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    padding: 12,
+  },
+  infoTitle: {
+    color: THEME.text,
+    fontWeight: '800',
+    fontSize: 13,
+  },
+  infoText: {
+    color: THEME.sub,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  activityCard: {
+    marginTop: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: THEME.card,
+    padding: 12,
+  },
+  activityTitle: {
+    color: THEME.text,
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  activitySub: {
+    color: THEME.sub,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  emptyText: {
+    color: THEME.sub,
+    fontSize: 12,
+    marginTop: 8,
   },
   primaryBtn: {
     marginTop: 20,

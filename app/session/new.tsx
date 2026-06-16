@@ -11,6 +11,7 @@ import {
   Alert,
   Platform,
   ActivityIndicator,
+  Share,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -18,6 +19,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { PlatformDateTimePicker } from '@/components/date-time-picker';
 import AppHeader from '../../components/AppHeader';
 import { createSession } from '../../data/api';
+import type { SessionFeedItem } from '../../data/sessions';
 
 const THEME = {
   bg: '#FFF6EF',
@@ -43,6 +45,55 @@ const TIME_OPTIONS = ['This afternoon', 'Tonight', 'Weekend', 'Morning', 'Late n
 const DURATION_OPTIONS = ['30–45 min', '1–2h', '3h+', 'All day'] as const;
 const GROUP_OPTIONS = ['Solo', 'Duo', 'Small group', 'Big group'] as const;
 const MATERIALS = ['Laptop', 'Textbook', 'Headphones', 'Whiteboard', 'Chargers'] as const;
+const SESSION_STEPS = ['Basics', 'When', 'Place', 'Finish'] as const;
+
+const getParam = (value?: string | string[]) =>
+  Array.isArray(value) ? value[0] : value;
+
+const parseParam = (value?: string | string[]) => {
+  const raw = getParam(value);
+  if (raw == null) return undefined;
+  try {
+    return JSON.parse(decodeURIComponent(raw));
+  } catch {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      try {
+        return decodeURIComponent(raw);
+      } catch {
+        return raw;
+      }
+    }
+  }
+};
+
+const serializeParam = (value: unknown) => {
+  if (value === undefined) return undefined;
+  return encodeURIComponent(JSON.stringify(value));
+};
+
+const toBoolean = (value: unknown) => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value !== 'string') return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (['true', '1', 'yes'].includes(normalized)) return true;
+  if (['false', '0', 'no'].includes(normalized)) return false;
+  return undefined;
+};
+
+const formatDate = (value: Date) =>
+  value.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+
+const formatTime = (value: Date) =>
+  value.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
 
 // Hide default header
 export const options = {
@@ -62,9 +113,11 @@ export default function NewStudySession() {
     placeId?: string;
     maxPeople?: string;
     notes?: string;
+    timeDetails?: string;
     materials?: string;
     isPublic?: string;
     date?: string;
+    currentStep?: string;
   }>();
 
   const [title, setTitle] = useState('Study date');
@@ -77,6 +130,7 @@ export default function NewStudySession() {
   const [placeId, setPlaceId] = useState<string | null>(null);
   const [maxPeople, setMaxPeople] = useState('3');
   const [notes, setNotes] = useState('');
+  const [timeDetails, setTimeDetails] = useState('');
   const [materials, setMaterials] = useState<string[]>(['Laptop', 'Chargers']);
   const [isPublic, setIsPublic] = useState(true);
   const [date, setDate] = useState<Date>(new Date());
@@ -84,49 +138,8 @@ export default function NewStudySession() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [saving, setSaving] = useState(false);
   const [initialized, setInitialized] = useState(false);
-
-  const getParam = (value?: string | string[]) =>
-    Array.isArray(value) ? value[0] : value;
-
-  const parseParam = (value?: string | string[]) => {
-    const raw = getParam(value);
-    if (raw == null) return undefined;
-    try {
-      return JSON.parse(decodeURIComponent(raw));
-    } catch {
-      try {
-        return JSON.parse(raw);
-      } catch {
-        try {
-          return decodeURIComponent(raw);
-        } catch {
-          return raw;
-        }
-      }
-    }
-  };
-
-  const toBoolean = (value: unknown) => {
-    if (typeof value === 'boolean') return value;
-    if (typeof value !== 'string') return undefined;
-    const normalized = value.trim().toLowerCase();
-    if (['true', '1', 'yes'].includes(normalized)) return true;
-    if (['false', '0', 'no'].includes(normalized)) return false;
-    return undefined;
-  };
-
-  const formatDate = (value: Date) =>
-    value.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    });
-
-  const formatTime = (value: Date) =>
-    value.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-    });
+  const [currentStep, setCurrentStep] = useState(0);
+  const [createdSession, setCreatedSession] = useState<SessionFeedItem | null>(null);
 
   useEffect(() => {
     if (initialized) return;
@@ -164,6 +177,9 @@ export default function NewStudySession() {
     const nextNotes = parseParam(params.notes);
     if (typeof nextNotes === 'string') setNotes(nextNotes);
 
+    const nextTimeDetails = parseParam(params.timeDetails);
+    if (typeof nextTimeDetails === 'string') setTimeDetails(nextTimeDetails);
+
     const nextMaterials = parseParam(params.materials);
     if (Array.isArray(nextMaterials)) {
       setMaterials(nextMaterials.filter((item) => typeof item === 'string'));
@@ -177,6 +193,12 @@ export default function NewStudySession() {
     if (typeof nextDate === 'string') {
       const parsed = new Date(nextDate);
       if (!Number.isNaN(parsed.getTime())) setDate(parsed);
+    }
+
+    const nextCurrentStep = parseParam(params.currentStep);
+    const parsedStep = Number.parseInt(String(nextCurrentStep ?? ''), 10);
+    if (!Number.isNaN(parsedStep)) {
+      setCurrentStep(Math.min(Math.max(parsedStep, 0), SESSION_STEPS.length - 1));
     }
 
     setInitialized(true);
@@ -194,6 +216,30 @@ export default function NewStudySession() {
     }
   }, [params.location, params.placeId]);
 
+  const isFinalStep = currentStep === SESSION_STEPS.length - 1;
+  const canContinue =
+    currentStep === 0
+      ? Boolean(title.trim() && course.trim())
+      : currentStep === 1
+      ? Boolean(timeSlot || timeDetails.trim())
+      : currentStep === 2
+      ? Boolean(location.trim())
+      : true;
+
+  const handleNextStep = () => {
+    if (!canContinue) {
+      const message =
+        currentStep === 0
+          ? 'Add a title and course/topic first.'
+          : currentStep === 2
+          ? 'Pick or type a cafe before finishing.'
+          : 'Complete this step first.';
+      Alert.alert('Almost there', message);
+      return;
+    }
+    setCurrentStep((prev) => Math.min(prev + 1, SESSION_STEPS.length - 1));
+  };
+
   const handleCreate = async () => {
     if (!course.trim() || !location.trim()) {
       Alert.alert(
@@ -206,17 +252,21 @@ export default function NewStudySession() {
     setSaving(true);
     try {
       const maxPeopleValue = Number.parseInt(maxPeople, 10);
-      await createSession({
+      const maxPeopleSafe = Number.isNaN(maxPeopleValue)
+        ? 2
+        : Math.max(1, maxPeopleValue);
+      const timeSlotLabel = timeDetails.trim() || timeSlot;
+      const session = await createSession({
         title: title.trim() || 'Study date',
         course: course.trim(),
         vibe,
-        timeSlot,
+        timeSlot: timeSlotLabel,
         duration,
         groupSize,
         placeId: placeId ?? undefined,
         locationLabel: location.trim(),
         location: location.trim(),
-        maxPeople: Number.isNaN(maxPeopleValue) ? 2 : maxPeopleValue,
+        maxPeople: maxPeopleSafe,
         notes: notes.trim(),
         materials,
         isPublic,
@@ -224,26 +274,12 @@ export default function NewStudySession() {
         scheduledFor: date.toISOString(),
         date: date.toISOString(),
       });
-      Alert.alert(
-        'Study date created ☕️',
-        `We saved your study date for ${course} at ${location}.`,
-        [
-          {
-            text: 'Nice!',
-            onPress: () => router.replace('/sessions'),
-          },
-        ]
-      );
+      setCreatedSession(session);
     } catch (err: any) {
       Alert.alert('Create failed', err?.message || 'Please try again.');
     } finally {
       setSaving(false);
     }
-  };
-
-  const serializeParam = (value: unknown) => {
-    if (value === undefined) return undefined;
-    return encodeURIComponent(JSON.stringify(value));
   };
 
   const goToMap = () => {
@@ -261,12 +297,78 @@ export default function NewStudySession() {
         placeId: serializeParam(placeId),
         maxPeople: serializeParam(maxPeople),
         notes: serializeParam(notes),
+        timeDetails: serializeParam(timeDetails),
         materials: serializeParam(materials),
         isPublic: serializeParam(isPublic),
         date: serializeParam(date.toISOString()),
+        currentStep: serializeParam(currentStep),
       },
     });
   };
+
+  const shareCreatedSession = () => {
+    if (!createdSession) return;
+    Share.share({
+      title: createdSession.title,
+      message: `Join my study session: ${createdSession.title} at ${createdSession.locationLabel}`,
+    }).catch(() => {});
+  };
+
+  if (createdSession) {
+    return (
+      <View style={[styles.container, { backgroundColor: THEME.bg }]}>
+        <AppHeader
+          leftIcon="chevron-back"
+          onLeftPress={() => router.replace('/sessions')}
+          rightIcon={null}
+          showLogo={false}
+          title="Session created"
+          subtitle="Now make it social"
+        />
+
+        <View style={styles.successWrap}>
+          <View style={styles.successCard}>
+            <View style={styles.successIcon}>
+              <Ionicons name="checkmark" size={26} color="#fff" />
+            </View>
+            <Text style={styles.successTitle}>{createdSession.title}</Text>
+            <Text style={styles.successSub}>
+              {createdSession.course} · {createdSession.timeSlot}
+            </Text>
+            <View style={styles.successMeta}>
+              <Ionicons name="location-outline" size={16} color={THEME.sub} />
+              <Text style={styles.successMetaText}>{createdSession.locationLabel}</Text>
+            </View>
+            <View style={styles.successMeta}>
+              <Ionicons name="people-outline" size={16} color={THEME.sub} />
+              <Text style={styles.successMetaText}>
+                1/{createdSession.maxPeople} joined · {createdSession.status}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.createButton, { marginTop: 18 }]}
+              onPress={() => router.replace(`/sessions/${createdSession._id}/invite`)}
+            >
+              <Ionicons name="person-add-outline" size={18} color="#fff" />
+              <Text style={styles.createButtonText}>Invite friends</Text>
+            </TouchableOpacity>
+            <View style={styles.successActions}>
+              <TouchableOpacity
+                style={styles.successSecondary}
+                onPress={() => router.replace(`/sessions/${createdSession._id}`)}
+              >
+                <Text style={styles.successSecondaryText}>View session</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.successSecondary} onPress={shareCreatedSession}>
+                <Text style={styles.successSecondaryText}>Share</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: THEME.bg }]}>
@@ -284,8 +386,38 @@ export default function NewStudySession() {
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.stepper}>
+          {SESSION_STEPS.map((stepName, index) => {
+            const active = index === currentStep;
+            const done = index < currentStep;
+            return (
+              <TouchableOpacity
+                key={stepName}
+                style={[styles.stepItem, active && styles.stepItemActive]}
+                onPress={() => setCurrentStep(index)}
+              >
+                <View style={[styles.stepDot, (active || done) && styles.stepDotActive]}>
+                  <Text style={[styles.stepNumber, (active || done) && styles.stepNumberActive]}>
+                    {done ? '✓' : index + 1}
+                  </Text>
+                </View>
+                <Text style={[styles.stepLabel, active && styles.stepLabelActive]}>
+                  {stepName}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
         {/* Main card */}
         <View style={styles.card}>
+          <Text style={styles.stepEyebrow}>
+            Step {currentStep + 1} of {SESSION_STEPS.length}
+          </Text>
+          <Text style={styles.stepTitle}>{SESSION_STEPS[currentStep]}</Text>
+
+          {currentStep === 0 && (
+            <>
           {/* Title */}
           <Text style={styles.label}>Title</Text>
           <TextInput
@@ -343,7 +475,11 @@ export default function NewStudySession() {
               );
             })}
           </View>
+            </>
+          )}
 
+          {currentStep === 1 && (
+            <>
           {/* When */}
           <Text style={[styles.label, { marginTop: 18 }]}>When</Text>
           <View style={styles.pickerRow}>
@@ -470,10 +606,16 @@ export default function NewStudySession() {
           </View>
           <TextInput
             style={[styles.input, { marginTop: 8 }]}
+            value={timeDetails}
+            onChangeText={setTimeDetails}
             placeholder="Optional detail (e.g. Friday 18h–21h)"
             placeholderTextColor={THEME.sub}
           />
+            </>
+          )}
 
+          {currentStep === 2 && (
+            <>
           {/* Location */}
           <Text style={[styles.label, { marginTop: 18 }]}>Café / location</Text>
           <View style={styles.locationRow}>
@@ -506,7 +648,11 @@ export default function NewStudySession() {
             />
             <Text style={styles.inlineHint}>Include yourself</Text>
           </View>
+            </>
+          )}
 
+          {currentStep === 3 && (
+            <>
           {/* Notes */}
           <Text style={[styles.label, { marginTop: 18 }]}>Notes</Text>
           <TextInput
@@ -565,24 +711,47 @@ export default function NewStudySession() {
               trackColor={{ false: '#CFC7C2', true: THEME.accentDark }}
             />
           </View>
+            </>
+          )}
         </View>
 
         {/* CTA */}
         <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.createButton, saving && styles.createButtonDisabled]}
-            onPress={handleCreate}
-            disabled={saving}
-          >
-            {saving ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <>
-                <Ionicons name="people-outline" size={18} color="#fff" />
-                <Text style={styles.createButtonText}>Create study date</Text>
-              </>
-            )}
-          </TouchableOpacity>
+          <View style={styles.footerRow}>
+            <TouchableOpacity
+              style={[styles.backButton, currentStep === 0 && styles.createButtonDisabled]}
+              disabled={currentStep === 0 || saving}
+              onPress={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
+            >
+              <Ionicons name="chevron-back" size={18} color={THEME.accentDark} />
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.createButton,
+                styles.nextButton,
+                (!canContinue || saving) && styles.createButtonDisabled,
+              ]}
+              onPress={isFinalStep ? handleCreate : handleNextStep}
+              disabled={!canContinue || saving}
+            >
+              {saving ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Text style={styles.createButtonText}>
+                    {isFinalStep ? 'Create study date' : 'Next'}
+                  </Text>
+                  <Ionicons
+                    name={isFinalStep ? 'people-outline' : 'chevron-forward'}
+                    size={18}
+                    color="#fff"
+                  />
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -603,6 +772,67 @@ const styles = StyleSheet.create({
     borderColor: THEME.border,
     padding: 16,
     backgroundColor: THEME.card,
+  },
+  stepper: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 10,
+  },
+  stepItem: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: '#fff',
+  },
+  stepItemActive: {
+    borderColor: THEME.accentDark,
+    backgroundColor: '#FFF3E6',
+  },
+  stepDot: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: THEME.pill,
+  },
+  stepDotActive: {
+    backgroundColor: THEME.accentDark,
+  },
+  stepNumber: {
+    fontSize: 11,
+    color: THEME.sub,
+    fontWeight: '800',
+  },
+  stepNumberActive: {
+    color: '#fff',
+  },
+  stepLabel: {
+    fontSize: 10,
+    color: THEME.sub,
+    fontWeight: '700',
+  },
+  stepLabelActive: {
+    color: THEME.accentDark,
+  },
+  stepEyebrow: {
+    fontSize: 11,
+    color: THEME.sub,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+  },
+  stepTitle: {
+    color: THEME.text,
+    fontSize: 22,
+    fontWeight: '800',
+    marginTop: 2,
+    marginBottom: 4,
   },
   label: {
     fontSize: 13,
@@ -702,6 +932,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 18,
   },
+  footerRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  backButton: {
+    flex: 0.8,
+    height: 52,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    columnGap: 6,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: THEME.border,
+  },
+  backButtonText: {
+    color: THEME.accentDark,
+    fontWeight: '800',
+  },
   createButton: {
     backgroundColor: THEME.accentDark,
     borderRadius: 999,
@@ -711,6 +961,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     columnGap: 8,
   },
+  nextButton: {
+    flex: 1.2,
+  },
   createButtonDisabled: {
     opacity: 0.7,
   },
@@ -718,5 +971,72 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '800',
     fontSize: 15,
+  },
+  successWrap: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  successCard: {
+    backgroundColor: THEME.card,
+    borderWidth: 1,
+    borderColor: THEME.border,
+    borderRadius: 24,
+    padding: 20,
+    shadowColor: '#7F3B00',
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 5,
+  },
+  successIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: THEME.accentDark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: THEME.text,
+  },
+  successSub: {
+    color: THEME.sub,
+    fontSize: 13,
+    marginTop: 4,
+    marginBottom: 10,
+  },
+  successMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+  },
+  successMetaText: {
+    color: THEME.sub,
+    fontSize: 13,
+    flex: 1,
+  },
+  successActions: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 12,
+  },
+  successSecondary: {
+    flex: 1,
+    height: 46,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: THEME.border,
+    backgroundColor: '#fff',
+  },
+  successSecondaryText: {
+    color: THEME.accentDark,
+    fontWeight: '800',
   },
 });

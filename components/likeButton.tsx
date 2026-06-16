@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { useLikedPromos } from '@/data/likedPromosContext';
 import { THEME } from '@/data/THEME';
 
 type Props = {
-  promoId: number;
+  promoId: string;
 };
 
 export default function LikeButton({ promoId }: Props) {
@@ -13,7 +14,13 @@ export default function LikeButton({ promoId }: Props) {
   const liked = isLiked(promoId);
 
   return (
-    <Pressable onPress={() => toggleLikedPromo(promoId)} style={styles.button}>
+    <Pressable
+      onPress={() => {
+        Haptics.selectionAsync().catch(() => {});
+        toggleLikedPromo(promoId);
+      }}
+      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+    >
       <Ionicons
         name={liked ? 'heart' : 'heart-outline'}
         size={16}
@@ -45,5 +52,9 @@ const styles = StyleSheet.create({
   },
   labelActive: {
     color: '#C05621',
+  },
+  buttonPressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.98 }],
   },
 });

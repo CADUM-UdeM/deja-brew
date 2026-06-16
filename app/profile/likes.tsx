@@ -9,7 +9,7 @@ import { PROMOS } from '../../data/promos';
 import { SESSIONS } from '../../data/sessions';
 
 const LIKED_PLACE_IDS = ['constance'];
-const LIKED_PROMO_IDS = [2];
+const LIKED_PROMO_IDS = ['2'];
 const LIKED_SESSION_IDS = ['s_003'];
 
 export default function LikesScreen() {
